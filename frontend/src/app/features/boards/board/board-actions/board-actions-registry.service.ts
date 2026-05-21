@@ -25,6 +25,7 @@ export class BoardActionsRegistryService {
       icon: '',
       description: '',
       image: '',
+      disabled: false,
     }));
   }
 

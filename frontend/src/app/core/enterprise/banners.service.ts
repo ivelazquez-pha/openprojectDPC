@@ -38,21 +38,15 @@ export class BannersService {
   private readonly _bannersHidden:boolean = true;
 
   constructor() {
-    const documentElement = this.documentElement;
-
-    this._bannersHidden = documentElement.body.classList.contains('ee-banners-hidden');
+    this._bannersHidden = true;
   }
 
-  public showBannerFor(feature:string):boolean {
-    if (this._bannersHidden) {
-      return false;
-    }
-
-    return !this.allowsTo(feature) || this.trialling(feature);
+  public showBannerFor(_feature:string):boolean {
+    return false;
   }
 
-  public allowsTo(feature:string):boolean {
-    return this.configuration.availableFeatures.includes(feature);
+  public allowsTo(_feature:string):boolean {
+    return true;
   }
 
   public trialling(feature:string):boolean {

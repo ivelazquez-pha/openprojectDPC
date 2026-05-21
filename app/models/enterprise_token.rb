@@ -53,8 +53,8 @@ class EnterpriseToken < ApplicationRecord
       connection.data_source_exists? table_name
     end
 
-    def allows_to?(feature)
-      active_tokens.any? { |token| Authorization::EnterpriseService.new(token).call(feature).result }
+    def allows_to?(_feature)
+      true
     end
 
     def active?
@@ -65,8 +65,39 @@ class EnterpriseToken < ApplicationRecord
       active_non_trial_tokens.empty? && active_trial_token.present?
     end
 
+    ALL_EE_FEATURES = Set.new(%w[
+      baseline_comparison
+      calculated_values
+      capture_external_links
+      custom_actions
+      custom_field_hierarchies
+      customize_life_cycle
+      date_alerts
+      define_custom_style
+      edit_attribute_groups
+      gantt_pdf_export
+      internal_comments
+      ldap_groups
+      mcp_server
+      meeting_templates
+      nextcloud_sso
+      one_drive_sharepoint_file_storage
+      placeholder_users
+      portfolio_management
+      project_creation_wizard
+      readonly_work_packages
+      scim_api
+      sso_auth_providers
+      team_planner_view
+      time_entry_time_restrictions
+      virus_scanning
+      work_package_query_relation_columns
+      work_package_sharing
+      work_package_subject_generation
+    ]).freeze
+
     def available_features
-      active_tokens.map(&:available_features).inject(Set.new, :|)
+      ALL_EE_FEATURES
     end
 
     def non_trialling_features
@@ -82,7 +113,7 @@ class EnterpriseToken < ApplicationRecord
     end
 
     def hide_banners?
-      OpenProject::Configuration.ee_hide_banners?
+      true
     end
 
     def user_limit
