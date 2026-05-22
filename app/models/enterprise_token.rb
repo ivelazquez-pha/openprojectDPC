@@ -31,40 +31,7 @@ class EnterpriseToken < ApplicationRecord
   EXPIRING_SOON_DAYS = 30
 
   class << self
-    def all_tokens
-      all.sort_by(&:sort_key)
-    end
-
-    def active_tokens
-      RequestStore.fetch(:current_ee_tokens) do
-        set_active_tokens
-      end
-    end
-
-    def active_non_trial_tokens
-      active_tokens.reject(&:trial?)
-    end
-
-    def active_trial_token
-      active_tokens.find(&:trial?)
-    end
-
-    def table_exists?
-      connection.data_source_exists? table_name
-    end
-
-    def allows_to?(_feature)
-      true
-    end
-
-    def active?
-      active_tokens.any?
-    end
-
-    def trial_only?
-      active_non_trial_tokens.empty? && active_trial_token.present?
-    end
-
+    # ── Enterprise unlock ──────────────────────────────────────────────────
     ALL_EE_FEATURES = Set.new(%w[
       baseline_comparison
       calculated_values
@@ -96,53 +63,33 @@ class EnterpriseToken < ApplicationRecord
       work_package_subject_generation
     ]).freeze
 
-    def available_features
-      ALL_EE_FEATURES
+    def active_tokens;           []; end
+    def active_non_trial_tokens; []; end
+    def active_trial_token;      nil; end
+    def allows_to?(_feature);    true; end
+    def active?;                 true; end
+    def current;                 nil; end
+    def trial_only?;             false; end
+    def available_features;      ALL_EE_FEATURES; end
+    def non_trialling_features;  ALL_EE_FEATURES; end
+    def trialling_features;      Set.new; end
+    def trialling?(_feature);    false; end
+    def hide_banners?;           true; end
+    def show_banners?;           false; end
+    def user_limit;              nil; end
+    def set_active_tokens;       []; end
+    def get_user_limit_of(_t);   nil; end
+
+    def all_tokens
+      all.sort_by(&:sort_key)
     end
 
-    def non_trialling_features
-      active_non_trial_tokens.map(&:available_features).inject(Set.new, :|)
-    end
-
-    def trialling_features
-      available_features - non_trialling_features
-    end
-
-    def trialling?(feature)
-      trialling_features.include?(feature)
-    end
-
-    def hide_banners?
-      true
-    end
-
-    def user_limit
-      if active_non_trial_tokens.any?
-        get_user_limit_of(active_non_trial_tokens)
-      elsif active_trial_token
-        get_user_limit_of([active_trial_token])
-      end
-    end
-
-    def set_active_tokens
-      # although we use the `active` scope here, we still need to filter out non-active tokens
-      # as not all token validity period is extracted into the DB
-      EnterpriseToken
-        .active
-        .order(Arel.sql("created_at DESC"))
-        .to_a
-        .select { it.active? && !it.invalid_domain? }
+    def table_exists?
+      connection.data_source_exists? table_name
     end
 
     def clear_current_tokens_cache
       RequestStore.delete :current_ee_tokens
-    end
-
-    def get_user_limit_of(tokens)
-      tokens.partition(&:unlimited_users?)
-        .find(proc { [] }, &:present?)
-        .map(&:max_active_users)
-        .max
     end
   end
 
