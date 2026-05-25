@@ -1,0 +1,56 @@
+name: Build & Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/**'
+      - 'modules/**'
+      - 'frontend/**'
+      - 'config/**'
+      - 'lib/**'
+      - 'Gemfile*'
+      - 'docker/**'
+      - '.github/workflows/docker-build.yml'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Login a Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extraer metadata (tags)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ivelazquez92/openproject-internal
+          tags: |
+            type=raw,value=15-slim
+            type=raw,value=latest
+            type=sha,prefix=sha-
+
+      - name: Build y Push imagen
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/prod/Dockerfile
+          target: slim
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILDKIT_SBOM_SCAN_CONTEXT=false
+            BUILDKIT_SBOM_SCAN_STAGE=false
