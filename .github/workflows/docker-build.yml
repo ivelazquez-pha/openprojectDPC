@@ -10,6 +10,7 @@ on:
       - 'frontend/**'
       - 'config/**'
       - 'lib/**'
+      - 'lib_static/**'
       - 'Gemfile*'
       - 'docker/**'
       - '.github/workflows/docker-build.yml'
