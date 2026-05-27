@@ -167,10 +167,9 @@ module OpenProject
           file: ::LocalFileUploader
         }
 
-        # Do not load Fog uploader unless configured,
-        # it will fail with missing configuration
-        unless OpenProject::Configuration.fog_credentials.empty?
+        begin
           uploaders[:fog] = "::FogFileUploader".constantize
+        rescue NameError
         end
 
         uploaders
