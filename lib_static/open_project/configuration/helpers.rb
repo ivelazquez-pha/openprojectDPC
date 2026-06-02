@@ -168,8 +168,13 @@ module OpenProject
         }
 
         begin
-          uploaders[:fog] = "::FogFileUploader".constantize
-        rescue NameError
+          # Explicitly require the file instead of relying on constantize, which
+          # fails silently during Zeitwerk eager loading when app/uploaders/ is
+          # processed after app/models/ (alphabetical order). Using require with
+          # an absolute path lets Ruby load it immediately regardless of Zeitwerk state.
+          require Rails.root.join("app/uploaders/fog_file_uploader").to_s
+          uploaders[:fog] = ::FogFileUploader
+        rescue LoadError, NameError
         end
 
         uploaders
