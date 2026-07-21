@@ -46,7 +46,7 @@ es:
         labor_budget_item:
           attributes:
             principal:
-              not_a_member_of_budget_project: no es miembro del proyecto presupuestario
+              not_a_member_of_budget_project: no es miembro del entorno presupuestario
     models:
       budget: Presupuesto
       labor_budget_item: Costo laboral previsto
@@ -76,8 +76,8 @@ es:
       budget_by_cost_type:
         title: Presupuesto por tipo de coste
         blankslate:
-          heading: Comience a controlar su proyecto
-          description: Obtenga una visión general de los presupuestos y costes para realizar un seguimiento eficaz del estado de su proyecto
+          heading: Comience a controlar su entorno
+          description: Obtenga una visión general de los presupuestos y costes para realizar un seguimiento eficaz del estado de su entorno
         blankslate_zero:
           heading: Faltan detalles del presupuesto
           description: Añada detalles sobre su presupuesto previsto para ver los datos aquí
@@ -88,8 +88,8 @@ es:
         count_caption_with_subitems:
           project:
             zero: No hay datos presupuestarios.
-            one: Datos recopilados de %{count} presupuesto incluido en este proyecto y sus subelementos.
-            other: Datos recopilados de %{count} presupuestos incluidos en este proyecto y sus subelementos.
+            one: Datos recopilados de %{count} presupuesto incluido en este entorno y sus subelementos.
+            other: Datos recopilados de %{count} presupuestos incluidos en este entorno y sus subelementos.
           program:
             zero: No hay datos presupuestarios.
             one: Datos recopilados de %{count} presupuesto incluido en este programa y sus subelementos.
@@ -118,7 +118,7 @@ es:
   label_yes: Sí
   label_budget_totals: Totales
   label_budget_details: Detalles de presupuesto
-  notice_budget_conflict: Los paquetes de trabajo deben ser del mismo proyecto.
+  notice_budget_conflict: Los paquetes de trabajo deben ser del mismo entorno.
   notice_no_budgets_available: No hay presupuestos disponibles.
   permission_edit_budgets: Editar presupuestos
   permission_view_budgets: Ver los presupuestos

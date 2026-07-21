@@ -69,7 +69,7 @@ es:
     button_back_to_list_view: Volver a la lista
     button_cancel: Cancelar
     button_close: Cerrar
-    button_change_project: Mover a otro proyecto
+    button_change_project: Mover a otro entorno
     button_check_all: Seleccionar todos
     button_configure-form: Configurar formulario
     button_confirm: Confirmar
@@ -77,7 +77,7 @@ es:
     button_copy: Copiar
     button_copy_to_clipboard: Copiar en el portapapeles
     button_copy_link_to_clipboard: Copiar enlace al portapapeles
-    button_copy_to_other_project: Duplicar en otro proyecto
+    button_copy_to_other_project: Duplicar en otro entorno
     button_custom-fields: Campos personalizados
     button_delete: Eliminar
     button_delete_watcher: Eliminar observador
@@ -185,7 +185,7 @@ es:
           not_set: "(Página no establecida aún)"
           hint: |
             Para incluir el contenido de otra página wiki, especifique el título o slug.
-            Para incluir la página wiki de otro proyecto, sepárelas con dos puntos, como en el ejemplo siguiente.
+            Para incluir la página wiki de otro entorno, sepárelas con dos puntos, como en el ejemplo siguiente.
         work_package_button:
           button: Insertar botón para crear paquete de trabajo
           type: Tipo de paquete de trabajo
@@ -211,7 +211,7 @@ es:
         change_button: Guardar y reprogramar
         change_title: Cambiar los días laborables
         removed_title: 'Eliminará los siguientes días de la lista de días no laborables:'
-        change_description: Cambiar qué días de la semana se consideran laborables y cuáles no, puede afectar a las fechas de inicio y fin de todos los paquetes de trabajo y ciclos de vida en todos los proyectos de esta instancia.
+        change_description: Cambiar qué días de la semana se consideran laborables y cuáles no, puede afectar a las fechas de inicio y fin de todos los paquetes de trabajo y ciclos de vida en todos los entornos de esta instancia.
         warning: 'Los cambios pueden tardar algún tiempo en surtir efecto. Se le notificará cuando todos los paquetes de trabajo pertinentes se hayan actualizado. ¿Seguro que desea continuar?
 
           '
@@ -313,7 +313,7 @@ es:
     label_added_time_by: Agregado por <a href="%{authorLink}">%{author}</a> a las %{age}
     label_ago: días antes
     label_all: todos
-    label_all_projects: Todos los proyectos
+    label_all_projects: Todos los entornos
     label_all_uppercase: Todos
     label_all_work_packages: todos los paquetes de trabajo
     label_and: "y"
@@ -354,7 +354,7 @@ es:
     label_expanded: expandido
     label_expand_all: Expandir todos
     label_expand_text: Mostrar texto completo
-    label_expand_project_menu: Expandir menú de proyecto
+    label_expand_project_menu: Expandir menú de entorno
     label_export: Exportar
     label_export_preparing: La exportación se está preparando y se descargará en breve.
     label_favorites: Favoritos
@@ -367,7 +367,7 @@ es:
     label_group_plural: Grupos
     label_hide_attributes: Mostrar menos
     label_hide_column: Esconder columna
-    label_hide_project_menu: Colapsar menú de proyecto
+    label_hide_project_menu: Colapsar menú de entorno
     label_in: en
     label_in_less_than: en menos de
     label_in_more_than: en más de
@@ -406,9 +406,9 @@ es:
     label_previous: Anterior
     label_per_page: 'Por pagina:'
     label_please_wait: Por favor, espere
-    label_project: Proyecto
-    label_project_list: Listas de proyectos
-    label_project_plural: Proyectos
+    label_project: Entorno
+    label_project_list: Listas de entornos
+    label_project_plural: Entornos
     label_visibility_settings: Configuración de visibilidad
     label_quote_comment: Citar este comentario
     label_recent: Recientes
@@ -419,7 +419,7 @@ es:
     label_remove_row: Eliminar fila
     label_report: Reportar
     label_repository_plural: Repositorios
-    label_resize_project_menu: Cambiar el tamaño del menú del proyecto
+    label_resize_project_menu: Cambiar el tamaño del menú del entorno
     label_save_as: Guardad como
     label_search_columns: Buscar una columna
     label_select_watcher: Selecciona un observador...
@@ -499,25 +499,25 @@ es:
         got_it: Entendido
       steps:
         help_menu: El menú Ayuda (?) proporciona <b>recursos de ayuda adicionales</b>. Aquí puedes encontrar una guía de usuario, vídeos explicativos y más. <br> ¡Disfruta de tu trabajo con OpenProject!
-        members: Invitar a nuevos <b>miembros</b> a unirse a tu proyecto.
-        quick_add_button: Haga clic en el icono del signo más (+) en el menú de navegación del encabezado para <b>crear un proyecto</b> o <b>invitar a compañeros</b>.
-        sidebar_arrow: Usa la flecha de retorno en la esquina superior izquierda para regresar al <b>menú principal</b> del proyecto.
+        members: Invitar a nuevos <b>miembros</b> a unirse a tu entorno.
+        quick_add_button: Haga clic en el icono del signo más (+) en el menú de navegación del encabezado para <b>crear un entorno</b> o <b>invitar a compañeros</b>.
+        sidebar_arrow: Usa la flecha de retorno en la esquina superior izquierda para regresar al <b>menú principal</b> del entorno.
         welcome: Realice un recorrido de introducción de tres minutos para conocer las <b>funciones más importantes</b>. <br> Le recomendamos que complete todos los pasos. Puede volver a iniciar el paseo en cualquier momento.
         wiki: En la <b>wiki</b>, puede elaborar documentos y compartir conocimientos con su equipo.
         boards:
-          overview: Seleccione los <b>tableros</b> para cambiar la vista y gestione su proyecto con la vista de tableros Agile.
+          overview: Seleccione los <b>tableros</b> para cambiar la vista y gestione su entorno con la vista de tableros Agile.
           lists_kanban: Aquí puede crear varias listas (columnas) en el tablero. Por ejemplo, esta función le permite crear un <b>tablero Kanban</b>.
           lists_basic: Aquí puede crear varias listas (columnas) en el tablero Agile.
           add: Haga clic en el icono del signo más (+) para <b>crear una tarjeta</b> o <b>añadir una tarjeta existente</b> a la lista en el tablero.
           drag: Arrastre y coloque las tarjetas en una lista específica para cambiar el orden o moverlas a otra lista. <br> Para ver los detalles, haga clic en el icono de información (i) de la esquina superior derecha o haga doble clic en una tarjeta.
         wp:
           toggler: Ahora, veamos la sección <b>paquete de trabajo</b>, que ofrece una vista más detallada de su trabajo.
-          list: En el resumen del <b>paquete de trabajo</b>, se muestra una lista de todos los trabajos del proyecto, como tareas, hitos, fases y más. <br> Desde esta vista, se pueden crear y editar directamente paquetes de trabajo. Para acceder a los detalles de un paquete de trabajo específico, simplemente haga doble clic en la fila correspondiente.
+          list: En el resumen del <b>paquete de trabajo</b>, se muestra una lista de todos los trabajos del entorno, como tareas, hitos, fases y más. <br> Desde esta vista, se pueden crear y editar directamente paquetes de trabajo. Para acceder a los detalles de un paquete de trabajo específico, simplemente haga doble clic en la fila correspondiente.
           full_view: En la vista de <b>detalles del paquete de trabajo</b>, se muestra toda la información pertinente sobre un paquete de trabajo específico, como la descripción, el estado, la prioridad, las actividades, las dependencias y los comentarios.
           back_button: Use la flecha de retorno de la esquina superior izquierda para salir y volver a la lista de paquetes de trabajo.
-          create_button: Use el botón <b>+ Crear</b> para añadir un nuevo paquete de trabajo a su proyecto.
-          gantt_menu: Cree programas y cronogramas del proyecto sin esfuerzo utilizando el módulo de Diagrama de Gantt.
-          timeline: Aquí puede <b>editar su plan de proyecto</b>, crear nuevos paquetes de trabajo como tareas, hitos, fases y más, y <b>añadir dependencias</b>. Todos los miembros del equipo pueden ver y actualizar el plan más reciente en cualquier momento.
+          create_button: Use el botón <b>+ Crear</b> para añadir un nuevo paquete de trabajo a su entorno.
+          gantt_menu: Cree programas y cronogramas del entorno sin esfuerzo utilizando el módulo de Diagrama de Gantt.
+          timeline: Aquí puede <b>editar su plan de entorno</b>, crear nuevos paquetes de trabajo como tareas, hitos, fases y más, y <b>añadir dependencias</b>. Todos los miembros del equipo pueden ver y actualizar el plan más reciente en cualquier momento.
         team_planner:
           overview: El planificador de equipo permite asignar de forma visual tareas a los miembros del equipo y obtener un resumen del trabajo de cada uno.
           calendar: En el tablero de planificación semanal o bisemanal, se muestran todos los paquetes de trabajo asignados a los miembros del equipo.
@@ -563,7 +563,7 @@ es:
         total_count_warning: Mostrando las %{newest_count} notificaciones más recientes. %{more_count} más no se muestran.
         empty_state:
           no_notification: Parece que ya estás al día.
-          no_notification_with_current_project_filter: Parece que ya está al día con el proyecto seleccionado.
+          no_notification_with_current_project_filter: Parece que ya está al día con el entorno seleccionado.
           no_notification_with_current_filter: Parece que ya está al día con el filtro %{filter}.
           no_notification_for_filter: Parece que ya está al día completamente para este filtro.
           no_selection: Haga clic en una notificación para ver todos los detalles de la actividad.
@@ -591,11 +591,11 @@ es:
       relation_description: Haga clic para añadir la descripción a esta relación
     project:
       autocompleter:
-        label: Autocompletado del proyecto
-      click_to_switch_to_project: 'Proyecto: %{projectname}'
-      context: Contexto del proyecto
-      not_available: Proyecto N/D
-      required_outside_context: 'Seleccione el proyecto donde quiere crear el paquete de trabajo para ver todos los atributos. Solo puede seleccionar proyectos que tengan activado el tipo de paquete utilizado.
+        label: Autocompletado del entorno
+      click_to_switch_to_project: 'Entorno: %{projectname}'
+      context: Contexto del entorno
+      not_available: Entorno N/D
+      required_outside_context: 'Seleccione el entorno donde quiere crear el paquete de trabajo para ver todos los atributos. Solo puede seleccionar entornos que tengan activado el tipo de paquete utilizado.
 
         '
     text_are_you_sure: "¿Estás seguro?"
@@ -676,7 +676,7 @@ es:
       notFoundText: No se encontraron elementos
       search: Buscar
       project:
-        placeholder: Seleccionar proyecto
+        placeholder: Seleccionar entorno
     repositories:
       select_tag: Seleccionar etiqueta
       select_branch: Seleccione rama
@@ -723,7 +723,7 @@ es:
         edit: Edición en masa
         delete: Eliminación en masa
         duplicate: Duplicado en masa
-        move: Cambio masivo del proyecto
+        move: Cambio masivo del entorno
       button_clear: Eliminar
       comment_added: El comentario fue añadido con éxito.
       comment_send_failed: Ha ocurrido un error. No se pudo añadir el comentario.
@@ -802,14 +802,14 @@ es:
         category: Categoría
         percentageDone: Porcentaje realizado
         priority: Prioridad
-        projectName: Proyecto
+        projectName: Entorno
         remainingWork: Trabajo restante
         remainingWorkAlternative: Horas restantes
         responsible: Responsable
         startDate: Fecha de inicio
         status: Estado
         subject: Asunto
-        subproject: Subproyecto
+        subproject: Subentorno
         title: Título
         type: Tipo
         updatedAt: Actualizada el
@@ -1016,17 +1016,17 @@ es:
       button_activate: Activar modo zen
       button_deactivate: Desactivar modo zen
     global_search:
-      all_projects: En todos los proyectos
+      all_projects: En todos los entornos
       close_search: Cerrar búsqueda
       items_available: "%{count} elementos disponibles"
       direct_hit_available: Se ha encontrado el paquete de trabajo con el ID exacto. Pulsa «Intro» para abrirlo.
-      current_project_and_all_descendants: En este proyecto + subproyectos
-      current_project: En este proyecto
+      current_project_and_all_descendants: En este entorno + subentornos
+      current_project: En este entorno
       recently_viewed: Vistos recientemente
-      search_placeholder_expanded: Buscar paquetes de trabajo por asunto, proyecto, tipo, estado o ID
+      search_placeholder_expanded: Buscar paquetes de trabajo por asunto, entorno, tipo, estado o ID
       title:
-        all_projects: todos los proyectos
-        project_and_subprojects: y todos los subproyectos
+        all_projects: todos los entornos
+        project_and_subprojects: y todos los subentornos
         search_for: Buscar por
     views:
       card: Tarjetas
@@ -1040,25 +1040,25 @@ es:
         title: Estado excluido de los totales de jerarquía
         content: El estado «%{status_name}» se ha configurado para que se excluya de los totales de jerarquía de Trabajo, Trabajo restante y % completado. Los totales no tienen en cuenta este valor.
     favorite_projects:
-      no_results: No tiene proyectos favoritos
-      no_results_subtext: Añada uno o varios proyectos como favoritos a través del resumen del proyecto o en una lista de proyectos.
+      no_results: No tiene entornos favoritos
+      no_results_subtext: Añada uno o varios entornos como favoritos a través del resumen del entorno o en una lista de entornos.
     include_projects:
-      toggle_title: Incluir proyectos
-      title: Proyectos
+      toggle_title: Incluir entornos
+      title: Entornos
       clear_selection: Borrar selección
       apply: Aplicar
       selected_filter:
-        all: Todos los proyectos
+        all: Todos los entornos
         selected: Solo seleccionados
-      search_placeholder: Buscar proyectos...
+      search_placeholder: Buscar entornos...
       search_placeholder_favorites: Buscar favoritos...
-      include_subprojects: Incluir todos los subproyectos
+      include_subprojects: Incluir todos los subentornos
       tooltip:
-        include_all_selected: Proyecto ya incluido, ya que "Incluir todos los subproyectos" está activada.
-        current_project: Este es el proyecto actual.
-        does_not_match_search: El proyecto no coincide con los criterios de búsqueda.
+        include_all_selected: Entorno ya incluido, ya que "Incluir todos los subentornos" está activada.
+        current_project: Este es el entorno actual.
+        does_not_match_search: El entorno no coincide con los criterios de búsqueda.
       no_results: Ningún producto coincide con tu criterio de búsqueda
-      no_favorite_results: Ningún proyecto favorito coincide con sus criterios de búsqueda.
+      no_favorite_results: Ningún entorno favorito coincide con sus criterios de búsqueda.
     include_workspaces:
       search_placeholder: Buscar…
       types:

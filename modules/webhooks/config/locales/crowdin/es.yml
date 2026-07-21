@@ -10,7 +10,7 @@ es:
         secret: Secreto de firma
         events: Eventos
         enabled: Activado
-        projects: Proyectos habilitados
+        projects: Entornos habilitados
       webhooks/log:
         event_name: Nombre del evento
         url: URL de carga
@@ -37,7 +37,7 @@ es:
         updated: Actualizado
         comment: Comentario
         internal_comment: Comentario interno
-      explanation_html: 'Al producirse un evento como la creación de un paquete de trabajo o una actualización en un proyecto, OpenProject enviará una solicitud POST a los puntos finales web configurados. A menudo, el evento se envía una vez transcurrido el [periodo de agregación configurado](aggregation_path).
+      explanation_html: 'Al producirse un evento como la creación de un paquete de trabajo o una actualización en un entorno, OpenProject enviará una solicitud POST a los puntos finales web configurados. A menudo, el evento se envía una vez transcurrido el [periodo de agregación configurado](aggregation_path).
 
         '
       status:
@@ -50,7 +50,7 @@ es:
         title: Entregas recientes
         time: Hora de entrega
       form:
-        introduction: 'Envíe una solicitud POST a la URL de carga siguiente para cualquier evento en el proyecto al que está suscrito. La carga corresponderá con la representación APIv3 del objeto a modificar.
+        introduction: 'Envíe una solicitud POST a la URL de carga siguiente para cualquier evento en el entorno al que está suscrito. La carga corresponderá con la representación APIv3 del objeto a modificar.
 
           '
         apiv3_doc_url: Para obtener más información, visite la documentación de la API
@@ -63,12 +63,12 @@ es:
         events:
           title: Eventos habilitados
         project_ids:
-          title: Proyectos habilitados
-          description: Seleccione para qué proyectos se ejecutará este webhook.
-          all: Todos los proyectos
-          selected: Solo los proyectos seleccionados
+          title: Entornos habilitados
+          description: Seleccione para qué entornos se ejecutará este webhook.
+          all: Todos los entornos
+          selected: Solo los entornos seleccionados
         selected_project_ids:
-          title: Proyectos seleccionados
+          title: Entornos seleccionados
         secret:
           description: 'Si se establece el valor secreto, OpenProject se usará para firmar la carga del webhook.
 

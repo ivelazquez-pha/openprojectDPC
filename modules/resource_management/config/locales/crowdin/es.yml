@@ -49,7 +49,7 @@ es:
     label_resource_planner: Planificador de recursos
     label_resource_planner_plural: Planificadores de recursos
     label_new_resource_planner: Nuevo planificador de recursos
-    public_caption: 'Haga que esta vista sea pública para todos los miembros del proyecto. Esto no afecta a la visibilidad de los paquetes de trabajo, que sigue dependiendo de los permisos de cada usuario.
+    public_caption: 'Haga que esta vista sea pública para todos los miembros del entorno. Esto no afecta a la visibilidad de los paquetes de trabajo, que sigue dependiendo de los permisos de cada usuario.
 
       '
     favorite_caption: 'Convierta esta vista en favorita para añadirla a la sección superior del menú de la barra lateral.
@@ -68,6 +68,6 @@ es:
       private: Privado
     blankslate:
       title: Aún no hay planificadores de recursos
-      desc: Cree un planificador de recursos para empezar a planificar la capacidad de este proyecto.
+      desc: Cree un planificador de recursos para empezar a planificar la capacidad de este entorno.
     show:
       placeholder: La vista detallada de este planificador de recursos estará disponible en breve.
