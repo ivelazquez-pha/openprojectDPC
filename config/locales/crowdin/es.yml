@@ -4241,8 +4241,8 @@ es:
   label_project_view_all: Ver todos los entornos
   label_project_show_details: Mostrar los detalles del entorno
   label_project_hide_details: Ocultar los detalles del entorno
-  label_portfolio: Portafolio
-  label_portfolio_new: Nuevo portafolio
+  label_portfolio: Espacio de trabajo
+  label_portfolio_new: Nuevo espacio de trabajo
   label_program: Programa
   label_program_new: Nuevo programa
   label_public_projects: Entornos públicos
@@ -4782,7 +4782,7 @@ es:
   permission_add_work_packages: Añadir paquetes de trabajo
   permission_add_messages: Publicar mensajes
   permission_add_project: Crear entornos
-  permission_add_portfolios: Crear portafolios
+  permission_add_portfolios: Crear espacios de trabajo
   permission_add_programs: Crear programas
   permission_add_work_package_attachments: Añadir archivos adjuntos
   permission_add_work_package_attachments_explanation: Permite añadir archivos adjuntos sin el permiso Editar paquetes de trabajo
