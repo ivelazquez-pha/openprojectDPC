@@ -828,16 +828,16 @@ es:
   portfolios:
     index:
       search:
-        label: Filtro de nombre de cartera
-        placeholder: Buscar carteras
+        label: Filtro de nombre de espacio de trabajo
+        placeholder: Buscar espacios de trabajo
       sub_items_html:
         one: "<strong>1</strong> subelemento"
         other: "<strong>%{count}</strong> subelementos"
     lists:
-      active: Carteras activas
-      my: Mis carteras
-      favorited: Carteras favoritas
-      archived: Carteras archivadas
+      active: Espacios de trabajo activos
+      my: Mis espacios de trabajo
+      favorited: Espacios de trabajo favoritos
+      archived: Espacios de trabajo archivados
   projects:
     copy:
       members: Miembros del proyecto
@@ -2887,10 +2887,10 @@ es:
       description: Empieza desde cero. Añade manualmente los atributos, miembros y módulos del proyecto.
     blank_description: No hay descripción.
   create_portfolio:
-    template_heading: Selecciona una plantilla de cartera para trabajar con los métodos de gestión de proyectos más comunes o crea una cartera desde cero.
+    template_heading: Selecciona una plantilla de espacio de trabajo para trabajar con los métodos de gestión de proyectos más comunes o crea un espacio de trabajo desde cero.
     blank_template:
-      label: Cartera en blanco
-      description: Empieza desde cero. Añade manualmente los atributos, miembros y módulos de la cartera.
+      label: Espacio de trabajo en blanco
+      description: Empieza desde cero. Añade manualmente los atributos, miembros y módulos del espacio de trabajo.
   create_program:
     template_heading: Selecciona una plantilla de programa para trabajar con los métodos de gestión de proyectos más comunes o crea un programa desde cero.
     blank_template:
@@ -3067,7 +3067,7 @@ es:
       nextcloud_sso: Inicio de sesión único para almacenamiento en la nube
       one_drive_sharepoint_file_storage: Almacenamiento de archivos OneDrive/SharePoint
       placeholder_users: Usuarios de marcadores de posición
-      portfolio_management: Gestión de carteras
+      portfolio_management: Gestión de espacios de trabajo
       project_creation_wizard: Solicitud de inicio de proyecto
       project_list_sharing: Compartición de la lista de proyectos
       readonly_work_packages: Paquetes de trabajo de solo lectura
@@ -3170,7 +3170,7 @@ es:
         title: Escriba comentarios internos que solo un pequeño grupo pueda ver
         description: " "
       portfolio_management:
-        description: Alinea tus proyectos con tus objetivos estratégicos organizándolos en carteras y programas.
+        description: Alinea tus proyectos con tus objetivos estratégicos organizándolos en espacios de trabajo y programas.
     teaser:
       title:
         one: Queda un día del token de prueba de %{trial_plan}
@@ -4200,7 +4200,7 @@ es:
   label_planning: Planificación
   label_please_login: Por favor, identifíquese
   label_plugins: Extensiones
-  label_portfolio_plural: Carteras
+  label_portfolio_plural: Espacios de trabajo
   label_modules_and_plugins: Módulos y Extensiones
   label_precedes: precede
   label_preferences: Preferencias
@@ -4902,9 +4902,9 @@ es:
     templated_hint: Generado automáticamente a través del tipo %{type}
   portfolio:
     count:
-      zero: 0 carteras
-      one: 1 cartera
-      other: "%{count} carteras"
+      zero: 0 espacios de trabajo
+      one: 1 espacio de trabajo
+      other: "%{count} espacios de trabajo"
   program:
     count:
       zero: 0 programas
@@ -5244,7 +5244,7 @@ es:
   setting_percent_complete_on_status_closed_set_100p_caption: Un paquete de trabajo cerrado se considera completo.
   setting_plain_text_mail: Correo en texto plano (sin HTML)
   setting_protocol: Protocolo
-  setting_project_gantt_query: Diagrama de Gantt de la cartera de proyectos
+  setting_project_gantt_query: Diagrama de Gantt del espacio de trabajo de proyectos
   setting_project_gantt_query_text: Puede modificar la consulta usada para mostrar el diagrama de Gantt en la página de información general del proyecto.
   setting_security_badge_displayed: Mostrar insignia de seguridad
   setting_registration_footer: Pié de página de registro

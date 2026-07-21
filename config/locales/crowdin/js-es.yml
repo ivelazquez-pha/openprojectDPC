@@ -1063,7 +1063,7 @@ es:
       search_placeholder: Buscar…
       types:
         program: Programa
-        portfolio: Cartera
+        portfolio: Espacio de trabajo
     baseline:
       toggle_title: Referencia
       clear: Despejar
