@@ -23,7 +23,7 @@
 es:
   plugin_openproject_documents:
     name: Documentos de OpenProject
-    description: Un plug-in OpenProject para permitir la creación de documentos en proyectos.
+    description: Un plug-in OpenProject para permitir la creación de documentos en entornos.
   attributes:
     collaborative_editing_hocuspocus_url: URL del servidor Hocuspocus
   activerecord:

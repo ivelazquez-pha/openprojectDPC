@@ -16,7 +16,7 @@ es:
       refresh: Refrescar
       refresh_work_package: Refrescar paquete de trabajo
     ifc_models:
-      empty_warning: Este proyecto aún no tiene ningún modelo IFC.
+      empty_warning: Este entorno aún no tiene ningún modelo IFC.
       use_this_link_to_manage: Use este enlace para cargar y administrar sus modelos IFC
       keyboard_input_disabled: El visor no tiene controles de teclado. Haga clic en el visor para controlarlo con el teclado.
       models:

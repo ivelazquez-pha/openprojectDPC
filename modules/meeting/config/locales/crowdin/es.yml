@@ -24,7 +24,7 @@
 es:
   plugin_openproject_meeting:
     name: Reuniones de OpenProject
-    description: Este módulo añade funciones para soportar reuniones de proyecto a OpenProject. Se pueden programar reuniones seleccionando invitados del mismo proyecto para participar en la reunión. Una agenda puede ser creada y enviada a los invitados. Después de la reunión, los asistentes pueden ser seleccionados y las actas pueden ser creadas en base a la agenda. Por último, las actas pueden ser enviadas a todos los asistentes y invitados.
+    description: Este módulo añade funciones para soportar reuniones de entorno a OpenProject. Se pueden programar reuniones seleccionando invitados del mismo entorno para participar en la reunión. Una agenda puede ser creada y enviada a los invitados. Después de la reunión, los asistentes pueden ser seleccionados y las actas pueden ser creadas en base a la agenda. Por último, las actas pueden ser enviadas a todos los asistentes y invitados.
   activerecord:
     attributes:
       meeting:
@@ -41,7 +41,7 @@ es:
         participants_invited: Invitados
         participants_added: 'Participants added:'
         participants_removed: 'Participants removed:'
-        project: Proyecto
+        project: Entorno
         start_date: Fecha
         start_time: Hora de inicio
         start_time_hour: Hora de inicio
@@ -214,9 +214,9 @@ es:
   label_subscribe_icalendar: Suscribirse al calendario
   label_recurring_filter: Filtro recurrente
   caption_meeting_template_select: Seleccione una plantilla para copiar automáticamente sus puntos del orden del día
-  caption_template_project_select: Seleccione el proyecto en el que desea crear esta plantilla de reunión
-  placeholder_meeting_template_select_project_first: Primero selecciona un proyecto
-  placeholder_meeting_template_no_templates_for_project: No hay plantillas disponibles para este proyecto
+  caption_template_project_select: Seleccione el entorno en el que desea crear esta plantilla de reunión
+  placeholder_meeting_template_select_project_first: Primero selecciona un entorno
+  placeholder_meeting_template_no_templates_for_project: No hay plantillas disponibles para este entorno
   meeting:
     participants:
       label:
@@ -231,8 +231,8 @@ es:
         apply_to_upcoming_meetings: Aplicar estos cambios a todas las próximas reuniones de esta serie
       text:
         template: Estos participantes serán invitados automáticamente a todas las reuniones futuras a medida que se vayan creando.
-        manage_participants: Busque y añada miembros del proyecto como participantes en esta reunión.
-        search_for_members: Buscar miembros del proyecto
+        manage_participants: Busque y añada miembros del entorno como participantes en esta reunión.
+        search_for_members: Buscar miembros del entorno
       blankslate:
         heading: Sin participantes
         description: Aún no hay participantes.
@@ -670,10 +670,10 @@ es:
   text_exit_draft_mode_dialog_template_title: "¿Abrir la primera repetición de esta serie de reuniones?"
   text_exit_draft_mode_dialog_template_subtitle: No podrás volver al modo Borrador después de esto.
   label_meeting_template_sharing: Compartiendo
-  label_meeting_template_sharing_none: Solo con este proyecto
-  label_meeting_template_sharing_descendants: Con subproyectos
-  label_meeting_template_sharing_system: Con todos los proyectos
-  text_meeting_template_sharing_description: Esta plantilla se puede compartir con subproyectos u otros proyectos en esta instancia. Solo se copiarán los elementos del orden del día y los archivos adjuntos.
+  label_meeting_template_sharing_none: Solo con este entorno
+  label_meeting_template_sharing_descendants: Con subentornos
+  label_meeting_template_sharing_system: Con todos los entornos
+  text_meeting_template_sharing_description: Esta plantilla se puede compartir con subentornos u otros entornos en esta instancia. Solo se copiarán los elementos del orden del día y los archivos adjuntos.
   text_meeting_not_editable_anymore: Esta reunión ya no es editable.
   text_meeting_not_present_anymore: Esta reunión ha sido eliminada. Por favor, seleccione otra reunión.
   label_add_work_package_to_meeting_dialog_title: Seleccionar reunión

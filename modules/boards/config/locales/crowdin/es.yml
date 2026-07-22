@@ -23,7 +23,7 @@ es:
       assignee: Asignado a
       status: Kanban
       version: Versión
-      subproject: Subproyecto
+      subproject: Subentorno
       subtasks: Principal-secundario
       basic: Básico
     board_type_descriptions:
@@ -39,7 +39,7 @@ es:
       version: 'Tablero con columnas automatizadas basadas en el atributo de la versión. Ideal para planificar el desarrollo de productos.
 
         '
-      subproject: 'Tablero con columnas automáticas para subproyectos. Al arrastrar paquetes de trabajo a otras listas, se actualizan los (sub)proyectos en consecuencia.
+      subproject: 'Tablero con columnas automáticas para subentornos. Al arrastrar paquetes de trabajo a otras listas, se actualizan los (sub)entornos en consecuencia.
 
         '
       subtasks: 'Tablero con columnas automáticas para subelementos. Al arrastrar paquetes de trabajo a otras listas, se actualizan los elementos principales en consecuencia.

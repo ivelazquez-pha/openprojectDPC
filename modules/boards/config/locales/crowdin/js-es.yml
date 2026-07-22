@@ -45,7 +45,7 @@ es:
         action_text: 'Un tablero con listas filtradas en el atributo %{attribute}. Al mover paquetes de trabajo a otras listas, se actualizará su atributo.
 
           '
-        action_text_subprojects: 'Tablero con columnas automáticas para subproyectos. Al arrastrar paquetes de trabajo a otras listas, se actualizan los (sub)proyectos en consecuencia.
+        action_text_subprojects: 'Tablero con columnas automáticas para subentornos. Al arrastrar paquetes de trabajo a otras listas, se actualizan los (sub)entornos en consecuencia.
 
           '
         action_text_subtasks: 'Tablero con columnas automáticas para subelementos. Al arrastrar paquetes de trabajo a otras listas, se actualizan los elementos principales en consecuencia.
@@ -64,13 +64,13 @@ es:
           assignee: asignado
           status: estado
           version: versión
-          subproject: Subproyecto
+          subproject: Subentorno
           subtasks: principal-secundaria
         board_type_title:
           assignee: Asignado a
           status: Estado
           version: Versión
-          subproject: Subproyecto
+          subproject: Subentorno
           subtasks: Padre-hijo
           basic: Básico
         select_attribute: Atributo de acción
@@ -79,15 +79,15 @@ es:
           assignee: Seleccione el usuario que quiera añadir como nueva lista de usuarios asignados
           status: Seleccione el estado que quiera añadir como nueva lista
           version: Seleccione la versión que quiera añadir como nueva lista
-          subproject: Seleccione el subproyecto que quiera añadir como nueva lista
+          subproject: Seleccione el subentorno que quiera añadir como nueva lista
           subtasks: Seleccione el paquete de trabajo que quiera añadir como nueva lista
         warning:
           status: |
             No hay estados disponibles actualmente. <br>
             Puede que no haya ninguno, o bien ya se añadieron todos al tablero.
           assignee: No hay ningún miembro que coincida con el valor de filtro. <br>
-          no_member: El proyecto no tiene actualmente ningún miembro que pueda añadirse. <br>
-          add_members: <a href="%{link}">Añada un miembro a este proyecto</a> para volver a seleccionar usuarios.
+          no_member: El entorno no tiene actualmente ningún miembro que pueda añadirse. <br>
+          add_members: <a href="%{link}">Añada un miembro a este entorno</a> para volver a seleccionar usuarios.
       configuration_modal:
         title: Configurar este tablero
         display_settings:

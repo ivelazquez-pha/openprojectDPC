@@ -32,8 +32,8 @@ es:
         subprojects:
           title: Subelementos
         project_favorites:
-          title: Proyectos favoritos
-          no_results: Actualmente no tiene ningún proyecto favorito. Haga clic en el icono de estrella en el panel de control del proyecto para añadirlo a sus favoritos.
+          title: Entornos favoritos
+          no_results: Actualmente no tiene ningún entorno favorito. Haga clic en el icono de estrella en el panel de control del entorno para añadirlo a sus favoritos.
         time_entries_current_user:
           title: Mi tiempo invertido
           displayed_days: 'Días mostrados en el widget:'

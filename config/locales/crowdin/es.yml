@@ -24,7 +24,7 @@ es:
   no_results_title_text: No hay nada que mostrar.
   activities:
     index:
-      no_results_title_text: No se ha producido ninguna actividad en el proyecto en este período de tiempo.
+      no_results_title_text: No se ha producido ninguna actividad en el entorno en este período de tiempo.
     work_packages:
       activity_tab:
         no_results_title_text: No hay actividad que mostrar
@@ -161,7 +161,7 @@ es:
         api_error: La API de Jira ha devuelto el estado de error %{status}
         401_error: La API de Jira ha devuelto un error 401. Es posible que su token de autenticación haya caducado o que no disponga de los permisos necesarios. Asegúrese de que el token pertenece a un administrador de Jira.
       columns:
-        projects: Proyectos
+        projects: Entornos
         last_change: Última modificación
         added: Añadido
         label_ago: Hace %{amount}
@@ -170,7 +170,7 @@ es:
         history: Historial
         remove_error: No se puede eliminar una importación de Jira mientras se está ejecutando
         import_blocked_error: Actualmente hay otra importación de Jira en curso o pendiente de revisión. Complétela o revierta antes de iniciar una nueva importación.
-        project_identifier_taken: 'Estás intentando importar un proyecto con un identificador que ya está en uso: %{taken_identifier}. Actualiza el identificador del proyecto en Jira y, a continuación, haz clic en «Reintentar».'
+        project_identifier_taken: 'Estás intentando importar un entorno con un identificador que ya está en uso: %{taken_identifier}. Actualiza el identificador del entorno en Jira y, a continuación, haz clic en «Reintentar».'
         blank:
           title: Aún no se han configurado ejecuciones de importación
           description: Cree una ejecución de importación para comenzar a importar información de esta instancia de Jira
@@ -185,8 +185,8 @@ es:
           instance_meta_done: Metadatos obtenidos
           import_scope: Seleccionar ámbito
           configuring: Seleccionar ámbito
-          projects_meta_fetching: Obteniendo datos del proyecto
-          projects_meta_error: Error al obtener los datos del proyecto
+          projects_meta_fetching: Obteniendo datos del entorno
+          projects_meta_error: Error al obtener los datos del entorno
           projects_meta_done: Información recopilada
           importing: En curso
           import_error: Error durante la importación
@@ -203,7 +203,7 @@ es:
           button_retry: Reintentar
           parts:
             projects:
-              one: 1 proyecto
+              one: 1 entorno
               other: "%{count} projectos"
             issues:
               one: 1 incidencia
@@ -250,21 +250,21 @@ es:
               label_coming_soon: Próximamente (2T 2026)
               label_coming_later: Más tarde
               label_available_server_data: Datos disponibles en %{server_info}
-              button_select_projects: Seleccionar proyectos para importar
+              button_select_projects: Seleccionar entornos para importar
               button_continue: Continuar
-              label_import: Seleccione los proyectos que desea importar.
-              button_select: Seleccionar proyectos
+              label_import: Seleccione los entornos que desea importar.
+              button_select: Seleccionar entornos
               label_selected_data: Datos seleccionados para la importación
               label_progress: Obteniendo datos de Jira...
               elements:
                 relations: Relaciones entre incidencias
-                project_ids: Identificadores de proyecto
+                project_ids: Identificadores de entorno
                 issue_ids: Identificadores de incidencias
                 sprints: Asignaciones de sprint
-                workflows: Flujos de trabajo a nivel de proyecto
+                workflows: Flujos de trabajo a nivel de entorno
                 schemes: Esquemas
                 permissions: Permisos
-                projects: Proyectos
+                projects: Entornos
                 issues: Incidencias
                 issue_details: Descripción de la incidencia, historial, comentarios y archivos adjuntos
                 custom_fields: Un subconjunto de campos personalizados
@@ -274,7 +274,7 @@ es:
               caption: Revise la configuración de importación y comience la importación
               caption_done: Completado
               label_available_data: Datos a importar
-              label_users_import_explanation: Usuarios que participan en los proyectos seleccionados (miembros de grupos incluidos)
+              label_users_import_explanation: Usuarios que participan en los entornos seleccionados (miembros de grupos incluidos)
               button_start: Iniciar importación
               description: Está a punto de iniciar una importación con la siguiente configuración.
               label_progress: Importando...
@@ -304,7 +304,7 @@ es:
             confirm: Entiendo y tengo una copia de seguridad
           revert_dialog:
             title: "¿Revertir esta importación de forma permanente?"
-            description: Esto eliminará todos los objetos importados (incluidos proyectos completos).
+            description: Esto eliminará todos los objetos importados (incluidos entornos completos).
             confirm: Entiendo que esta reversión eliminará los datos de forma permanente
           finalize_dialog:
             title: "¿Aprobar esta importación?"
@@ -312,7 +312,7 @@ es:
             confirm: Entiendo que esta acción no se puede deshacer
             confirm_button: Entendido
           select_projects:
-            title: Seleccione los proyectos
+            title: Seleccione los entornos
     mcp_configurations:
       index:
         description: El protocolo de contexto de modelo (MCP, por sus siglas en inglés) permite a los agentes de IA proporcionar a sus usuarios herramientas y recursos expuestos por esta instancia de OpenProject. Esta función aún se encuentra en fase beta.
@@ -398,17 +398,17 @@ es:
         title: Tabla de tokens de acceso
     settings:
       new_project:
-        project_creation: Creación de proyecto
-        notification_text_default: "<p>Hola,</p> <p>Se ha creado un nuevo proyecto: projectValue:name</p> <p>Muchas gracias</p>\n"
+        project_creation: Creación de entorno
+        notification_text_default: "<p>Hola,</p> <p>Se ha creado un nuevo entorno: projectValue:name</p> <p>Muchas gracias</p>\n"
       work_packages_identifier:
         page_header:
-          description: Elige entre los ID numéricos clásicos de los paquetes de trabajo o los ID semánticos específicos del proyecto, que añaden el identificador del proyecto al principio del ID del paquete de trabajo.
+          description: Elige entre los ID numéricos clásicos de los paquetes de trabajo o los ID semánticos específicos del entorno, que añaden el identificador del entorno al principio del ID del paquete de trabajo.
         banner:
-          existing_identifiers_notice: 'Los identificadores actuales de %{project_count} proyectos no cumplen los requisitos para ser identificadores semánticos basados en proyectos. OpenProject puede actualizarlos automáticamente para que sean válidos, tal y como se muestra en los ejemplos siguientes. Haz clic en «Corregir automáticamente y guardar» para actualizar los identificadores de todos los proyectos de esta manera y habilitar los identificadores semánticos basados en proyectos.
+          existing_identifiers_notice: 'Los identificadores actuales de %{project_count} entornos no cumplen los requisitos para ser identificadores semánticos basados en entornos. OpenProject puede actualizarlos automáticamente para que sean válidos, tal y como se muestra en los ejemplos siguientes. Haz clic en «Corregir automáticamente y guardar» para actualizar los identificadores de todos los entornos de esta manera y habilitar los identificadores semánticos basados en entornos.
 
             '
         box_header:
-          label_project: Proyecto
+          label_project: Entorno
           label_previous_identifier: Identificador anterior
           label_autofixed_suggestion: Identificador futuro
           label_example_work_package_id: Ejemplo de ID del paquete de trabajo
@@ -418,26 +418,26 @@ es:
           error_does_not_start_with_letter: Debe comenzar con una letra mayúscula
           error_special_characters: No se permiten caracteres especiales
           error_not_fully_uppercased: Debe estar en mayúsculas
-          error_in_use: Ya está en uso como identificador activo de otro proyecto
-          error_used_in_past: Reservado por el historial de identificadores de otro proyecto
+          error_in_use: Ya está en uso como identificador activo de otro entorno
+          error_used_in_past: Reservado por el historial de identificadores de otro entorno
           error_reserved_by_system: Reservado como palabra clave del sistema
           error_unknown: Necesita revisión manual
           remaining_projects:
-            one: "... 1 proyecto más"
-            other: "... %{count} proyectos más"
+            one: "... 1 entorno más"
+            other: "... %{count} entornos más"
         button_autofix: Corregir automáticamente y guardar
         dialog:
           title: Cambiar los identificadores de los paquetes de trabajo
-          heading: "¿Activar los ID de paquetes de trabajo basados en proyectos?"
-          description: 'Esto cambiará los ID de todos los paquetes de trabajo de todos los proyectos de esta instancia. Los identificadores y las URL anteriores seguirán redirigiendo correctamente. Este cambio tardará un tiempo en completarse.
+          heading: "¿Activar los ID de paquetes de trabajo basados en entornos?"
+          description: 'Esto cambiará los ID de todos los paquetes de trabajo de todos los entornos de esta instancia. Los identificadores y las URL anteriores seguirán redirigiendo correctamente. Este cambio tardará un tiempo en completarse.
 
             '
           confirm_button: Cambiar identificadores
           checkbox_label: Entiendo que esto cambiará de forma permanente todos los ID de los paquetes de trabajo
         success_banner: Se ha actualizado correctamente el formato del identificador del paquete de trabajo.
         in_progress:
-          converting_banner_message: Actualmente se están convirtiendo los identificadores de proyectos a formato semántico. Esto puede llevar algún tiempo.
-          reverting_banner_message: Actualmente se están volviendo a establecer los identificadores de proyectos en su formato clásico. Esto puede llevar algún tiempo.
+          converting_banner_message: Actualmente se están convirtiendo los identificadores de entornos a formato semántico. Esto puede llevar algún tiempo.
+          reverting_banner_message: Actualmente se están volviendo a establecer los identificadores de entornos en su formato clásico. Esto puede llevar algún tiempo.
     workflows:
       tabs:
         default_transitions: Transiciones predeterminadas
@@ -514,16 +514,16 @@ es:
       name: Nombre arbitrario de la conexión LDAP
       host: Nombre del host LDAP o dirección IP
       login_map: La clave de atributo en LDAP que se utiliza para identificar el inicio de sesión único del usuario. Por lo general, esto será `uid` o`samAccountName`.
-      generic_map: La clave de atributo en LDAP que está asignada al proyecto abierto `%{attribute}` atributo
-      admin_map_html: 'Opcional: la clave de atributo en LDAP que <strong> si esta presente </strong> marca al usuario del proyecto abierto como administrador. Deje en blanco cuando tenga dudas.'
+      generic_map: La clave de atributo en LDAP que está asignada al entorno abierto `%{attribute}` atributo
+      admin_map_html: 'Opcional: la clave de atributo en LDAP que <strong> si esta presente </strong> marca al usuario del entorno abierto como administrador. Deje en blanco cuando tenga dudas.'
       system_user_dn_html: |
         Introduzca el ND del usuario del sistema utilizado para el acceso de solo lectura.
         <br>
         Ejemplo: uid=openproject,ou=system,dc=ejemplo,dc=com
       system_user_password: Ingrese la contraseña de enlace del usuario del sistema
       base_dn: |
-        Ingrese el DN base del subárbol en LDAP que desea que el proyecto abierto busque para usuarios y grupos.
-        El proyecto abierto filtrará los nombres de usuario proporcionados solo en este subárbol.
+        Ingrese el DN base del subárbol en LDAP que desea que el entorno abierto busque para usuarios y grupos.
+        El entorno abierto filtrará los nombres de usuario proporcionados solo en este subárbol.
         Ejemplo ou=users,dc=example,dc=com
       filter_string: |
         Permite añadir un filtro RFC4515 opcional para aplicar los resultados mostrados de los usuarios filtrados en LDAP.
@@ -532,17 +532,17 @@ es:
         OpenProject siempre filtrará el atributo de inicio de sesión proporcionado por el usuario para identificar el registro. Si especifica un filtro aquí,
         se concatenará con un operador AND. De forma predeterminada, se usará un valor de comodín (objectClass=*) como filtro.
       onthefly_register: |
-        Si marca esta casilla, el proyecto abierto creará automáticamente nuevos usuarios a partir de sus entradas LDAP cuando se autentican por primera vez con el proyecto abierto.
-        ¡Deje esto sin marcar para permitir que solo las cuentas existentes en el proyecto abierto se autentiquen a través de LDAP!
+        Si marca esta casilla, el entorno abierto creará automáticamente nuevos usuarios a partir de sus entradas LDAP cuando se autentican por primera vez con el entorno abierto.
+        ¡Deje esto sin marcar para permitir que solo las cuentas existentes en el entorno abierto se autentiquen a través de LDAP!
     connection_encryption: Cifrado de conexión
     encryption_details: Opciones LDAPS / STARTTLS
     system_account: Cuenta del sistema
     system_account_legend: |
-      El proyecto abierto requiere acceso de solo lectura a través de una cuenta del sistema para buscar usuarios y grupos en su árbol LDAP.
+      El entorno abierto requiere acceso de solo lectura a través de una cuenta del sistema para buscar usuarios y grupos en su árbol LDAP.
       Especifique las credenciales de enlace para ese usuario del sistema en la siguiente sección.
     ldap_details: LDAP detalles
     user_settings: Mapeo de atributos
-    user_settings_legend: 'Los siguientes campos están relacionados con cómo se crean los usuarios en el proyecto abierto a partir de entradas LDAP y qué atributos LDAP se utilizan para definir los atributos de un usuario del proyecto abierto (asignación de atributos).
+    user_settings_legend: 'Los siguientes campos están relacionados con cómo se crean los usuarios en el entorno abierto a partir de entradas LDAP y qué atributos LDAP se utilizan para definir los atributos de un usuario del entorno abierto (asignación de atributos).
 
       '
     tls_mode:
@@ -594,8 +594,8 @@ es:
     admin:
       custom_field_projects:
         is_for_all_blank_slate:
-          heading: Para todos los proyectos
-          description: Este campo personalizado está activado en todos los proyectos, ya que la opción «Para todos los proyectos» está marcada. No puede desactivarse para proyectos individuales.
+          heading: Para todos los entornos
+          description: Este campo personalizado está activado en todos los entornos, ya que la opción «Para todos los entornos» está marcada. No puede desactivarse para entornos individuales.
       items:
         actions: Acciones del elemento
         blankslate:
@@ -614,7 +614,7 @@ es:
           short: Nombre corto
           weight: Peso
       notice:
-        remember_items_and_projects: Recuerde configurar los artículos y proyectos en las pestañas respectivas para este campo personalizado.
+        remember_items_and_projects: Recuerde configurar los artículos y entornos en las pestañas respectivas para este campo personalizado.
       hierarchy:
         subitems:
           zero: ningún subelemento
@@ -622,11 +622,11 @@ es:
           other: "%{count} subelementos"
       role_assignment:
         title: Asignación de roles
-        description: Puede conceder automáticamente un determinado rol de proyecto a cualquier usuario asignado a este atributo de proyecto, independientemente del rol original de ese usuario en ese proyecto.
-        warning: En función de la función seleccionada a continuación, el usuario asignado a este atributo del proyecto podría obtener muchos más permisos de los que tenía anteriormente, incluida la capacidad de añadir nuevos miembros y elevar su rol.
-        role_field_label: Rol de proyecto
-        role_field_caption: Este rol de proyecto se concederá automáticamente a cualquier usuario asignado a este atributo de proyecto
-        review_hint: 'Hay %{user_count} que ya tienen asignado este atributo en varios proyectos. Podrían obtener permisos adicionales y ser añadidos a proyectos a los que antes no tenían acceso.
+        description: Puede conceder automáticamente un determinado rol de entorno a cualquier usuario asignado a este atributo de entorno, independientemente del rol original de ese usuario en ese entorno.
+        warning: En función de la función seleccionada a continuación, el usuario asignado a este atributo del entorno podría obtener muchos más permisos de los que tenía anteriormente, incluida la capacidad de añadir nuevos miembros y elevar su rol.
+        role_field_label: Rol de entorno
+        role_field_caption: Este rol de entorno se concederá automáticamente a cualquier usuario asignado a este atributo de entorno
+        review_hint: 'Hay %{user_count} que ya tienen asignado este atributo en varios entornos. Podrían obtener permisos adicionales y ser añadidos a entornos a los que antes no tenían acceso.
 
           '
         review_button: Revisar usuarios y permisos
@@ -640,38 +640,38 @@ es:
             gain_role: Recibirá el rol «%{new_role}»
             lose_role: Perderá el rol «%{old_role}»
             no_change: Sin cambios
-    text_add_new_custom_field: 'Para agregar nuevos campos personalizados a un proyecto, primero debe crearlos, y luego añadirlos a este proyecto.
+    text_add_new_custom_field: 'Para agregar nuevos campos personalizados a un entorno, primero debe crearlos, y luego añadirlos a este entorno.
 
       '
     is_enabled_globally: Está activado a nivel global
-    enabled_in_project: Activado en el proyecto
+    enabled_in_project: Activado en el entorno
     contained_in_type: Incluido en el tipo
     confirm_destroy_option: Al eliminar una opción, se eliminarán todas las repeticiones (por ejemplo, en paquetes de trabajo). ¿Está seguro de que desea eliminarla?
     reorder_alphabetical: Ordenar los valores alfabéticamente
     reorder_confirmation: 'Advertencia: Se perderá el orden actual de los valores disponibles, así como todos los valores no guardados. ¿Seguro que desea continuar?'
-    placeholder_version_select: Primero debe seleccionar el paquete de trabajo o el proyecto
+    placeholder_version_select: Primero debe seleccionar el paquete de trabajo o el entorno
     calculated_field_not_editable: Atributo no editable. Este valor se calcula automáticamente.
     no_role_assigment: Sin asignación de roles
     instructions:
       is_required:
         all: Marca el campo personalizado como obligatorio. De este modo, será obligatorio rellenar el campo al crear nuevos recursos. Los recursos existentes no requerirán un valor al actualizarse.
-        project: Los atributos obligatorios deben ser completados por el usuario al crear el proyecto si el campo está activo (configurado como «Para todos los proyectos» o copiado de un proyecto/plantilla en el que el campo está activo). Los proyectos existentes no requerirán un valor al actualizarse.
+        project: Los atributos obligatorios deben ser completados por el usuario al crear el entorno si el campo está activo (configurado como «Para todos los entornos» o copiado de un entorno/plantilla en el que el campo está activo). Los entornos existentes no requerirán un valor al actualizarse.
       is_for_all:
-        all: Marque el campo personalizado como disponible en todos los proyectos existentes y nuevos.
-        project: Marque el atributo como disponible en todos los proyectos existentes y nuevos.
+        all: Marque el campo personalizado como disponible en todos los entornos existentes y nuevos.
+        project: Marque el atributo como disponible en todos los entornos existentes y nuevos.
       multi_select:
         all: Permite al usuario asignar varios valores a este campo personalizado.
         project: Permite al usuario asignar varios valores a este atributo.
       searchable:
         all: Incluye los valores de los campos al usar la funcionalidad de búsqueda global.
-        project: Marque esta casilla para que este atributo esté disponible como filtro en las listas de proyectos.
+        project: Marque esta casilla para que este atributo esté disponible como filtro en las listas de entornos.
       editable:
         all: Permitir que el campo sea editable por los propios usuarios.
       admin_only:
         all: Marque para que este campo personalizado solo sea visible para los administradores. Los usuarios sin derechos de administrador no podrán verlo ni editarlo.
         project: Marque esta casilla para que este atributo solo sea visible para los administradores. Los usuarios sin derechos de administrador no podrán verlo ni editarlo.
       is_filter:
-        all: 'Permitir que el campo personalizado se utilice como filtro en las vistas de paquetes de trabajo. Tenga en cuenta que solo ''Para todos los proyectos'' seleccionados, el campo personalizado se mostrará en vistas globales.
+        all: 'Permitir que el campo personalizado se utilice como filtro en las vistas de paquetes de trabajo. Tenga en cuenta que solo ''Para todos los entornos'' seleccionados, el campo personalizado se mostrará en vistas globales.
 
           '
       formula:
@@ -683,7 +683,7 @@ es:
         all: 0 significa sin restricción
         project: 0 significa sin restricción
       has_comment:
-        project: Permite al usuario añadir un comentario relacionado con el atributo del proyecto al seleccionar el valor en la descripción general del proyecto.
+        project: Permite al usuario añadir un comentario relacionado con el atributo del entorno al seleccionar el valor en la descripción general del entorno.
     tab:
       no_results_title_text: Actualmente no hay campos personalizados.
       no_results_content_text: Crear un nuevo campo personalizado
@@ -692,9 +692,9 @@ es:
       title: Error en el valor calculado
     errors:
       unknown: Se ha producido un error desconocido. Revise la fórmula de este Valor calculado.
-      mathematical: La fórmula matemática da lugar a un error. Revisa el atributo de cálculo del proyecto y vuelve a intentarlo.
+      mathematical: La fórmula matemática da lugar a un error. Revisa el atributo de cálculo del entorno y vuelve a intentarlo.
       missing_value: El atributo «%{custom_field_name}» es obligatorio para este Valor calculado, pero está vacío.
-      disabled_value: El atributo «%{custom_field_name}» es obligatorio para este Valor calculado, pero está desactivado para el proyecto.
+      disabled_value: El atributo «%{custom_field_name}» es obligatorio para este Valor calculado, pero está desactivado para el entorno.
   concatenation:
     single: o bien
   danger_dialog:
@@ -794,9 +794,9 @@ es:
       blueprint: Plano de patrón
   global_search:
     title:
-      all_projects: Buscar «%{search_term}» en todos los proyectos
+      all_projects: Buscar «%{search_term}» en todos los entornos
       current_project: Buscar «%{search_term}» en %{project_name}
-      project_and_subprojects: Buscar «%{search_term}» en %{project_name} y en todos los subproyectos
+      project_and_subprojects: Buscar «%{search_term}» en %{project_name} y en todos los subentornos
     placeholder: Buscar en %{app_title}
     overwritten_tabs:
       all: Todos
@@ -806,7 +806,7 @@ es:
     edit:
       synchronized_groups: Grupos sincronizados
     index:
-      description: Al agrupar a los usuarios, puede añadirlos como miembros a los mismos proyectos o asignarles los mismos roles globales.
+      description: Al agrupar a los usuarios, puede añadirlos como miembros a los mismos entornos o asignarles los mismos roles globales.
     table_component:
       blank_slate:
         description: Puede definir grupos de usuarios con nombre y permisos específicos.
@@ -815,7 +815,7 @@ es:
     users:
       no_results_title_text: Actualmente no hay usuarios que formen parte de este grupo.
     memberships:
-      no_results_title_text: Actualmente no hay proyectos que formen parte de este grupo.
+      no_results_title_text: Actualmente no hay entornos que formen parte de este grupo.
     synchronized_groups:
       blankslate:
         action: Ajustes de autenticación
@@ -828,20 +828,20 @@ es:
   portfolios:
     index:
       search:
-        label: Filtro de nombre de cartera
-        placeholder: Buscar carteras
+        label: Filtro de nombre de espacio de trabajo
+        placeholder: Buscar espacios de trabajo
       sub_items_html:
         one: "<strong>1</strong> subelemento"
         other: "<strong>%{count}</strong> subelementos"
     lists:
-      active: Carteras activas
-      my: Mis carteras
-      favorited: Carteras favoritas
-      archived: Carteras archivadas
+      active: Espacios de trabajo activos
+      my: Mis espacios de trabajo
+      favorited: Espacios de trabajo favoritos
+      archived: Espacios de trabajo archivados
   projects:
     copy:
-      members: Miembros del proyecto
-      overviews: Visión general del proyecto
+      members: Miembros del entorno
+      overviews: Visión general del entorno
       queries: 'Paquetes de trabajo: vistas guardadas'
       wiki_page_attachments: 'Páginas wiki: archivos adjuntos'
       work_package_attachments: 'Paquetes de trabajo: archivos adjuntos'
@@ -849,71 +849,71 @@ es:
       work_package_file_links: 'Paquetes de trabajo: enlaces de archivos'
       work_package_shares: 'Paquetes de trabajo: comparticiones'
     create:
-      notification_email_subject: Se ha creado el proyecto «%{project_name}»
+      notification_email_subject: Se ha creado el entorno «%{project_name}»
       complete_wizard_link: Completar el %{artefact_name}
     delete:
       scheduled: Se ha programado la eliminación y se ejecutará en segundo plano. Recibirá una notificación con el resultado.
-      schedule_failed: 'El proyecto no puede ser eliminado: %{errors}'
-      failed: Se ha producido un error al eliminar el proyecto «%{name}»
-      failed_text: La solicitud para eliminar el proyecto «%{name}» ha fallado. El proyecto se ha archivado.
-      completed: Eliminación del proyecto «%{name}» completada
-      completed_text: La petición para borrar el proyecto '%{name}' se ha completado.
-      completed_text_children: 'Adicionalmente, los siguientes subproyectos han sido eliminados:'
+      schedule_failed: 'El entorno no puede ser eliminado: %{errors}'
+      failed: Se ha producido un error al eliminar el entorno «%{name}»
+      failed_text: La solicitud para eliminar el entorno «%{name}» ha fallado. El entorno se ha archivado.
+      completed: Eliminación del entorno «%{name}» completada
+      completed_text: La petición para borrar el entorno '%{name}' se ha completado.
+      completed_text_children: 'Adicionalmente, los siguientes subentornos han sido eliminados:'
     index:
       open_as_gantt: Abrir como diagrama de Gantt
-      no_results_title_text: No hay proyectos por el momento
-      no_results_content_text: Crear un nuevo proyecto
+      no_results_title_text: No hay entornos por el momento
+      no_results_content_text: Crear un nuevo entorno
       search:
-        label: Filtro de nombre de proyecto
-        placeholder: Buscar por nombre de proyecto
+        label: Filtro de nombre de entorno
+        placeholder: Buscar por nombre de entorno
     lists:
-      active: Proyectos activos
-      my: Mis proyectos
-      favorited: Proyectos favoritos
-      archived: Proyectos archivados
-      shared: Listas de proyectos compartidas
-      my_lists: Mis listas de proyectos
+      active: Entornos activos
+      my: Mis entornos
+      favorited: Entornos favoritos
+      archived: Entornos archivados
+      shared: Listas de entornos compartidas
+      my_lists: Mis listas de entornos
       new:
-        placeholder: Nueva lista de proyectos
+        placeholder: Nueva lista de entornos
       delete_modal:
-        title: Eliminar lista de proyectos
-        heading: "¿Eliminar esta lista de proyectos?"
-        text: Esta acción no eliminará ningún proyecto que contenga la lista. ¿Seguro que desea eliminar esta lista de proyectos?
+        title: Eliminar lista de entornos
+        heading: "¿Eliminar esta lista de entornos?"
+        text: Esta acción no eliminará ningún entorno que contenga la lista. ¿Seguro que desea eliminar esta lista de entornos?
     settings:
       header_details: Detalles básicos
       header_status: Estado
-      header_relations: Relaciones del proyecto
+      header_relations: Relaciones del entorno
       button_update_details: Actualizar detalles
       button_update_status_description: Actualizar descripción del estado
-      button_update_parent_project: Actualizar proyecto principal
-      public_warning: 'Este proyecto es público. Cualquier persona que tenga acceso a esta instancia podrá ver e interactuar con este proyecto en función de su rol y los permisos asociados. Los subproyectos no se ven afectados y tienen sus propios ajustes.
+      button_update_parent_project: Actualizar entorno principal
+      public_warning: 'Este entorno es público. Cualquier persona que tenga acceso a esta instancia podrá ver e interactuar con este entorno en función de su rol y los permisos asociados. Los subentornos no se ven afectados y tienen sus propios ajustes.
 
         '
       public_confirmation:
         checkbox: Entiendo que esto hará público el contenido que antes era privado
-        title: "¿Hacer público este proyecto?"
-        description: 'Cualquier persona que tenga acceso a esta instancia podrá ver e interactuar con este proyecto en función de su rol y configuración de autenticación. Los subproyectos no se ven afectados y tienen su propios ajustes.
+        title: "¿Hacer público este entorno?"
+        description: 'Cualquier persona que tenga acceso a esta instancia podrá ver e interactuar con este entorno en función de su rol y configuración de autenticación. Los subentornos no se ven afectados y tienen su propios ajustes.
 
           '
       private_confirmation:
         checkbox: Entiendo que esto hará que el contenido que antes era público pase a ser privado.
-        title: "¿Hacer privado este proyecto?"
-        description: 'El proyecto solo será visible para los miembros del proyecto en función de su rol y los permisos asociados. Los subproyectos no se ven afectados y tienen sus propios ajustes.
+        title: "¿Hacer privado este entorno?"
+        description: 'El entorno solo será visible para los miembros del entorno en función de su rol y los permisos asociados. Los subentornos no se ven afectados y tienen sus propios ajustes.
 
           '
       change_identifier: Cambiar identificador
-      change_identifier_dialog_title: Cambiar el identificador del proyecto
+      change_identifier_dialog_title: Cambiar el identificador del entorno
       change_identifier_format_hint_semantic: Solo mayúsculas (A–Z), números o guiones bajos. Máximo 10 caracteres. Debe empezar por una letra.
       change_identifier_format_hint_legacy: Solo letras minúsculas (a–z), números, guiones o guiones bajos.
-      change_identifier_warning: 'Esto cambiará de forma permanente los identificadores y las URL de todos los paquetes de trabajo de este proyecto. No obstante, los identificadores y las URL anteriores seguirán redirigiendo correctamente.
+      change_identifier_warning: 'Esto cambiará de forma permanente los identificadores y las URL de todos los paquetes de trabajo de este entorno. No obstante, los identificadores y las URL anteriores seguirán redirigiendo correctamente.
 
         '
       subitems:
         template_section: 'Selecciona las plantillas que se utilizarán al crear nuevos subelementos.
 
           '
-        project_template_label: Plantilla de proyectos
-        project_template_caption: Selecciona un proyecto de plantilla que se utilizará por defecto para los nuevos subelementos de este tipo.
+        project_template_label: Plantilla de entornos
+        project_template_caption: Selecciona un entorno de plantilla que se utilizará por defecto para los nuevos subelementos de este tipo.
         program_template_label: Plantilla de programas
         program_template_caption: Selecciona un programa de plantilla que se utilizará por defecto para los nuevos subelementos de este tipo.
         no_template: Sin plantilla predefinida
@@ -923,7 +923,7 @@ es:
         enable_failed: Error al activar el modo de plantilla.
         members:
           excluded_roles_label: Roles a excluir cuando se aplica la plantilla
-          excluded_roles_caption: 'Al crear un nuevo proyecto a partir de esta plantilla, se omitirán los roles seleccionados anteriormente. Esto te permite seleccionar qué miembros se excluirán en función de sus roles en el proyecto. Los usuarios podrán acceder a la plantilla para verla sin que se les conceda acceso a los nuevos proyectos creados a partir de ella.
+          excluded_roles_caption: 'Al crear un nuevo entorno a partir de esta plantilla, se omitirán los roles seleccionados anteriormente. Esto te permite seleccionar qué miembros se excluirán en función de sus roles en el entorno. Los usuarios podrán acceder a la plantilla para verla sin que se les conceda acceso a los nuevos entornos creados a partir de ella.
 
             '
       actions:
@@ -932,7 +932,7 @@ es:
       activities:
         no_results_title_text: Actualmente no hay actividades disponibles.
       forums:
-        no_results_title_text: Actualmente no hay foros para el proyecto.
+        no_results_title_text: Actualmente no hay foros para el entorno.
         no_results_content_text: Crear un nuevo foro
       categories:
         no_results_title_text: Actualmente no hay categorias de paquetes de trabajo.
@@ -941,48 +941,48 @@ es:
         no_results_title_text: Actualmente no hay campos personalizados disponibles.
       life_cycle:
         header:
-          title: Ciclo de vida del proyecto
-          description_html: Las fases activas del proyecto definen el ciclo de vida de este proyecto y se definen en los <a href=%{admin_settings_url} target="_blank">ajustes de administración</a>. Las fases habilitadas se mostrarán en su <a href=%{overview_url} target="_blank">resumen del proyecto</a>.
+          title: Ciclo de vida del entorno
+          description_html: Las fases activas del entorno definen el ciclo de vida de este entorno y se definen en los <a href=%{admin_settings_url} target="_blank">ajustes de administración</a>. Las fases habilitadas se mostrarán en su <a href=%{overview_url} target="_blank">resumen del entorno</a>.
         non_defined: Actualmente no hay fases definidas.
         section_header: Fases
         step:
-          use_in_project: Usar %{step} en este proyecto
+          use_in_project: Usar %{step} en este entorno
         filter:
-          label: Buscar fase del proyecto
+          label: Buscar fase del entorno
       project_custom_fields:
         header:
-          title: Atributos del proyecto
-          description_html: 'Estos atributos del proyecto se mostrarán en su <a href=%{overview_url} target="_blank">página de resumen del proyecto</a> bajo sus respectivas secciones. Puede activar o desactivar atributos individuales. Los atributos y secciones del proyecto son definidos en los <a href=%{admin_settings_url} target="_blank">ajustes de administración</a> por el administrador de la instancia. '
+          title: Atributos del entorno
+          description_html: 'Estos atributos del entorno se mostrarán en su <a href=%{overview_url} target="_blank">página de resumen del entorno</a> bajo sus respectivas secciones. Puede activar o desactivar atributos individuales. Los atributos y secciones del entorno son definidos en los <a href=%{admin_settings_url} target="_blank">ajustes de administración</a> por el administrador de la instancia. '
         filter:
-          label: Buscar atributo de proyecto
+          label: Buscar atributo de entorno
         actions:
-          label_enable_single: Activo en este proyecto, pulse para desactivarlo
-          label_disable_single: Inactivo en este proyecto, pulse para activarlo
-          remove_from_project: Quitar del proyecto
+          label_enable_single: Activo en este entorno, pulse para desactivarlo
+          label_disable_single: Inactivo en este entorno, pulse para activarlo
+          remove_from_project: Quitar del entorno
         is_for_all_blank_slate:
-          heading: Para todos los proyectos
-          description: Este atributo de proyecto está activado en todos los proyectos, ya que la opción «Para todos los proyectos» está marcada. No puede desactivarse para proyectos individuales.
-        enabled_via_assignee_when_submitted_html: Este atributo del proyecto no se puede desactivar, ya que está configurado como <a href=%{pir_submission_url} target="_blank">asignado al enviarlo</a> para las solicitudes de inicio de proyectos.
+          heading: Para todos los entornos
+          description: Este atributo de entorno está activado en todos los entornos, ya que la opción «Para todos los entornos» está marcada. No puede desactivarse para entornos individuales.
+        enabled_via_assignee_when_submitted_html: Este atributo del entorno no se puede desactivar, ya que está configurado como <a href=%{pir_submission_url} target="_blank">asignado al enviarlo</a> para las solicitudes de inicio de entornos.
       types:
         no_results_title_text: Actualmente no hay tipos disponibles.
         form:
           enable_type_in_project: Habilitar tipo «%{type}»
       versions:
-        no_results_title_text: Actualmente no hay versiones para este proyecto.
+        no_results_title_text: Actualmente no hay versiones para este entorno.
         no_results_content_text: Crear un nueva versión
         work_packages_graph: Gráfico de paquetes de trabajo
         show_work_packages: Mostrar los paquetes de trabajo
       storage:
-        no_results_title_text: No se ha registrado el uso de espacio en disco adicional por este proyecto.
+        no_results_title_text: No se ha registrado el uso de espacio en disco adicional por este entorno.
       work_package_priorities:
         new_label: Nueva prioridad
       creation_wizard:
         errors:
-          no_work_package_type: No se ha podido habilitar la solicitud de inicio del proyecto porque requiere al menos un tipo de paquete de trabajo activo y este proyecto no tiene ninguno. Añada al menos un tipo de paquete de trabajo a este proyecto.
-          no_status_when_submitted: No se ha podido habilitar la solicitud de inicio del proyecto porque el tipo de paquete de trabajo %{type} requiere al menos un estado asociado. Habilite al menos un flujo de trabajo de estado para este tipo de paquete de trabajo.
+          no_work_package_type: No se ha podido habilitar la solicitud de inicio del entorno porque requiere al menos un tipo de paquete de trabajo activo y este entorno no tiene ninguno. Añada al menos un tipo de paquete de trabajo a este entorno.
+          no_status_when_submitted: No se ha podido habilitar la solicitud de inicio del entorno porque el tipo de paquete de trabajo %{type} requiere al menos un estado asociado. Habilite al menos un flujo de trabajo de estado para este tipo de paquete de trabajo.
         export:
           description_attachment_export: El artefacto generado se guardará como PDF adjunto al paquete de trabajo del artefacto.
-          description_file_link_export: El paquete de trabajo de artefactos tendrá un enlace de archivo a un PDF almacenado en un almacenamiento de archivos externo. Requiere un almacenamiento de archivos de trabajo con carpetas de proyecto gestionadas automáticamente para este proyecto. Por el momento sólo son compatibles los almacenamientos de archivos Nextcloud.
+          description_file_link_export: El paquete de trabajo de artefactos tendrá un enlace de archivo a un PDF almacenado en un almacenamiento de archivos externo. Requiere un almacenamiento de archivos de trabajo con carpetas de entorno gestionadas automáticamente para este entorno. Por el momento sólo son compatibles los almacenamientos de archivos Nextcloud.
           description_file_storage_selection: Selecciona cuál de los almacenamientos de archivos externos configurados se debe utilizar.
           external_file_storage: Almacenamiento de archivos externo
           label_artifact_export: Exportación de artefactos
@@ -991,18 +991,18 @@ es:
           pdf_file_storage: Almacenamiento de archivos PDF
           unavailable: no disponible
         label_request_submission: Envío de la solicitud
-        project_attributes_description: 'Selecciona los atributos del proyecto que deben incluirse en la solicitud de inicio del proyecto. Esta lista solo incluye los [atributos del proyecto](project_attributes_url) habilitados para este proyecto.
+        project_attributes_description: 'Selecciona los atributos del entorno que deben incluirse en la solicitud de inicio del entorno. Esta lista solo incluye los [atributos del entorno](project_attributes_url) habilitados para este entorno.
 
           '
-        enabled_because_required_html: Este atributo del proyecto no se puede desactivar para esta solicitud de inicio de proyecto, ya que está definido como obligatorio. El administrador de la instancia puede cambiarlo en la <a href=%{admin_settings_url} target="_blank">configuración de administración</a>.
+        enabled_because_required_html: Este atributo del entorno no se puede desactivar para esta solicitud de inicio de entorno, ya que está definido como obligatorio. El administrador de la instancia puede cambiarlo en la <a href=%{admin_settings_url} target="_blank">configuración de administración</a>.
     status:
       button_edit: Editar estado
     wizard:
       sidebar_content_title: Contenido
       sections: Secciones
-      title: Solicitud de inicio de proyecto
+      title: Solicitud de inicio de entorno
       no_help_text: Este atributo no tiene texto de ayuda definido.
-      success: Atributos del proyecto guardados y paquete de trabajo de artefactos creado correctamente.
+      success: Atributos del entorno guardados y paquete de trabajo de artefactos creado correctamente.
       progress_label: "%{current} de %{total}"
       create_artifact_work_package_error: No se ha podido crear el paquete de trabajo de artefactos
       create_artifact_storage_error: No se ha podido almacenar el artefacto en el almacenamiento de archivos
@@ -1023,8 +1023,8 @@ es:
     can_be_saved_as: 'Las modificaciones solo pueden guardarse en una lista nueva:'
   members:
     index:
-      no_results_title_text: Actualmente no hay miembros que formen parte de este proyecto.
-      no_results_content_text: Añadir un miembro a este proyecto
+      no_results_title_text: Actualmente no hay miembros que formen parte de este entorno.
+      no_results_content_text: Añadir un miembro a este entorno
     invite_by_mail: Enviar invitación a %{mail}
     send_invite_to: Enviar invitación a
     columns:
@@ -1035,13 +1035,13 @@ es:
       all: Todos
       invited: Invitado
       locked: Bloqueado
-      project_roles: Roles de proyecto
+      project_roles: Roles de entorno
       wp_shares: Comparticiones de paquete de trabajo
       groups: Grupos
     delete_member_dialog:
       title: Borrar miembro
-      will_remove_the_users_role: Esto borrará el rol del usuario de este proyecto.
-      will_remove_the_groups_role: Esto borrará el rol del grupo de este proyecto.
+      will_remove_the_users_role: Esto borrará el rol del usuario de este entorno.
+      will_remove_the_groups_role: Esto borrará el rol del grupo de este entorno.
       however_work_packages_shared_with_user_html:
         one: Sin embargo, %{shared_work_packages_link} también se han compartido con este usuario.
         other: Sin embargo, %{shared_work_packages_link} también se han compartido con este usuario.
@@ -1051,16 +1051,16 @@ es:
       remove_work_packages_shared_with_user_too: Un usuario que ha sido eliminado como miembro puede seguir accediendo a los paquetes de trabajo compartidos. ¿Desea eliminar también los compartidos?
       remove_work_packages_shared_with_group_too: Un grupo que ha sido eliminado como miembro puede seguir accediendo a los paquetes de trabajo compartidos. ¿Desea eliminar también los compartidos?
       will_not_affect_inherited_shares: "(Esto no afectará a los paquetes de trabajo compartidos con su grupo)."
-      can_remove_direct_but_not_shared_roles: Puede eliminar a este usuario como miembro directo del proyecto, pero el grupo en el que se encuentra también es miembro de este proyecto, por lo que seguirá siendo miembro a través del grupo.
+      can_remove_direct_but_not_shared_roles: Puede eliminar a este usuario como miembro directo del entorno, pero el grupo en el que se encuentra también es miembro de este entorno, por lo que seguirá siendo miembro a través del grupo.
       also_work_packages_shared_with_user_html:
         one: Además, %{shared_work_packages_link} se ha compartido con este usuario.
         other: Además, %{shared_work_packages_link} se han compartido con este usuario.
       remove_project_membership_or_work_package_shares_too: "¿Desea eliminar solo al usuario como miembro directo (y conservar las comparticiones) o eliminar también las comparticiones del paquete de trabajo?"
-      will_remove_all_user_access_priveleges: La eliminación de este miembro eliminará todos los privilegios de acceso del usuario al proyecto. El usuario seguirá existiendo como parte de la instancia.
-      will_remove_all_group_access_priveleges: La eliminación de este miembro eliminará todos los privilegios de acceso del grupo al proyecto. El grupo seguirá existiendo como parte de la instancia.
-      cannot_delete_inherited_membership: No puede eliminar a este miembro porque pertenece a un grupo que a su vez es miembro de este proyecto.
-      cannot_delete_inherited_membership_note_admin_html: Puede eliminar el grupo como miembro del proyecto o este miembro concreto del grupo en el enlace %{administration_settings_link}.
-      cannot_delete_inherited_membership_note_non_admin: Puede eliminarlo como miembro del proyecto o ponerse en contacto con su administrador para que elimine a este miembro concreto del grupo.
+      will_remove_all_user_access_priveleges: La eliminación de este miembro eliminará todos los privilegios de acceso del usuario al entorno. El usuario seguirá existiendo como parte de la instancia.
+      will_remove_all_group_access_priveleges: La eliminación de este miembro eliminará todos los privilegios de acceso del grupo al entorno. El grupo seguirá existiendo como parte de la instancia.
+      cannot_delete_inherited_membership: No puede eliminar a este miembro porque pertenece a un grupo que a su vez es miembro de este entorno.
+      cannot_delete_inherited_membership_note_admin_html: Puede eliminar el grupo como miembro del entorno o este miembro concreto del grupo en el enlace %{administration_settings_link}.
+      cannot_delete_inherited_membership_note_non_admin: Puede eliminarlo como miembro del entorno o ponerse en contacto con su administrador para que elimine a este miembro concreto del grupo.
     delete_work_package_shares_dialog:
       title: Revocar los elementos compartidos del paquete de trabajo
       shared_with_this_user_html:
@@ -1103,7 +1103,7 @@ es:
       no_results_title_text: Actualmente no hay tokens de acceso disponibles.
       notice_api_token_revoked: Se ha eliminado el token de la API. Para crear un nuevo token, utilice el botón de la sección API.
       notice_rss_token_revoked: Se ha eliminado el token RSS. Para crear un nuevo token, utilice el enlace de la sección RSS.
-      notice_ical_token_revoked: Se ha revocado el token de iCalendar «%{token_name}» para el calendario «%{calendar_name}» del proyecto «%{project_name}». La URL de iCalendar con este token ya no es válida.
+      notice_ical_token_revoked: Se ha revocado el token de iCalendar «%{token_name}» para el calendario «%{calendar_name}» del entorno «%{project_name}». La URL de iCalendar con este token ya no es válida.
     password_confirmation_dialog:
       confirmation_required: Necesitas introducir la contraseña de tu cuenta para confirmar este cambio.
       title: Confirma tu contraseña para continuar
@@ -1113,7 +1113,7 @@ es:
       no_results_content_text: Añadir un elemento de noticias
   roles:
     edit:
-      default_for_new_projects_warning: 'Este rol está configurado como el rol predeterminado que se asigna a los usuarios que no son administradores y que crean un proyecto. No elimine los siguientes permisos, ya que, de lo contrario, los creadores de proyectos no podrán completar la configuración de los proyectos que acaben de crear:'
+      default_for_new_projects_warning: 'Este rol está configurado como el rol predeterminado que se asigna a los usuarios que no son administradores y que crean un entorno. No elimine los siguientes permisos, ya que, de lo contrario, los creadores de entornos no podrán completar la configuración de los entornos que acaben de crear:'
     permissions:
       section_check_all_label: Asignar todos los permisos de %{module}
       section_uncheck_all_label: Quitar todos los permisos de %{module}
@@ -1151,7 +1151,7 @@ es:
       more: "%{count} más"
       summary_html: Miembro de %{names}.
     memberships:
-      no_results_title_text: El usuario no es actualmente un miembro del proyecto.
+      no_results_title_text: El usuario no es actualmente un miembro del entorno.
     open_profile: Abrir perfil
     invite_user_modal:
       invite: Invitar
@@ -1160,23 +1160,23 @@ es:
         invite_to_project: Invitar a %{type} a %{project}
         invite_principal_to_project: Invitar a %{principal} a %{project}
       project:
-        label: Proyecto
-        required: Por favor, seleccione un proyecto
+        label: Entorno
+        required: Por favor, seleccione un entorno
         next_button: Siguiente
-        no_results: No se encontraron proyectos
-        no_invite_rights: No tiene permiso para invitar a miembros a este proyecto
+        no_results: No se encontraron entornos
+        no_invite_rights: No tiene permiso para invitar a miembros a este entorno
       type:
         required: Por favor, seleccione el tipo de miembro al que invitará
         user:
           title: Invitar usuario %{project_name}
-          description: Permisos basados en el rol asignado en el proyecto seleccionado
+          description: Permisos basados en el rol asignado en el entorno seleccionado
         group:
           title: Invitar grupo a %{project_name}
-          description: Permisos basados en el rol asignado en el proyecto seleccionado
+          description: Permisos basados en el rol asignado en el entorno seleccionado
         placeholder_user:
           title: Añadir usuario de marcador de posición a %{project_name}
           title_no_ee: Usuario de marcador de posición (extensión solo para Enterprise)
-          description: No tiene acceso al proyecto y no se enviarán correos electrónicos.
+          description: No tiene acceso al entorno y no se enviarán correos electrónicos.
         already_member_message: Ya es miembro de %{project}
       principal:
         no_results_user: No se encontraron usuarios
@@ -1192,13 +1192,13 @@ es:
       role:
         label: Rol en %{project}
         no_roles_found: No se encontraron roles
-        description: 'Este es el rol que el usuario recibirá al unirse al proyecto. El rol define las acciones que puede realizar y la información que pueden ver. [Obtenga más información sobre roles y permisos.](docs_url)
+        description: 'Este es el rol que el usuario recibirá al unirse al entorno. El rol define las acciones que puede realizar y la información que pueden ver. [Obtenga más información sobre roles y permisos.](docs_url)
 
           '
         required: Por favor, seleccione un rol
       message:
         label: Mensaje de invitación
-        description: Enviaremos un correo electrónico al usuario, al cual puede añadir un mensaje personal aquí. Una explicación sobre la invitación podría ser útil, o bien información básica sobre el proyecto para ayudarles a empezar.
+        description: Enviaremos un correo electrónico al usuario, al cual puede añadir un mensaje personal aquí. Una explicación sobre la invitación podría ser útil, o bien información básica sobre el entorno para ayudarles a empezar.
       summary:
         next_button: Enviar invitación
       success_message:
@@ -1211,7 +1211,7 @@ es:
         work_days: Días laborables
         work_hours: Horas laborales
         availability_factor: Factor de disponibilidad
-        availability_subtitle: Dedicado al trabajo en proyectos
+        availability_subtitle: Dedicado al trabajo en entornos
         effective_hours: Horas efectivas de trabajo
         effective_subtitle: A la semana
         not_set: No establecido
@@ -1243,9 +1243,9 @@ es:
         per_day: al día
         per_week: a la semana
         total_work_hours: Total de horas trabajadas
-        availability_description: El factor de disponibilidad representa el porcentaje real de tu tiempo de trabajo dedicado a las tareas del proyecto. Esto incluye reuniones, correos electrónicos, tareas administrativas y otras actividades ajenas al proyecto.
+        availability_description: El factor de disponibilidad representa el porcentaje real de tu tiempo de trabajo dedicado a las tareas del entorno. Esto incluye reuniones, correos electrónicos, tareas administrativas y otras actividades ajenas al entorno.
         availability_factor: Factor de disponibilidad
-        availability_factor_caption: Indica el porcentaje de tu jornada laboral que dedicas al trabajo en proyectos.
+        availability_factor_caption: Indica el porcentaje de tu jornada laboral que dedicas al trabajo en entornos.
         total_available_hours: Total de horas de trabajo disponibles
         title_availability_factor: Factor de disponibilidad
         title_days_and_hours: Días y horas
@@ -1267,7 +1267,7 @@ es:
   page:
     text: Texto
   placeholder_users:
-    right_to_manage_members_missing: 'No puede eliminar el usuario de marcador de posición. No tiene permiso para administrar miembros en todos los proyectos al que pertenece el usuario de marcador de posición.
+    right_to_manage_members_missing: 'No puede eliminar el usuario de marcador de posición. No tiene permiso para administrar miembros en todos los entornos al que pertenece el usuario de marcador de posición.
 
       '
     delete_tooltip: Eliminar usuario de marcador de posición
@@ -1368,10 +1368,10 @@ es:
 
           '
       projects:
-        tab: Proyectos
-        enable_all: Habilitar en todos los proyectos
-        select_projects: Seleccionar proyectos
-        select_projects_description: Seleccione los proyectos en los que desea utilizar este tipo.
+        tab: Entornos
+        enable_all: Habilitar en todos los entornos
+        select_projects: Seleccionar entornos
+        select_projects_description: Seleccione los entornos en los que desea utilizar este tipo.
       settings:
         tab: Ajustes
         type_color_text: El color seleccionado distingue distintos tipos en los diagramas de Gantt o en las tablas de paquetes de trabajo. Por lo tanto, se recomienda usar un color intenso.
@@ -1388,7 +1388,7 @@ es:
           context:
             work_package: Paquete de trabajo
             parent: Principal
-            project: Proyecto
+            project: Entorno
         pattern:
           label: Patrón del asunto
           caption: Cree patrones añadiendo texto o escriba «/» para buscar [atributos admitidos](attributes_url).
@@ -1403,7 +1403,7 @@ es:
             label_disable_all: Desactivar todo
   versions:
     overview:
-      work_packages_in_archived_projects: La versión se comparte con proyectos archivados que aún tienen paquetes de trabajo asignados a esta versión. Estos se contabilizan, pero no aparecerán en las vistas vinculadas.
+      work_packages_in_archived_projects: La versión se comparte con entornos archivados que aún tienen paquetes de trabajo asignados a esta versión. Estos se contabilizan, pero no aparecerán en las vistas vinculadas.
       no_results_title_text: Actualmente no hay paquetes de trabajo asignados a esta versión.
   wiki:
     page_not_editable_index: La página solicitada no existe (todavía). Has sido redirigido al inicio las páginas de la wiki.
@@ -1463,14 +1463,14 @@ es:
       heading: "¿Eliminar este paquete de trabajo de forma permanente?"
       description: "¿Seguro que desea eliminar el paquete de trabajo «%{name}»?"
       confirm_descendants_deletion: Entiendo que TODOS los elementos derivados de este paquete de trabajo se eliminarán de forma recursiva.
-      cross_project_warning: 'Se eliminarán los paquetes de trabajo de los siguientes proyectos: %{projects}'
+      cross_project_warning: 'Se eliminarán los paquetes de trabajo de los siguientes entornos: %{projects}'
     bulk_delete_dialog:
       title: Eliminar %{count} paquetes de trabajo
       heading: "¿Desea eliminar estos %{count} paquetes de trabajo de forma definitiva?"
       description: 'The following work packages and all associated data will be permanently deleted:'
       description_with_children: 'The following work packages, including children and all associated data, will be permanently deleted:'
       confirm_children_deletion: Entiendo que todos los paquetes de trabajo seleccionados y sus elementos secundarios se eliminarán de forma permanente.
-      cross_project_warning: 'Estos paquetes de trabajo abarcan varios proyectos: %{projects}'
+      cross_project_warning: 'Estos paquetes de trabajo abarcan varios entornos: %{projects}'
       children_label: 'También se eliminarán los siguientes elementos secundarios:'
     datepicker_modal:
       banner:
@@ -1527,11 +1527,11 @@ es:
       descendant: descendiente seleccionado
     move:
       no_common_statuses_exists: No hay ningún estado disponible para todos los paquetes de trabajo seleccionados. Su estado no se puede cambiar.
-      unsupported_for_multiple_projects: Mover o copiar por lotes no esta soportado para paquetes de trabajo de múltiples proyectos
-      current_type_not_available_in_target_project: 'El tipo actual del paquete de trabajo no está habilitado en el proyecto de destino. Por favor, habilite el tipo en el proyecto destino si desea que permanezca sin cambios. De lo contrario, seleccione de la lista un tipo disponible en el proyecto de destino.
+      unsupported_for_multiple_projects: Mover o copiar por lotes no esta soportado para paquetes de trabajo de múltiples entornos
+      current_type_not_available_in_target_project: 'El tipo actual del paquete de trabajo no está habilitado en el entorno de destino. Por favor, habilite el tipo en el entorno destino si desea que permanezca sin cambios. De lo contrario, seleccione de la lista un tipo disponible en el entorno de destino.
 
         '
-      bulk_current_type_not_available_in_target_project: 'Los tipos actuales de los paquetes de trabajo no están habilitados en el proyecto de destino. Por favor, habilite los tipos en el proyecto destino si desea que permanezcan sin cambios. De lo contrario, seleccione de la lista un tipo disponible en el proyecto de destino.
+      bulk_current_type_not_available_in_target_project: 'Los tipos actuales de los paquetes de trabajo no están habilitados en el entorno de destino. Por favor, habilite los tipos en el entorno destino si desea que permanezcan sin cambios. De lo contrario, seleccione de la lista un tipo disponible en el entorno de destino.
 
         '
     sharing:
@@ -1544,11 +1544,11 @@ es:
         category:
           no_results_title_text: No hay categorias disponibles por el momento.
         assigned_to:
-          no_results_title_text: Actualmente no hay miembros que formen parte de este proyecto.
+          no_results_title_text: Actualmente no hay miembros que formen parte de este entorno.
         responsible:
-          no_results_title_text: Actualmente no hay miembros que formen parte de este proyecto.
+          no_results_title_text: Actualmente no hay miembros que formen parte de este entorno.
         author:
-          no_results_title_text: Actualmente no hay miembros que formen parte de este proyecto.
+          no_results_title_text: Actualmente no hay miembros que formen parte de este entorno.
         priority:
           no_results_title_text: No hay prioridades disponibles por el momento.
         type:
@@ -1669,7 +1669,7 @@ es:
         identifier: Identificador
         work_package: Paquete de trabajo
       jira_import:
-        projects: Proyectos
+        projects: Entornos
       import/jira:
         name: Nombre de instancia de Jira
         url: URL de instancia de Jira
@@ -1712,7 +1712,7 @@ es:
         field_format: Formato
         formula: Fórmula
         is_filter: Usado como filtro
-        is_for_all: Para todos los proyectos
+        is_for_all: Para todos los entornos
         is_required: Obligatorio
         max_length: Longitud máxima
         min_length: Longitud mínima
@@ -1791,8 +1791,8 @@ es:
         enabled_modules: Módulos activados
         identifier: Identificador
         latest_activity_at: Última actividad en
-        parent: Subproyecto de
-        project_creation_wizard_enabled: Solicitud de inicio de proyecto
+        parent: Subentorno de
+        project_creation_wizard_enabled: Solicitud de inicio de entorno
         public_value:
           title: Visibilidad
           true: público
@@ -1814,7 +1814,7 @@ es:
         project_creation_wizard_work_package_comment: Comentario del paquete de trabajo
         project_creation_wizard_work_package_type: Tipo de paquete de trabajo
         template: Plantilla
-        templated: Plantilla del proyecto
+        templated: Plantilla del entorno
         templated_value:
           true: marcar como plantilla
           false: desmarcar como plantilla
@@ -1863,7 +1863,7 @@ es:
         hidden: Oculto
         manual_sorting: Orden de clasificación manual
         ordered_work_packages: Orden de paquetes de trabajo
-        include_subprojects: Incluir subproyectos
+        include_subprojects: Incluir subentornos
         results: Resultados
       relation:
         lag: Retraso
@@ -1904,7 +1904,7 @@ es:
         description: Texto predeterminado para descripción
         attribute_groups: Configuración del formulario
         is_in_roadmap: Mostrado en la hoja de ruta de forma predeterminada
-        is_default: Activado para nuevos proyectos de forma predeterminada
+        is_default: Activado para nuevos entornos de forma predeterminada
         is_milestone: Es un hito
         color: Color
         patterns: Patrones
@@ -2028,7 +2028,7 @@ es:
         schedule_manually: Programación manual
         spent_hours: Tiempo invertido
         spent_time: Tiempo invertido
-        subproject: Subproyecto
+        subproject: Subentorno
         time_entries: Registro de tiempo
         type: Tipo
         version: Versión
@@ -2069,7 +2069,7 @@ es:
         overlapping_range: se solapa con un intervalo de días no laborables ya existente.
         blank_nested: necesita tener la propiedad '%{property}' definida.
         cannot_delete_mapping: es obligatorio. No se puede eliminar.
-        is_for_all_cannot_modify: es para todos los proyectos y, por tanto, no puede modificarse.
+        is_for_all_cannot_modify: es para todos los entornos y, por tanto, no puede modificarse.
         cant_link_a_work_package_with_a_descendant: Un paquete de trabajo no puede ser vinculado a una de sus subtareas.
         circular_dependency: Esta relación podría crear una dependencia circular.
         confirmation: no coincide con %{attribute}.
@@ -2087,7 +2087,7 @@ es:
         even: debe ser incluido.
         exclusion: está reservado.
         feature_disabled: no está disponible.
-        feature_disabled_for_project: está desactivado para este proyecto.
+        feature_disabled_for_project: está desactivado para este entorno.
         file_too_large: es demasiado grande (el tamaño máximo es de %{count} Bytes).
         filter_does_not_exist: el filtro no existe.
         format: no coincide con el formato esperado '%{expected}'.
@@ -2118,7 +2118,7 @@ es:
         not_json_object: no es un objeto JSON.
         not_an_integer: No es un entero.
         not_an_iso_date: 'no es una fecha válida. Requiere formato: AAAA-MM-DD.'
-        not_same_project: no pertenecen a un mismo proyecto.
+        not_same_project: no pertenecen a un mismo entorno.
         datetime_must_be_in_future: debe ser en el futuro.
         odd: debe ser impar.
         regex_match_failed: no coincide con la expresión regular %{expression}.
@@ -2166,13 +2166,13 @@ es:
           at_least_one_custom_option: Como mínimo, tiene que estar disponible una opción.
           previous_custom_field_recalculation_unprocessed: El recálculo de los cambios anteriores para este campo personalizado aún no se ha aplicado. Inténtalo de nuevo en unos minutos.
           referenced_in_other_fields_html:
-            one: "%{name} se utiliza en el cálculo de atributos del proyecto %{links}."
-            other: "%{name} se utiliza en los cálculos de atributos del proyecto: %{links}."
+            one: "%{name} se utiliza en el cálculo de atributos del entorno %{links}."
+            other: "%{name} se utiliza en los cálculos de atributos del entorno: %{links}."
           attributes:
             formula:
               blank: La fórmula no puede estar en blanco.
               invalid: La fórmula no es válida.
-              invalid_characters: Solo se permiten valores numéricos, operadores matemáticos y atributos de proyecto de tipo entero, flotante, valor calculado y lista ponderada.
+              invalid_characters: Solo se permiten valores numéricos, operadores matemáticos y atributos de entorno de tipo entero, flotante, valor calculado y lista ponderada.
               not_allowed_custom_fields_referenced: El atributo %{custom_fields} no se puede usar porque conduce a una referencia circular; un atributo depende del otro.
               format: "%{message}"
             required:
@@ -2180,7 +2180,7 @@ es:
         custom_fields_project:
           attributes:
             project_ids:
-              blank: Seleccione un proyecto.
+              blank: Seleccione un entorno.
         custom_actions:
           only_one_allowed: Solo se permite un valor (%{name}).
           empty: El valor (%{name}) no puede estar vacío.
@@ -2222,7 +2222,7 @@ es:
         meeting:
           error_conflict: No se ha podido guardar porque otra persona ha actualizado la reunión mientras tanto. Vuelva a cargar la página.
         message:
-          cannot_move_message_to_forum_of_different_project: No se puede mover un mensaje a un foro de un proyecto diferente.
+          cannot_move_message_to_forum_of_different_project: No se puede mover un mensaje a un foro de un entorno diferente.
         notifications:
           at_least_one_channel: Debe especificarse al menos un canal para enviar notificaciones.
           attributes:
@@ -2246,13 +2246,13 @@ es:
               invalid_values: El valor no es válido.
               id_filter_required: Se requiere el filtro 'id'.
         project:
-          archived_ancestor: El proyecto tiene un antecesor archivado.
-          foreign_wps_reference_version: Los paquetes de trabajo en los proyectos no descendientes hacen referencia a versiones del proyecto o a sus descendientes.
+          archived_ancestor: El entorno tiene un antecesor archivado.
+          foreign_wps_reference_version: Los paquetes de trabajo en los entornos no descendientes hacen referencia a versiones del entorno o a sus descendientes.
           cannot_be_assigned_to_artifact_work_package: El usuario elegido no se puede asignar a paquetes de trabajo.
           attributes:
             base:
-              archive_permission_missing_on_subprojects: No tiene los permisos necesarios para archivar todos los subproyectos. Por favor, póngase en contacto con un administrador.
-              project_initiation_request_disabled: La solicitud de inicio de proyecto está desactivada. Debe estar activada para crear el paquete de trabajo de artefactos.
+              archive_permission_missing_on_subprojects: No tiene los permisos necesarios para archivar todos los subentornos. Por favor, póngase en contacto con un administrador.
+              project_initiation_request_disabled: La solicitud de inicio de entorno está desactivada. Debe estar activada para crear el paquete de trabajo de artefactos.
             types:
               in_use_by_work_packages: 'todavia en uso por los paquetes de trabajo: %{types}'
             identifier:
@@ -2264,7 +2264,7 @@ es:
         project_custom_field_project_mapping:
           attributes:
             project_ids:
-              blank: Por favor, selecciona un proyecto.
+              blank: Por favor, selecciona un entorno.
         project/phase:
           attributes:
             start_date:
@@ -2404,7 +2404,7 @@ es:
             parent:
               cannot_be_milestone: no puede ser un hito.
               cannot_be_self_assigned: no se puede asignar a su propio usuario.
-              cannot_be_in_another_project: no puede estar en otro proyecto.
+              cannot_be_in_another_project: no puede estar en otro entorno.
               not_a_valid_parent: no es válido.
             schedule_manually:
               cannot_be_automatically_scheduled: no puede establecerse en falso (programado automáticamente) ya que no tiene predecesores ni elementos secundarios.
@@ -2419,7 +2419,7 @@ es:
             priority_id:
               only_active_priorities_allowed: debe estar activo.
             category:
-              only_same_project_categories_allowed: La categoría de un paquete de trabajo debe estar en el mismo proyecto que el paquete de trabajo.
+              only_same_project_categories_allowed: La categoría de un paquete de trabajo debe estar en el mismo entorno que el paquete de trabajo.
               does_not_exist: La categoría especificada no existe.
             estimated_hours:
               not_a_number: no es una duración válida.
@@ -2477,7 +2477,7 @@ es:
               ungrantable: tiene un rol no asignable.
               more_than_one: tiene más de un rol.
             principal:
-              unassignable: no puede ser asignado a un proyecto.
+              unassignable: no puede ser asignado a un entorno.
         version:
           undeletable_archived_projects: La versión no puede borrarse cuando tiene paquetes de trabajos adjuntos.
           undeletable_work_packages_attached: La versión no puede borrarse cuando tiene paquetes de trabajos adjuntos.
@@ -2526,11 +2526,11 @@ es:
         other: Notificaciones
       placeholder_user: Usuario de marcador de posición
       project:
-        one: Proyecto
-        other: Proyectos
+        one: Entorno
+        other: Entornos
       project_query:
-        one: Lista de proyectos
-        other: Listas de proyectos
+        one: Lista de entornos
+        other: Listas de entornos
       query: Consulta personalizada
       reminder: Recordatorio
       role:
@@ -2588,8 +2588,8 @@ es:
       added_by_on: añadido por %{user} el %{datetime}
       removed_on: eliminado el %{datetime}
       removed_by_on: eliminado por %{user} el %{datetime}
-      parent_without_of: Subproyecto
-      parent_no_longer: Ya no es subproyecto de
+      parent_without_of: Subentorno
+      parent_no_longer: Ya no es subentorno de
       time_entry:
         hour:
           one: "%{count} hora"
@@ -2603,8 +2603,8 @@ es:
       changeset: Conjuntos de cambios
       message: Foros
       news: Noticias
-      project_details: Detalles del proyecto
-      subproject: Incluir subproyectos
+      project_details: Detalles del entorno
+      subproject: Incluir subentornos
       time_entry: Tiempo invertido
       wiki_edit: Wiki
       work_package: Paquetes de trabajo
@@ -2613,7 +2613,7 @@ es:
       added_date: establecido en %{date}
       changed_date: cambiado de %{from} a %{to}
       deactivated: desactivado
-      deleted_project_phase: Fase de proyecto eliminada
+      deleted_project_phase: Fase de entorno eliminada
       phase_and_both_gates: "%{phase_message}. %{start_gate_message} y %{finish_gate_message}"
       phase_and_one_gate: "%{phase_message}. %{gate_message}"
       removed_date: fecha de eliminación %{date}
@@ -2662,7 +2662,7 @@ es:
     hexcode: Código hexadecimal
     id: ID
     is_default: Valor predeterminado
-    is_for_all: Para todos los proyectos
+    is_for_all: Para todos los entornos
     public: Público
     principal: Usuario o grupo
     issue: Paquete de trabajo
@@ -2680,10 +2680,10 @@ es:
     operator: Operador
     password: Contraseña
     priority: Prioridad
-    project: Proyecto
-    project_ids: IDs de proyectos
-    project_phase: Fase del proyecto
-    project_phase_definition: Fase del proyecto
+    project: Entorno
+    project_ids: IDs de entornos
+    project_phase: Fase del entorno
+    project_phase_definition: Fase del entorno
     reason: Motivo
     responsible: Responsable
     required: Obligatorio
@@ -2859,40 +2859,40 @@ es:
     text_update_consent_time: Marque esta casilla para estimular a los usuarios a dar, nuevamente, su consentimiento. Habilite cuando haya cambiado el aspecto legal de la información relativa al mencionado consentimiento.
     update_consent_last_time: 'Última actualización de consentimiento: %{update_time}'
   copy_project:
-    title: Copiar proyecto «%{source_project_name}»
-    started: Comenzó la copia del proyecto '%{source_project_name}' a "%{target_project_name}". Se le informará por correo tan pronto como esté disponible el proyecto "%{target_project_name}".
-    failed: No se puede copiar proyecto %{source_project_name}
+    title: Copiar entorno «%{source_project_name}»
+    started: Comenzó la copia del entorno '%{source_project_name}' a "%{target_project_name}". Se le informará por correo tan pronto como esté disponible el entorno "%{target_project_name}".
+    failed: No se puede copiar entorno %{source_project_name}
     failed_internal: Copia fallida debido a un error interno.
-    succeeded: Proyecto creado %{target_project_name}
+    succeeded: Entorno creado %{target_project_name}
     errors: Error
-    project_custom_fields: Campos personalizados del proyecto
+    project_custom_fields: Campos personalizados del entorno
     x_objects_of_this_type:
       zero: No hay objetos de este tipo
       one: Un objeto de este tipo
       other: "%{count} objetos de este tipo"
     text:
-      failed: No se pudo copiar el proyecto "%{source_project_name}" al proyecto "%{target_project_name}".
-      succeeded: Proyecto copiado de "%{source_project_name}" a "%{target_project_name}".
-    source_project_label: Proyecto copiado
+      failed: No se pudo copiar el entorno "%{source_project_name}" al entorno "%{target_project_name}".
+      succeeded: Entorno copiado de "%{source_project_name}" a "%{target_project_name}".
+    source_project_label: Entorno copiado
     copy_options:
-      dependencies_label: Copiar desde el proyecto
+      dependencies_label: Copiar desde el entorno
   create_project:
-    attributes_heading: Rellena esta información obligatoria para trabajar en tus proyectos.
+    attributes_heading: Rellena esta información obligatoria para trabajar en tus entornos.
     template_label: Usar plantilla
-    template_heading: Selecciona una plantilla de proyecto para trabajar con los métodos de gestión de proyectos más comunes o crea un proyecto desde cero.
+    template_heading: Selecciona una plantilla de entorno para trabajar con los métodos de gestión de entornos más comunes o crea un entorno desde cero.
     copy_options:
       dependencies_label: Copiar desde la plantilla
     blank_template:
-      label: Proyecto en blanco
-      description: Empieza desde cero. Añade manualmente los atributos, miembros y módulos del proyecto.
+      label: Entorno en blanco
+      description: Empieza desde cero. Añade manualmente los atributos, miembros y módulos del entorno.
     blank_description: No hay descripción.
   create_portfolio:
-    template_heading: Selecciona una plantilla de cartera para trabajar con los métodos de gestión de proyectos más comunes o crea una cartera desde cero.
+    template_heading: Selecciona una plantilla de espacio de trabajo para trabajar con los métodos de gestión de entornos más comunes o crea un espacio de trabajo desde cero.
     blank_template:
-      label: Cartera en blanco
-      description: Empieza desde cero. Añade manualmente los atributos, miembros y módulos de la cartera.
+      label: Espacio de trabajo en blanco
+      description: Empieza desde cero. Añade manualmente los atributos, miembros y módulos del espacio de trabajo.
   create_program:
-    template_heading: Selecciona una plantilla de programa para trabajar con los métodos de gestión de proyectos más comunes o crea un programa desde cero.
+    template_heading: Selecciona una plantilla de programa para trabajar con los métodos de gestión de entornos más comunes o crea un programa desde cero.
     blank_template:
       label: Programa en blanco
       description: Empieza desde cero. Añade manualmente los atributos, miembros y módulos del programa.
@@ -3022,7 +3022,7 @@ es:
 
     '
   description_available_columns: Columnas disponibles
-  description_choose_project: Proyectos
+  description_choose_project: Entornos
   description_compare_from: Comparar desde
   description_compare_to: Comparar con
   description_current_position: 'Usted está aquí: '
@@ -3067,9 +3067,9 @@ es:
       nextcloud_sso: Inicio de sesión único para almacenamiento en la nube
       one_drive_sharepoint_file_storage: Almacenamiento de archivos OneDrive/SharePoint
       placeholder_users: Usuarios de marcadores de posición
-      portfolio_management: Gestión de carteras
-      project_creation_wizard: Solicitud de inicio de proyecto
-      project_list_sharing: Compartición de la lista de proyectos
+      portfolio_management: Gestión de espacios de trabajo
+      project_creation_wizard: Solicitud de inicio de entorno
+      project_list_sharing: Compartición de la lista de entornos
       readonly_work_packages: Paquetes de trabajo de solo lectura
       scim_api: API del servidor SCIM
       sso_auth_providers: Inicio de sesión único (SSO)
@@ -3093,7 +3093,7 @@ es:
       homescreen_description: 'Los planes Enterprise amplían la edición Community de OpenProject con [extensiones Enterprise](enterprise_url) adicionales y asistencia profesional, ideales para organizaciones que ejecutan OpenProject en un entorno de misión crítica.
 
         '
-      homescreen_subline: Al mejorar su plan, también estará apoyando un proyecto de código abierto.
+      homescreen_subline: Al mejorar su plan, también estará apoyando un entorno de código abierto.
       baseline_comparison:
         description: Resalte los cambios realizados en esta lista desde cualquier momento en el pasado.
       benefits:
@@ -3109,7 +3109,7 @@ es:
       work_package_subject_generation:
         description: Cree asuntos generados automáticamente utilizando atributos y texto referenciados.
       customize_life_cycle:
-        description: Cree y organice fases de proyecto diferentes a las previstas en la planificación del ciclo del proyecto PM2.
+        description: Cree y organice fases de entorno diferentes a las previstas en la planificación del ciclo del entorno PM2.
       capture_external_links:
         description: Prevenga los ataques de ingeniería social detectando y advirtiendo sobre los enlaces externos antes de que los usuarios los visiten.
       work_package_query_relation_columns:
@@ -3123,24 +3123,24 @@ es:
       readonly_work_packages:
         description: Marque los paquetes de trabajo como de solo lectura para estados específicos.
       custom_field_hierarchies:
-        description: Los campos personalizados de jerarquía permiten organizar estructuras jerárquicas en paquetes de trabajo y proyectos haciendo uso de listas de selección de varios niveles.
+        description: Los campos personalizados de jerarquía permiten organizar estructuras jerárquicas en paquetes de trabajo y entornos haciendo uso de listas de selección de varios niveles.
       date_alerts:
         description: Con las alertas de fecha, recibirá notificaciones de próximas fechas de inicio o finalización para que nunca olvide una fecha límite importante.
       weighted_item_lists:
         description: Las listas de elementos ponderados te permiten crear una lista con valores numéricos asociados.
       work_package_sharing:
-        description: Compartir paquetes de trabajo con usuarios que no son miembros del proyecto.
+        description: Compartir paquetes de trabajo con usuarios que no son miembros del entorno.
       project_list_sharing:
-        description: Comparta listas de proyectos con usuarios individuales.
+        description: Comparta listas de entornos con usuarios individuales.
       calculated_values:
-        description: Los valores calculados le permiten crear un atributo basado en fórmulas matemáticas utilizando valores numéricos y otros atributos del proyecto y campos personalizados.
+        description: Los valores calculados le permiten crear un atributo basado en fórmulas matemáticas utilizando valores numéricos y otros atributos del entorno y campos personalizados.
       define_custom_style:
         title: Tema de color y logotipo personalizados
         more_info: 'Nota: El logotipo utilizado será de acceso público.'
         description: Personalice su instalación de OpenProject con su logotipo y colores.
       custom_actions:
         title: Acciones personalizadas
-        description: Las acciones personalizadas son accesos directos con un solo clic a un conjunto de acciones predefinidas que puede mostrar en determinados paquetes de trabajo según el estado, rol, tipo o proyecto.
+        description: Las acciones personalizadas son accesos directos con un solo clic a un conjunto de acciones predefinidas que puede mostrar en determinados paquetes de trabajo según el estado, rol, tipo o entorno.
       mcp_server:
         description: Incorpore OpenProject a sus flujos de trabajo de IA con un servidor MCP seguro.
       meeting_templates:
@@ -3157,20 +3157,20 @@ es:
       virus_scanning:
         description: Asegúrese de que los archivos cargados en OpenProject se analizan en busca de virus antes de que otros usuarios puedan acceder a ellos.
       project_creation_wizard:
-        description: Genere un asistente paso a paso para ayudar a los gestores de proyectos a completar una solicitud de inicio de proyecto.
+        description: Genere un asistente paso a paso para ayudar a los gestores de entornos a completar una solicitud de inicio de entorno.
       placeholder_users:
         title: Usuarios de marcador de posición
-        description: 'Los usuarios de marcadores de posición son una forma de asignar paquetes de trabajo a usuarios que no son parte de su proyecto. Pueden ser útiles en múltiples escenarios; por ejemplo, si necesita rastrear las tareas de un recurso que aún no está nombrado o disponible, o si no quieres dar acceso a esa persona a OpenProject pero quieres seguir las tareas que se le han asignado.
+        description: 'Los usuarios de marcadores de posición son una forma de asignar paquetes de trabajo a usuarios que no son parte de su entorno. Pueden ser útiles en múltiples escenarios; por ejemplo, si necesita rastrear las tareas de un recurso que aún no está nombrado o disponible, o si no quieres dar acceso a esa persona a OpenProject pero quieres seguir las tareas que se le han asignado.
 
           '
       internal_comments:
         title: Comentarios internos
-        description: Los comentarios internos permiten a un equipo interno comunicarse entre sí de forma privada. Solo son visibles para determinados roles del proyecto y nunca serán visibles públicamente.
+        description: Los comentarios internos permiten a un equipo interno comunicarse entre sí de forma privada. Solo son visibles para determinados roles del entorno y nunca serán visibles públicamente.
       internal_comments_inline:
         title: Escriba comentarios internos que solo un pequeño grupo pueda ver
         description: " "
       portfolio_management:
-        description: Alinea tus proyectos con tus objetivos estratégicos organizándolos en carteras y programas.
+        description: Alinea tus entornos con tus objetivos estratégicos organizándolos en espacios de trabajo y programas.
     teaser:
       title:
         one: Queda un día del token de prueba de %{trial_plan}
@@ -3187,7 +3187,7 @@ es:
       request_again: Solicitar de nuevo
       resend_action: Reenviar correo electrónico de confirmación
       welcome_title: Resumen rápido de funciones
-      welcome_description: Obtenga un resumen rápido de la gestión de proyectos y la colaboración en equipo con Enterprise Edition de OpenProject.
+      welcome_description: Obtenga un resumen rápido de la gestión de entornos y la colaboración en equipo con Enterprise Edition de OpenProject.
       confirmation_info: 'Le enviamos un correo electrónico el %{date} a la dirección %{email} con toda la información para iniciar la prueba gratuita de OpenProject Enterprise. Revise su bandeja de entrada y haga clic en el enlace de confirmación proporcionado para iniciar su prueba gratuita de 14 días.
 
         '
@@ -3213,11 +3213,11 @@ es:
     dialog_component:
       title: Prueba Enterprise
   error_auth_source_sso_failed: El intento de inicio de sesión único (SSO) para el usuario “%{value}” falló
-  error_can_not_archive_project: 'Este proyecto no se puede archivar: %{errors}'
+  error_can_not_archive_project: 'Este entorno no se puede archivar: %{errors}'
   error_can_not_delete_entry: No se puede eliminar la entrada
   error_can_not_delete_custom_field: Imposible eliminar el campo seleccionado
-  error_can_not_delete_in_use_archived_undisclosed: También hay paquetes de trabajo en proyectos archivados. Debe pedir a un administrador que realice la eliminación para ver qué proyectos se ven afectados.
-  error_can_not_delete_in_use_archived_work_packages: 'Hay paquetes de trabajo en los proyectos archivados. Necesita reactivar los proyectos siguientes para cambiar el atributo de los paquetes de trabajo correspondientes: %{archived_projects_urls}'
+  error_can_not_delete_in_use_archived_undisclosed: También hay paquetes de trabajo en entornos archivados. Debe pedir a un administrador que realice la eliminación para ver qué entornos se ven afectados.
+  error_can_not_delete_in_use_archived_work_packages: 'Hay paquetes de trabajo en los entornos archivados. Necesita reactivar los entornos siguientes para cambiar el atributo de los paquetes de trabajo correspondientes: %{archived_projects_urls}'
   error_can_not_delete_type:
     explanation: Este tipo contiene paquetes de trabajo y no se puede eliminar. Puede ver todos los paquetes de trabajo afectados en <a target="_blank" href="%{url}">esta vista</a>.
   error_can_not_delete_standard_type: Tipos estándar no se pueden borrar.
@@ -3225,7 +3225,7 @@ es:
   error_can_not_remove_role: Este rol esta en uso y no puede ser eliminado
   error_can_not_reopen_work_package_on_closed_version: No se puede volver a abrir un paquete de trabajo asignado a una versión cerrada
   error_can_not_find_all_resources: No se encontraron todos los recursos relacionados con esta solicitud.
-  error_can_not_unarchive_project: 'Este proyecto no se puede recuperar: %{errors}'
+  error_can_not_unarchive_project: 'Este entorno no se puede recuperar: %{errors}'
   error_check_user_and_role: Por favor elige un usuario y un rol.
   error_code: Error %{code}
   error_color_could_not_be_saved: No se pudo guardar el color
@@ -3244,13 +3244,13 @@ es:
   error_pdf_failed_to_export: 'No se ha podido guardar la exportación PDF: %{error}'
   error_token_authenticity: No se puede verificar el token de falsificación de solicitud entre sitios. ¿Intentó enviar datos en varios navegadores o pestañas? Cierre de todas las pestañas y vuelva a intentarlo.
   error_reminder_not_found: No se ha encontrado el recordatorio o ya se ha notificado.
-  error_work_package_not_found_in_project: El paquete de trabajo no se ha encontrado o no pertenece a este proyecto
+  error_work_package_not_found_in_project: El paquete de trabajo no se ha encontrado o no pertenece a este entorno
   error_work_package_id_not_found: No se ha encontrado el paquete de trabajo.
-  error_must_be_project_member: debe ser miembro del proyecto
+  error_must_be_project_member: debe ser miembro del entorno
   error_migrations_are_pending: Su instalación de OpenProject tiene migraciones de bases de datos pendientes. Es probable que haya pasado por alto la ejecución de las migraciones en la última actualización. Consulte la guía de actualización para actualizar correctamente su instalación.
   error_migrations_visit_upgrade_guides: Visite la documentación de la Guía de actualización
   error_no_default_work_package_status: Ningún estado del paquete trabajo predeterminado está definido. Por favor, compruebe su configuración (ir a "Administración-> Situación del paquete de trabajo").
-  error_no_type_in_project: Ningún tipo se asocia a este proyecto. Por favor, Compruebe la configuración del proyecto.
+  error_no_type_in_project: Ningún tipo se asocia a este entorno. Por favor, Compruebe la configuración del entorno.
   error_omniauth_registration_timed_out: El registro mediante un proveedor de autenticación externa expiró. Por favor inténtelo nuevamente.
   error_omniauth_invalid_auth: La información de autenticación proporcionada por el proveedor de identidades no era válida. Póngase en contacto con el administrador para obtener ayuda.
   error_password_change_failed: Se produjo un error al intentar cambiar la contraseña.
@@ -3275,9 +3275,9 @@ es:
     changeset: Set de cambios editado
     message: Mensaje editado
     news: Noticias
-    project_details: Detalles del proyecto editados
-    project: Proyecto editado
-    projects: Proyecto editado
+    project_details: Detalles del entorno editados
+    project: Entorno editado
+    projects: Entorno editado
     reply: Respondió
     time_entry: Tiempo de ingreso editado
     wiki_page: Página wiki editada
@@ -3285,8 +3285,8 @@ es:
     work_package_edit: Paquete de trabajo editado
     work_package_note: Nota de paquete de trabajo añadido
     title:
-      project_html: 'Proyecto: %{name}'
-      subproject_html: 'Subproyecto: %{name}'
+      project_html: 'Entorno: %{name}'
+      subproject_html: 'Subentorno: %{name}'
   export:
     dialog:
       title: Exportar
@@ -3354,7 +3354,7 @@ es:
           label: Incluir descripciones
           caption: Esta opción añadirá una columna de descripción en formato bruto.
     your_work_packages_export: Se están exportando paquetes de trabajo
-    your_projects_export: Se están exportando proyectos
+    your_projects_export: Se están exportando entornos
     succeeded: Exportación completada
     failed: 'Se ha producido un error al intentar exportar los paquetes de trabajo: %{message}'
     demo:
@@ -3467,7 +3467,7 @@ es:
   homescreen:
     additional:
       projects: Projectos visibles mas recientes en esta instancia.
-      no_visible_projects: No hay ningún proyecto visible en esta instancia.
+      no_visible_projects: No hay ningún entorno visible en esta instancia.
       users: Usuarios registrados mas recientes en esta instancia.
     blocks:
       community: OpenProject Community
@@ -3487,7 +3487,7 @@ es:
             line_2: Mayor facilidad para arrastrar y soltar y mejora de las opciones de desplazamiento en el módulo Backlogs.
             line_3: Botones de inicio y finalización del sprint en el encabezado del sprint.
             line_4: Función de copiar la configuración del flujo de trabajo entre roles.
-            line_5: El widget «Mis reuniones» en las páginas de inicio y de resumen del proyecto.
+            line_5: El widget «Mis reuniones» en las páginas de inicio y de resumen del entorno.
     links:
       upgrade_enterprise_edition: Actualizar a Enterprise
       postgres_migration: Migrando su instalación a PostgreSQL
@@ -3603,7 +3603,7 @@ es:
         disabled_text: Los tokens API no están habilitados por el administrador. Póngase en contacto con su administrador para utilizar esta función.
         add_button: Token API
       ical:
-        blank_description: Para añadir un token de iCalendar, suscríbase a un calendario nuevo o existente desde el módulo Calendario de un proyecto. Debe disponer de los permisos necesarios.
+        blank_description: Para añadir un token de iCalendar, suscríbase a un calendario nuevo o existente desde el módulo Calendario de un entorno. Debe disponer de los permisos necesarios.
         blank_title: No hay token de iCalendar
         title: iCalendar
         table_title: Tokens de iCalendar
@@ -3697,7 +3697,7 @@ es:
           seven_days_after: 7 días después
       non_participating:
         title: No participando
-        description: Notificaciones adicionales para actividades en todos los proyectos.
+        description: Notificaciones adicionales para actividades en todos los entornos.
         submit_button: Actualizar preferencias
         work_package_created: Nuevos paquetes de trabajo
         work_package_commented: Todos los nuevos comentarios
@@ -3705,11 +3705,11 @@ es:
         work_package_prioritized: Todos los cambios de prioridad
         work_package_scheduled: Todos los cambios de fecha
       project_specific_settings:
-        title: Configuración de notificaciones específicas de proyectos
-        description: Esta configuración específica de proyectos reemplaza los ajustes predeterminados anteriores.
-        add_button: Añadir notificaciones específicas del proyecto
-        dialog_title: Añadir notificaciones específicas del proyecto
-        list_header: Proyectos con notificaciones específicas
+        title: Configuración de notificaciones específicas de entornos
+        description: Esta configuración específica de entornos reemplaza los ajustes predeterminados anteriores.
+        add_button: Añadir notificaciones específicas del entorno
+        dialog_title: Añadir notificaciones específicas del entorno
+        list_header: Entornos con notificaciones específicas
   notifications:
     reasons:
       assigned: Asignado a
@@ -3725,7 +3725,7 @@ es:
       all: Todos
       all_title: Mostrar todo
     menu:
-      by_project: No leído por proyecto
+      by_project: No leído por entorno
       by_reason: Motivo
       inbox: Bandeja de entrada
     send_notifications: Enviar notificaciones para esta acción
@@ -3744,13 +3744,13 @@ es:
   label_actions: Comportamiento
   label_active: Activo
   label_activate_user: Activar usuario
-  label_active_in_new_projects: Activo en nuevos proyectos
+  label_active_in_new_projects: Activo en nuevos entornos
   label_activity: Actividad
   label_add_edit_translations: Añadir y editar traducciones
   label_add_another_file: Agregar otro archivo
   label_add_columns: Agregar columnas seleccionadas
   label_add_note: Añadir una nota
-  label_add_projects: Añadir proyectos
+  label_add_projects: Añadir entornos
   label_add_related_work_packages: Añadir paquetes de trabajo relacionados
   label_add_subtask: Agregar subtarea
   label_added: agregado
@@ -3786,7 +3786,7 @@ es:
   label_integrations: Integraciones
   label_add_column: Añadir columna
   label_applied_status: Estado aplicado
-  label_archive_project: Archivar proyecto
+  label_archive_project: Archivar entorno
   label_ascending: Ascendente
   label_assigned_to_me_work_packages: Paquetes de trabajo asignados a mí
   label_associated_revisions: Revisiones asociadas
@@ -3798,15 +3798,15 @@ es:
   label_ldap_auth_source_plural: Conexiones LDAP
   label_attribute_expand_text: El texto completo para «%{attribute}»
   label_authentication: Autentificación
-  label_available_custom_fields_projects: Proyectos de campos personalizados disponibles
+  label_available_custom_fields_projects: Entornos de campos personalizados disponibles
   label_available_global_roles: Roles globales disponibles
-  label_available_project_attributes: Atributos del proyecto disponibles
+  label_available_project_attributes: Atributos del entorno disponibles
   label_available_project_forums: Foros disponibles
   label_available_project_repositories: Repositorios disponibles
   label_available_project_versions: Versiones disponibles
   label_available_project_work_package_categories: Categorias de paquetes de trabjo disponibles
   label_available_project_work_package_types: Tipos de paquete de trabajo disponibles
-  label_available_projects: Proyectos disponibles
+  label_available_projects: Entornos disponibles
   label_api_doc: Documentación de la API
   label_backup: Copia de seguridad
   label_backup_code: Código de copia de seguridad
@@ -3877,7 +3877,7 @@ es:
   label_copy_workflow_from: Copiar flujo de trabajo desde
   label_copy_workflow_from_type: Copiar a otro tipo
   label_copy_workflow_from_role: Copiar a otros roles
-  label_copy_project: Copiar proyecto
+  label_copy_project: Copiar entorno
   label_core_version: Versión base
   label_core_build: Núcleo base
   label_created_by: Creado por %{user}
@@ -3901,7 +3901,7 @@ es:
   label_day_plural: días
   label_default: Por defecto
   label_delete_user: Eliminar usuario
-  label_delete_project: Eliminar proyecto
+  label_delete_project: Eliminar entorno
   label_delete: Eliminar
   label_deleted: borrado
   label_deleted_custom_field: "(campo personalizado borrado)"
@@ -4002,7 +4002,7 @@ es:
   label_subject_or_id: Asunto o ID
   label_calendar_subscriptions: Suscripciones al calendario
   label_identifier: Identificador
-  label_project_identifier: Identificador del proyecto
+  label_project_identifier: Identificador del entorno
   label_in: en
   label_in_less_than: en menos de
   label_in_more_than: en más de
@@ -4010,7 +4010,7 @@ es:
   label_incoming_emails: Correos electrónicos entrantes
   label_includes: incluye
   label_incomplete: Incompleto
-  label_include_sub_projects: Incluir subproyectos
+  label_include_sub_projects: Incluir subentornos
   label_index_by_date: Índice por fecha
   label_index_by_title: Índice por título
   label_information: Información
@@ -4025,7 +4025,7 @@ es:
   label_item_plural: Elementos
   label_weighted_item_list: Lista ponderada de artículos
   label_share: Compartir
-  label_share_project_list: Listas de proyectos compartidas
+  label_share_project_list: Listas de entornos compartidas
   label_share_work_package: Compartir paquete de trabajo
   label_show_all_registered_users: Mostrar todos los usuarios registrados
   label_show_less: Mostrar menos
@@ -4036,7 +4036,7 @@ es:
   label_languages: Idiomas
   label_external_links: Enlaces externos
   label_locale: Idioma y región
-  label_jump_to_a_project: Saltar a un proyecto...
+  label_jump_to_a_project: Saltar a un entorno...
   label_jira_import: Migrador Jira
   label_keyword_plural: Palabras clave
   label_language_based: Basado en el idioma del usuario
@@ -4156,7 +4156,7 @@ es:
   label_none_parentheses: "(ninguno)"
   label_not_contains: no contiene
   label_not_equals: no es
-  label_life_cycle_step_plural: Ciclo de vida del proyecto
+  label_life_cycle_step_plural: Ciclo de vida del entorno
   label_on: en
   label_operator_all: no está vacío
   label_operator_none: está vacío
@@ -4200,7 +4200,7 @@ es:
   label_planning: Planificación
   label_please_login: Por favor, identifíquese
   label_plugins: Extensiones
-  label_portfolio_plural: Carteras
+  label_portfolio_plural: Espacios de trabajo
   label_modules_and_plugins: Módulos y Extensiones
   label_precedes: precede
   label_preferences: Preferencias
@@ -4216,36 +4216,36 @@ es:
   label_profile: Perfil
   label_percent_complete: "% compleado"
   label_progress_tracking: Seguimiento del progreso
-  label_project: Proyecto
-  label_project_activity: Actividad del proyecto
-  label_project_attribute_plural: Atributos del proyecto
-  label_project_attribute_manage_link: Administrar atributos del proyecto
-  label_project_count: Número total de proyectos
-  label_project_copy_notifications: Enviar notificaciones por correo electrónico durante la copia del proyecto
+  label_project: Entorno
+  label_project_activity: Actividad del entorno
+  label_project_attribute_plural: Atributos del entorno
+  label_project_attribute_manage_link: Administrar atributos del entorno
+  label_project_count: Número total de entornos
+  label_project_copy_notifications: Enviar notificaciones por correo electrónico durante la copia del entorno
   label_project_initiation_export_pdf: Exportar PDF para %{project_creation_name}
-  label_project_latest: Últimos proyectos
+  label_project_latest: Últimos entornos
   label_project_default_type: Permitir tipo vacio
-  label_project_hierarchy: Jerarquía del proyecto
-  label_project_mappings: Proyectos
-  label_project_new: Nuevo proyecto
-  label_project_plural: Proyectos
-  label_project_list_plural: Listas de proyectos
-  label_project_life_cycle: Ciclo de vida del proyecto
-  label_project_attributes_plural: Atributos del proyecto
-  label_project_custom_field_plural: Atributos del proyecto
-  label_project_settings: Configuración del proyecto
-  label_project_attributes_settings: Ajustes de los atributos del proyecto
+  label_project_hierarchy: Jerarquía del entorno
+  label_project_mappings: Entornos
+  label_project_new: Nuevo entorno
+  label_project_plural: Entornos
+  label_project_list_plural: Listas de entornos
+  label_project_life_cycle: Ciclo de vida del entorno
+  label_project_attributes_plural: Atributos del entorno
+  label_project_custom_field_plural: Atributos del entorno
+  label_project_settings: Configuración del entorno
+  label_project_attributes_settings: Ajustes de los atributos del entorno
   label_project_storage_plural: Almacenamientos de archivos
-  label_project_storage_project_folder: 'Almacenamientos de archivos: Carpetas del proyecto'
-  label_projects_disk_usage_information: "%{count} proyectos utilizando %{used_disk_space} espacio de disco"
-  label_project_view_all: Ver todos los proyectos
-  label_project_show_details: Mostrar los detalles del proyecto
-  label_project_hide_details: Ocultar los detalles del proyecto
-  label_portfolio: Portafolio
-  label_portfolio_new: Nuevo portafolio
+  label_project_storage_project_folder: 'Almacenamientos de archivos: Carpetas del entorno'
+  label_projects_disk_usage_information: "%{count} entornos utilizando %{used_disk_space} espacio de disco"
+  label_project_view_all: Ver todos los entornos
+  label_project_show_details: Mostrar los detalles del entorno
+  label_project_hide_details: Ocultar los detalles del entorno
+  label_portfolio: Espacio de trabajo
+  label_portfolio_new: Nuevo espacio de trabajo
   label_program: Programa
   label_program_new: Nuevo programa
-  label_public_projects: Proyectos públicos
+  label_public_projects: Entornos públicos
   label_query_new: Nueva consulta
   label_query_plural: Consultas personalizadas
   label_read: Leer...
@@ -4327,9 +4327,9 @@ es:
   label_storage_group: Sistema de archivos de almacenamiento %{identifier}
   label_storage_for: Abarca almacenamiento para
   label_string: Texto
-  label_subproject: Subproyecto
-  label_subproject_new: Subproyecto nuevo
-  label_subproject_plural: Subproyectos
+  label_subproject: Subentorno
+  label_subproject_new: Subentorno nuevo
+  label_subproject_plural: Subentornos
   label_subitems: Subelementos
   label_subtask_plural: Subtareas
   label_summary: Resumen
@@ -4348,7 +4348,7 @@ es:
   label_time_entry_plural: Tiempo invertido
   label_time_entry_activity_plural: Actividades de tiempo invertido
   label_title: Título
-  label_projects_menu: Proyectos
+  label_projects_menu: Entornos
   label_today: hoy
   label_today_capitalized: Hoy
   label_token_version: Versión del token
@@ -4367,7 +4367,7 @@ es:
   label_upgrade_guides: Guías de actualización
   label_used_by: Utilizado por
   label_used_by_types: Utilizado por tipos
-  label_used_in_projects: Utilizado en proyectos
+  label_used_in_projects: Utilizado en entornos
   label_user: Usuario
   label_user_and_permission: Usuarios y permisos
   label_user_named: Usuario %{name}
@@ -4383,11 +4383,11 @@ es:
   label_version_new: Nueva versión
   label_version_edit: Editar versión
   label_version_plural: Versiones
-  label_version_sharing_descendants: Con subproyectos
-  label_version_sharing_hierarchy: Con la jerarquía del proyecto
+  label_version_sharing_descendants: Con subentornos
+  label_version_sharing_hierarchy: Con la jerarquía del entorno
   label_version_sharing_none: No compartido
-  label_version_sharing_system: Con todos los proyectos
-  label_version_sharing_tree: Con el árbol del proyecto
+  label_version_sharing_system: Con todos los entornos
+  label_version_sharing_tree: Con el árbol del entorno
   label_videos: Vídeos
   label_view_all_revisions: Ver todas las revisiones
   label_view_diff: Ver diferencias
@@ -4401,7 +4401,7 @@ es:
   label_wiki_content_updated: Página wiki actualizada
   label_wiki_toc: Tabla de contenidos
   label_wiki_toc_empty: El índice está vacío porque no hay ningún encabezado.
-  label_wiki_dont_show_menu_item: No mostrar esta página wiki en la navegación del proyecto
+  label_wiki_dont_show_menu_item: No mostrar esta página wiki en la navegación del entorno
   label_wiki_edit: Editar Wiki
   label_wiki_edit_plural: Ediciones Wiki
   label_wiki_page_attachments: Datos adjuntos de página wiki
@@ -4410,7 +4410,7 @@ es:
   label_wiki_page: Página wiki
   label_wiki_page_plural: Páginas Wiki
   label_wiki_show_index_page_link: Mostrar el elemento de submenú 'Tabla de contenidos'
-  label_wiki_show_menu_item: Mostrar como elemento de menú de navegación de proyecto
+  label_wiki_show_menu_item: Mostrar como elemento de menú de navegación de entorno
   label_wiki_show_new_page_link: Mostrar el elemento de submenú 'Crear nueva página hija'
   label_wiki_start: Página de inicio
   label_work: Trabajo
@@ -4455,9 +4455,9 @@ es:
     other: "%{count} paquetes de trabajo"
     zero: Sin paquetes de trabajo
   label_x_projects:
-    one: 1 proyecto
-    other: "%{count} proyectos"
-    zero: sin proyectos
+    one: 1 entorno
+    other: "%{count} entornos"
+    zero: sin entornos
   label_x_files:
     one: 1 archivo
     other: "%{count} archivos"
@@ -4474,7 +4474,7 @@ es:
   label_yesterday: ayer
   label_zen_mode: Modo zen
   label_role_type: Tipo
-  label_member_role: Rol del proyecto
+  label_member_role: Rol del entorno
   label_global_role: Rol global
   label_not_changeable: "(no modificable)"
   label_global: Global
@@ -4510,8 +4510,8 @@ es:
         page_not_found: No se encuentra la página wiki “%{name}”.
     create_work_package_link:
       errors:
-        no_project_context: Llamando a la macro create_work_package_link desde el contexto externo del proyecto.
-        invalid_type: No se ha encontrado ningún tipo con nombre '%{type}' en el proyecto '%{project}'.
+        no_project_context: Llamando a la macro create_work_package_link desde el contexto externo del entorno.
+        invalid_type: No se ha encontrado ningún tipo con nombre '%{type}' en el entorno '%{project}'.
       link_name: Nuevo paquete de trabajo
       link_name_type: "%{type_name} nuevo"
   mail:
@@ -4559,11 +4559,11 @@ es:
       note: 'Nota: «%{note}»'
     sharing:
       work_packages:
-        allowed_actions_html: 'Tiene los siguientes permisos sobre este paquete de trabajo: %{allowed_actions}. Esto puede cambiar dependiendo de su rol en el proyecto y de sus permisos.'
+        allowed_actions_html: 'Tiene los siguientes permisos sobre este paquete de trabajo: %{allowed_actions}. Esto puede cambiar dependiendo de su rol en el entorno y de sus permisos.'
         create_account: 'Para acceder a este paquete de trabajo necesitará crear y activar una cuenta en %{instance}. '
         open_work_package: Abrir paquete de trabajo
         subject: El paquete de trabajo %{id} fue compartido con usted
-        enterprise_text: Compartir paquetes de trabajo con usuarios que no son miembros del proyecto.
+        enterprise_text: Compartir paquetes de trabajo con usuarios que no son miembros del entorno.
         summary:
           user: "%{user} ha compartido un paquete de trabajo contigo con permisos de %{role_rights}"
           group: "%{user} ha compartido un paquete de trabajo con el grupo %{group} del que eres miembro"
@@ -4614,7 +4614,7 @@ es:
     body: Su cuenta en %{app_title} está conectada a un proveedor de autenticación externo (%{name}).
     subtext: Las contraseñas de las cuentas externas no pueden cambiarse en la aplicación. Utilice la funcionalidad de pérdida de contraseña de su proveedor de autenticación.
   mail_body_register: 'Bienvenido a %{app_title}. Por favor, active su cuenta haciendo clic en este enlace:'
-  mail_body_register_header_title: Correo electrónico de invitación al miembro del proyecto
+  mail_body_register_header_title: Correo electrónico de invitación al miembro del entorno
   mail_body_register_user: Estimado/a %{name},
   mail_body_register_links_html: |
     Le invitamos a explorar nuestro canal de YouTube (%{youtube_link}), donde encontrará un seminario web (%{webinar_link})
@@ -4639,15 +4639,15 @@ es:
     subject: "%{project}: se añadió como miembro a su usuario"
     body:
       added_by:
-        without_message: "%{user} le añadió como miembro al proyecto «%{project}»."
-        with_message: "%{user} le añadió como miembro al proyecto «%{project}» con el mensaje siguiente:"
+        without_message: "%{user} le añadió como miembro al entorno «%{project}»."
+        with_message: "%{user} le añadió como miembro al entorno «%{project}» con el mensaje siguiente:"
       roles: 'Tiene los roles siguientes:'
   mail_member_updated_project:
     subject: "%{project}: se actualizaron sus roles"
     body:
       updated_by:
-        without_message: "%{user} actualizó los roles que tiene en el proyecto «%{project}»."
-        with_message: "%{user} actualizó los roles que tiene en el proyecto «%{project}» con el mensaje siguiente:"
+        without_message: "%{user} actualizó los roles que tiene en el entorno «%{project}»."
+        with_message: "%{user} actualizó los roles que tiene en el entorno «%{project}» con el mensaje siguiente:"
       roles: 'Tiene asignados los roles siguientes:'
   mail_member_updated_global:
     subject: Se actualizaron sus permisos globales
@@ -4659,7 +4659,7 @@ es:
   mail_user_activation_limit_reached:
     subject: Se ha alcanzado el límite de activaciones del usuario
     message_html: |
-      Un nuevo usuario (%{email}) intento crear una cuenta en el ambiente de Proyecto Abierto que usted administra (%{host}).
+      Un nuevo usuario (%{email}) intento crear una cuenta en el ambiente de Entorno Abierto que usted administra (%{host}).
       El usuario no puede activar su cuenta debido a que el límite del usuario ha sido alcanzado.
     steps:
       label: 'Para permitir al usuario ingresar, usted puede: '
@@ -4707,21 +4707,21 @@ es:
   notice_locking_conflict_warning: Esta página ha sido actualizada por otra persona. Para no perder sus ediciones, cópielas localmente y vuelva a cargarlas para ver la versión actualizada.
   notice_locking_conflict_danger: No se han podido guardar sus cambios debido a modificaciones conflictivas. Para no perder sus ediciones, cópielas localmente y vuelva a cargarlas para ver la versión actualizada.
   notice_locking_conflict_action_button: Descartar los cambios y volver a cargar
-  notice_member_added: Se añadio a %{name} al proyecto.
-  notice_members_added: Añadidos %{number} usuarios al proyecto.
-  notice_member_removed: Se ha eliminado a %{user} del proyecto.
-  notice_member_deleted: El usuario %{user} ha sido borrado del proyecto y eliminado.
+  notice_member_added: Se añadio a %{name} al entorno.
+  notice_members_added: Añadidos %{number} usuarios al entorno.
+  notice_member_removed: Se ha eliminado a %{user} del entorno.
+  notice_member_deleted: El usuario %{user} ha sido borrado del entorno y eliminado.
   notice_no_principals_found: No se encontraron resultados.
   notice_bad_request: Petición incorrecta.
   notice_not_authorized: No está autorizado a acceder a esta página.
-  notice_not_authorized_archived_project: El proyecto que usted esta tratando de acceder ha sido archivado.
+  notice_not_authorized_archived_project: El entorno que usted esta tratando de acceder ha sido archivado.
   notice_requires_enterprise_token: Falta el token de la empresa o no permite el acceso a esta página.
   notice_password_confirmation_failed: La contraseña introducida no es correcta.
   notice_principals_found_multiple: "Hemos encontrado %{number} resultados. \n Pulse TAB para ver el primer resultado."
   notice_principals_found_single: "Se ha encontrado solo un resultado. \n Pulse TAB para verlo."
   notice_parent_item_not_found: Elemento padre no encontrado.
-  notice_project_not_deleted: El proyecto no fue eliminado.
-  notice_project_not_found: Proyecto no encontrado.
+  notice_project_not_deleted: El entorno no fue eliminado.
+  notice_project_not_found: Entorno no encontrado.
   notice_smtp_address_unsafe_env_hint: La dirección SMTP %{address} no es segura. Añádela a la lista blanca mediante la variable de entorno %{env_name}.
   notice_successful_connection: Conexión exitosa.
   notice_successful_create: Creación exitosa.
@@ -4745,7 +4745,7 @@ es:
   notice_automatic_set_of_standard_type: Establecer tipo estándar automáticamente.
   notice_logged_out: Has cerrado la sesion.
   notice_wont_delete_auth_source: La conexión LDAP no puede eliminarse mientras siga habiendo usuarios que la utilicen.
-  notice_project_cannot_update_custom_fields: 'No se pueden actualizar campos personalizados disponibles del proyecto. El proyecto es inválido: %{errors}'
+  notice_project_cannot_update_custom_fields: 'No se pueden actualizar campos personalizados disponibles del entorno. El entorno es inválido: %{errors}'
   notice_attachment_migration_wiki_page: 'Esta página se generó automáticamente al actualizar OpenProject. Contiene todos los datos adjuntos que estaban asociados anteriormente al %{container_type} "%{container_name}".
 
     '
@@ -4770,7 +4770,7 @@ es:
           tb: TB
   onboarding:
     heading_getting_started: Obtener información general
-    text_getting_started_description: Obtenga un resumen rápido sobre la gestión de proyectos y la colaboración en equipo con OpenProject. Puedes volver a ver este video des del menú de ayuda.
+    text_getting_started_description: Obtenga un resumen rápido sobre la gestión de entornos y la colaboración en equipo con OpenProject. Puedes volver a ver este video des del menú de ayuda.
     welcome: Bienvenido a %{app_title}
     select_language: Seleccione su idioma
   open_project:
@@ -4781,17 +4781,17 @@ es:
   permission_add_work_package_comments: Añadir comentarios
   permission_add_work_packages: Añadir paquetes de trabajo
   permission_add_messages: Publicar mensajes
-  permission_add_project: Crear proyectos
-  permission_add_portfolios: Crear portafolios
+  permission_add_project: Crear entornos
+  permission_add_portfolios: Crear espacios de trabajo
   permission_add_programs: Crear programas
   permission_add_work_package_attachments: Añadir archivos adjuntos
   permission_add_work_package_attachments_explanation: Permite añadir archivos adjuntos sin el permiso Editar paquetes de trabajo
   permission_add_internal_comments: Escribir comentarios internos
-  permission_archive_project: Archivar proyecto
+  permission_archive_project: Archivar entorno
   permission_create_user: Crear usuarios
   permission_manage_user: Editar usuarios
   permission_manage_placeholder_user: Crear, editar y eliminar usuarios de marcador de posición
-  permission_add_subprojects: Crear subproyectos
+  permission_add_subprojects: Crear subentornos
   permission_add_work_package_watchers: Agregar observadores
   permission_assign_versions: Asignar versiones
   permission_browse_repository: Permiso de solo lectura sobre el repositorio (Navegación y checkout)
@@ -4799,8 +4799,8 @@ es:
   permission_change_work_package_status_explanation: Permite cambiar el estado sin el permiso Editar paquetes de trabajo
   permission_comment_news: Comentar noticias
   permission_commit_access: Permiso de escritura sobre el repositorio (commit)
-  permission_copy_projects: Copiar proyectos
-  permission_copy_projects_explanation: En los proyectos de plantilla, este permiso tiene una función secundaria, permite la creación de nuevos proyectos derivados de la plantilla.
+  permission_copy_projects: Copiar entornos
+  permission_copy_projects_explanation: En los entornos de plantilla, este permiso tiene una función secundaria, permite la creación de nuevos entornos derivados de la plantilla.
   permission_copy_work_packages: Duplicar paquetes de trabajo
   permission_create_backup: Crear copias de seguridad
   permission_delete_work_package_watchers: Eliminar los observadores
@@ -4819,15 +4819,15 @@ es:
   permission_edit_own_time_entries: Editar registros de tiempo propios
   permission_edit_others_internal_comments: Moderar comentarios internos
   permission_edit_others_internal_comments_explanation: 'Precaución: Los usuarios con este permiso pueden editar los comentarios internos de otros usuarios.'
-  permission_edit_project: Editar proyecto
-  permission_edit_project_attributes: Editar atributos del proyecto
-  permission_edit_project_phases: Editar fases del proyecto
+  permission_edit_project: Editar entorno
+  permission_edit_project_attributes: Editar atributos del entorno
+  permission_edit_project_phases: Editar fases del entorno
   permission_edit_reportings: Editar reportes
   permission_edit_time_entries: Editar registros de tiempo para otros usuarios
   permission_edit_timelines: Editar cronogramas
   permission_edit_wiki_pages: Editar wiki página
   permission_export_work_packages: Exportar Paquetes de Trabajo
-  permission_export_projects: Exportar proyectos
+  permission_export_projects: Exportar entornos
   permission_invite_members_by_email: Invitar a miembros por correo electrónico
   permission_invite_members_by_email_explanation: 'Permite a los usuarios invitar a nuevos miembros por correo electrónico. Los usuarios invitados recibirán un correo electrónico con un enlace para establecer su contraseña y activar su cuenta. Depende del permiso para gestionar miembros
 
@@ -4840,7 +4840,7 @@ es:
   permission_manage_work_package_relations: Gestionar las relaciones del paquete de trabajo
   permission_manage_members: Gestión de Miembros
   permission_manage_news: Administrar noticias
-  permission_manage_project_activities: Gestionar actividades del proyecto
+  permission_manage_project_activities: Gestionar actividades del entorno
   permission_manage_public_queries: Administrar vistas públicas
   permission_manage_repository: Gestionar repositorio
   permission_manage_subtasks: Administrar jerarquías de paquetes de trabajo
@@ -4856,20 +4856,20 @@ es:
     '
   permission_move_work_packages: Mover paquetes de trabajo
   permission_save_queries: Guardar vistas
-  permission_search_project: Buscar proyecto
+  permission_search_project: Buscar entorno
   permission_select_custom_fields: Seleccionar campos personalizados
-  permission_select_project_custom_fields: Seleccione los atributos del proyecto
-  permission_select_project_phases: Seleccione las fases del proyecto
-  permission_select_project_phases_explanation: Activar/desactivar las fases de un proyecto. Permite al usuario seleccionar el ciclo de vida adecuado para el proyecto, ya que las fases inactivas no serán visibles en la página de resumen del proyecto ni en la lista de proyectos.
-  permission_select_project_modules: Seleccionar módulos de proyecto
+  permission_select_project_custom_fields: Seleccione los atributos del entorno
+  permission_select_project_phases: Seleccione las fases del entorno
+  permission_select_project_phases_explanation: Activar/desactivar las fases de un entorno. Permite al usuario seleccionar el ciclo de vida adecuado para el entorno, ya que las fases inactivas no serán visibles en la página de resumen del entorno ni en la lista de entornos.
+  permission_select_project_modules: Seleccionar módulos de entorno
   permission_share_work_packages: Compartir paquetes de trabajo
   permission_manage_types: Seleccionar Tipos
   permission_manage_own_reminders: Crear recordatorios propios
   permission_view_all_principals: Ver todos los usuarios y grupos
-  permission_view_all_principals_explanation: 'Permite a los usuarios ver todos los usuarios y grupos del sistema, incluso si no son miembros de ningún proyecto o grupo al que se hayan unido.
+  permission_view_all_principals_explanation: 'Permite a los usuarios ver todos los usuarios y grupos del sistema, incluso si no son miembros de ningún entorno o grupo al que se hayan unido.
 
     '
-  permission_view_project: Ver proyectos
+  permission_view_project: Ver entornos
   permission_view_changesets: Ver las revisiones del repositorio en OpenProject
   permission_view_internal_comments: Ver comentarios internos
   permission_view_commit_author_statistics: Ver estadísticas del commit del autor
@@ -4887,24 +4887,24 @@ es:
   permission_view_wiki_edits: Ver historial wiki
   permission_view_wiki_pages: Ver wiki
   permission_work_package_assigned: Hazte asignado/responsable
-  permission_work_package_assigned_explanation: Los paquetes de trabajo se pueden asignar a usuarios y grupos con este papel en los proyectos correspondientes
-  permission_view_project_activity: Ver la actividad del proyecto
-  permission_view_project_attributes: Ver atributos del proyecto
-  permission_view_project_phases: Ver las fases del proyecto
+  permission_work_package_assigned_explanation: Los paquetes de trabajo se pueden asignar a usuarios y grupos con este papel en los entornos correspondientes
+  permission_view_project_activity: Ver la actividad del entorno
+  permission_view_project_attributes: Ver atributos del entorno
+  permission_view_project_phases: Ver las fases del entorno
   permission_save_bcf_queries: Guardar consultas BCF
   permission_manage_public_bcf_queries: Administrar consultas BCF públicas
   permission_edit_attribute_help_texts: Editar textos de ayuda de atributos
-  permission_manage_public_project_queries: Administrar listas públicas de proyectos
-  permission_view_project_query: Ver vistas de proyecto
-  permission_edit_project_query: Editar vistas de proyecto
+  permission_manage_public_project_queries: Administrar listas públicas de entornos
+  permission_view_project_query: Ver vistas de entorno
+  permission_edit_project_query: Editar vistas de entorno
   placeholders:
     default: "-"
     templated_hint: Generado automáticamente a través del tipo %{type}
   portfolio:
     count:
-      zero: 0 carteras
-      one: 1 cartera
-      other: "%{count} carteras"
+      zero: 0 espacios de trabajo
+      one: 1 espacio de trabajo
+      other: "%{count} espacios de trabajo"
   program:
     count:
       zero: 0 programas
@@ -4912,38 +4912,38 @@ es:
       other: "%{count} programas"
   project:
     archive:
-      title: Archivar proyecto
-      are_you_sure: "¿Está seguro que desea archivar el proyecto '%{name}'?"
+      title: Archivar entorno
+      are_you_sure: "¿Está seguro que desea archivar el entorno '%{name}'?"
       archived: Archivado
     count:
-      zero: 0 proyectos
-      one: 1 proyecto
+      zero: 0 entornos
+      one: 1 entorno
       other: "%{count} projectos"
     destroy:
-      title: Eliminar proyecto
-      heading: "¿Eliminar este proyecto de forma permanente?"
+      title: Eliminar entorno
+      heading: "¿Eliminar este entorno de forma permanente?"
       confirmation_message_for_subprojects_html:
-        zero: 'Está a punto de borrar de forma permanente todos los datos relativos al proyecto <strong>%{name}</strong>.
+        zero: 'Está a punto de borrar de forma permanente todos los datos relativos al entorno <strong>%{name}</strong>.
 
           '
-        one: 'Está a punto de borrar de forma permanente todos los datos relativos al proyecto <strong>%{name}</strong> y este subproyecto:
+        one: 'Está a punto de borrar de forma permanente todos los datos relativos al entorno <strong>%{name}</strong> y este subentorno:
 
           '
-        other: 'Está a punto de borrar de forma permanente todos los datos relativos al proyecto <strong>%{name}</strong> y estos subproyectos:
+        other: 'Está a punto de borrar de forma permanente todos los datos relativos al entorno <strong>%{name}</strong> y estos subentornos:
 
           '
     filters:
-      project_phase: 'Fase del proyecto: %{phase}'
-      project_phase_any: 'Fase del proyecto: Cualquiera'
-      project_phase_gate: 'Puerta de la fase del proyecto: %{gate}'
+      project_phase: 'Fase del entorno: %{phase}'
+      project_phase_any: 'Fase del entorno: Cualquiera'
+      project_phase_gate: 'Puerta de la fase del entorno: %{gate}'
     identifier:
-      warning_one: Los miembros del proyecto deberán migrar los repositorios del proyecto.
-      warning_two: Los links al proyeto existentes dejarán de funcionar.
-      title: Cambiar el identificador de proyecto
-    not_available: Proyecto N/D
+      warning_one: Los miembros del entorno deberán migrar los repositorios del entorno.
+      warning_two: Los links al entorno existentes dejarán de funcionar.
+      title: Cambiar el identificador de entorno
+    not_available: Entorno N/D
     template:
       copying_title: Plantilla aplicada
-      copying: 'Tu proyecto está siendo creado a partir de la plantilla seleccionada. Serás notificado por correo electrónico tan pronto como el proyecto esté disponible.
+      copying: 'Tu entorno está siendo creado a partir de la plantilla seleccionada. Serás notificado por correo electrónico tan pronto como el entorno esté disponible.
 
         '
       use_template: Usar plantilla
@@ -4964,10 +4964,10 @@ es:
     assignee_or_group: Grupo al que pertenece o al que está asignado
     member_of_group: Asignación de grupo
     name_or_identifier: Nombre o identificador
-    only_subproject_id: Sólo subproyecto
+    only_subproject_id: Sólo subentorno
     shared_with_user: Compartido con usuarios
     shared_with_me: Compartido conmigo
-    subproject_id: Incluyendo subproyecto
+    subproject_id: Incluyendo subentorno
   repositories:
     at_identifier: en %{identifier}
     atom_revision_feed: Feed de revisión de Atom
@@ -4993,7 +4993,7 @@ es:
       instructions: Instrucciones de checkout
       show_instructions: Mostrar las instrucciones de checkout
       text_instructions: Este texto es mostrado conjuntamente con la URL de checkout para guiar en el proceso de checkout del repositorio.
-      not_available: Las instrucciones de Checkout para este repositorio no estan definidas. Consulte con su administrador para habilitarlas en este proyecto en la configuración del sistema.
+      not_available: Las instrucciones de Checkout para este repositorio no estan definidas. Consulte con su administrador para habilitarlas en este entorno en la configuración del sistema.
     create_managed_delay: 'Nota: el repositorio es administrado, se crea asincrónicamente en el disco y estará disponible en breve.'
     create_successful: El repositorio ha sido registrado.
     delete_sucessful: El repositorio ha sido eliminado.
@@ -5002,9 +5002,9 @@ es:
       info: La eliminación del repositorio no se puede deshacer.
       info_not_managed: 'Nota: Esto NO borrará el contenido de este repositorio, ya que no es gestionado por OpenProject.'
       managed_path_note: 'Se borrará el directorio siguiente: %{path}'
-      repository_verification_html: Introduce el identificador del proyecto %{identifier} para confirmar la eliminación de su repositorio.
-      subtitle: "¿Esta seguro de que desea eliminar el tipo %{repository_type} del proyecto %{project_name}?"
-      subtitle_not_managed_html: "¿De verdad quieres eliminar el enlace %{repository_type} %{url} del proyecto %{project_name}?"
+      repository_verification_html: Introduce el identificador del entorno %{identifier} para confirmar la eliminación de su repositorio.
+      subtitle: "¿Esta seguro de que desea eliminar el tipo %{repository_type} del entorno %{project_name}?"
+      subtitle_not_managed_html: "¿De verdad quieres eliminar el enlace %{repository_type} %{url} del entorno %{project_name}?"
       title_html: Eliminar el %{repository_type}
       title_not_managed: Eliminar el %{repository_type} linkado?
     errors:
@@ -5044,7 +5044,7 @@ es:
     settings:
       automatic_managed_repos_disabled: Desactivar la creación automática
       automatic_managed_repos: Creación automática de repositorios gestionados
-      automatic_managed_repos_text: Al establecer un proveedor aquí, los proyectos recién creados recibirán automáticamente un repositorio gestionado de este proveedor.
+      automatic_managed_repos_text: Al establecer un proveedor aquí, los entornos recién creados recibirán automáticamente un repositorio gestionado de este proveedor.
     scm_vendor: Sistema de gestión de control de fuente
     scm_type: Tipo de repositorio
     scm_types:
@@ -5058,7 +5058,7 @@ es:
       oauth_application_details_link_text: Ir a la página de configuración
       setup_documentation_details: 'Si necesita ayuda para configurar un nuevo almacenamiento de archivos, compruebe la documentación: '
       setup_documentation_details_link_text: Configuración de almacenamiento de archivos
-      show_warning_details: Para utilizar este almacenamiento recuerde activar el módulo y el almacenamiento específico en la configuración de cada proyecto deseado.
+      show_warning_details: Para utilizar este almacenamiento recuerde activar el módulo y el almacenamiento específico en la configuración de cada entorno deseado.
     subversion:
       existing_title: Subversion existentes de repositorio
       existing_introduction: Si tienes una Subversion de repositorio existente, puede enlazarlo con OpenProject para acceder a él desde dentro de la aplicación.
@@ -5144,7 +5144,7 @@ es:
   setting_smtp_user_name: Nombre de usuario SMTP
   setting_smtp_password: Contraseña SMTP
   setting_smtp_domain: Dominio SMTP HELO
-  setting_activity_days_default: Días mostrados en actividad de proyecto
+  setting_activity_days_default: Días mostrados en actividad de entorno
   setting_api_tokens_enabled: Habilitar tokens API
   setting_api_tokens_enabled_caption: 'Decida si los usuarios pueden crear tokens API personales en la configuración de sus cuentas. Estos tokens se pueden utilizar para acceder a las diferentes API de OpenProject, como APIv3 y MCP.
 
@@ -5174,16 +5174,16 @@ es:
   setting_consent_info: Texto de información de consentimiento
   setting_consent_required: Se requiere consentimiento
   setting_consent_decline_mail: Consentimiento de la dirección de correo electrónico
-  setting_cross_project_work_package_relations: Permitir relaciones cruzadas en paquetes de trabajo de proyecto
+  setting_cross_project_work_package_relations: Permitir relaciones cruzadas en paquetes de trabajo de entorno
   setting_first_week_of_year: La primera semana del año contiene
   setting_date_format: Fecha
   setting_default_language: Idioma predeterminado
-  setting_default_projects_modules: Modulos activados por defecto para nuevos proyectos
-  setting_default_projects_public: Nuevos proyectos son públicos por defecto
+  setting_default_projects_modules: Modulos activados por defecto para nuevos entornos
+  setting_default_projects_public: Nuevos entornos son públicos por defecto
   setting_disable_password_login: Desactivar la autenticación por contraseña
   setting_diff_max_lines_displayed: Cantidad máxima de diferencias de lineas mostradas
   setting_omniauth_direct_login_provider: Proveedor de SSO de inicio de sesión directo
-  setting_display_subprojects_work_packages: Mostrar paquetes de trabajo de subproyectos en proyectos principales por defecto
+  setting_display_subprojects_work_packages: Mostrar paquetes de trabajo de subentornos en entornos principales por defecto
   setting_duration_format: Formato de la duración
   setting_duration_format_hours_only: Sólo horas
   setting_duration_format_days_and_hours: Días y horas
@@ -5192,7 +5192,7 @@ es:
   setting_emails_header: Encabezado de correos electrónicos
   setting_email_login: Usar correo electrónico como nombre de usuario
   setting_enabled_scm: SCM activado
-  setting_enabled_projects_columns: Columnas de una lista de proyectos mostradas por defecto
+  setting_enabled_projects_columns: Columnas de una lista de entornos mostradas por defecto
   setting_feeds_enabled: Activar Feeds
   setting_ical_enabled: Habilitar las suscripciones a iCalendar
   setting_feeds_limit: Limite de contenido de feed
@@ -5214,7 +5214,7 @@ es:
     '
   setting_work_package_properties: Propiedades de paquete de trabajo
   setting_work_package_startdate_is_adddate: Usar fecha actual como fecha de inicio para nuevos paquetes de trabajo
-  setting_work_packages_projects_export_limit: Fecha límite para exportar paquete de trabajo o proyectos
+  setting_work_packages_projects_export_limit: Fecha límite para exportar paquete de trabajo o entornos
   setting_journal_aggregation_time_minutes: Período de agregación
   setting_log_requesting_user: Registrar inicio de sesión de usuario, nombre, y dirección de correo para todas las solicitudes
   setting_login_required: Autentificación requerida
@@ -5226,11 +5226,11 @@ es:
   setting_mail_handler_body_delimiters: Truncar los correos electrónicos después de una de estas líneas
   setting_mail_handler_body_delimiter_regex: Truncar correos que coincidan con esta expresión regular
   setting_mail_handler_ignore_filenames: Archivos adjuntos de email ignorados
-  setting_new_project_user_role_id: Papel ortorgado a usuario no administrador que crea un proyecto
-  setting_new_project_user_role_id_caption: 'Solo se muestran los roles que incluyen los permisos para editar los atributos del proyecto y gestionar a los miembros, de modo que el creador pueda completar la configuración del proyecto.
+  setting_new_project_user_role_id: Papel ortorgado a usuario no administrador que crea un entorno
+  setting_new_project_user_role_id_caption: 'Solo se muestran los roles que incluyen los permisos para editar los atributos del entorno y gestionar a los miembros, de modo que el creador pueda completar la configuración del entorno.
 
     '
-  setting_new_project_send_confirmation_email: Enviar notificación al autor al crear un nuevo proyecto
+  setting_new_project_send_confirmation_email: Enviar notificación al autor al crear un nuevo entorno
   setting_new_project_notification_text: Texto de la notificación
   setting_password_active_rules: Requisitos de la contraseña
   setting_password_count_former_banned: Numero de contraseñas usadas mas recientemente bloqueadas para re-uso
@@ -5244,8 +5244,8 @@ es:
   setting_percent_complete_on_status_closed_set_100p_caption: Un paquete de trabajo cerrado se considera completo.
   setting_plain_text_mail: Correo en texto plano (sin HTML)
   setting_protocol: Protocolo
-  setting_project_gantt_query: Diagrama de Gantt de la cartera de proyectos
-  setting_project_gantt_query_text: Puede modificar la consulta usada para mostrar el diagrama de Gantt en la página de información general del proyecto.
+  setting_project_gantt_query: Diagrama de Gantt del espacio de trabajo de entornos
+  setting_project_gantt_query_text: Puede modificar la consulta usada para mostrar el diagrama de Gantt en la página de información general del entorno.
   setting_security_badge_displayed: Mostrar insignia de seguridad
   setting_registration_footer: Pié de página de registro
   setting_registration_footer_caption: Este texto aparece en el pie de página de la página de registro. Utilice el editor HTML para dar formato al texto de cada idioma seleccionado.
@@ -5261,7 +5261,7 @@ es:
   setting_self_registration_caption: 'Elija el mecanismo de autorregistro para los usuarios. Tenga cuidado con el ajuste que elija, ya que algunas opciones permiten a los usuarios activar sus propias cuentas a esta instancia.
 
     '
-  setting_self_registration_warning: 'El usuario podrá activar sus propias cuentas. Tenga en cuenta que esto les dará acceso a todos los proyectos públicos y a su contenido. Asegúrese de que no se exponen datos sensibles o privados en los proyectos públicos.
+  setting_self_registration_warning: 'El usuario podrá activar sus propias cuentas. Tenga en cuenta que esto les dará acceso a todos los entornos públicos y a su contenido. Asegúrese de que no se exponen datos sensibles o privados en los entornos públicos.
 
     '
   setting_self_registration_disabled: Deshabilitado
@@ -5301,11 +5301,11 @@ es:
   setting_welcome_title: Título del bloque de bienvenida
   setting_welcome_on_homescreen: Mostrar bloque de bienvenida en la pagina de inicio
   setting_work_packages_identifier_classic: Secuencia numérica para toda la instancia (predeterminada)
-  setting_work_packages_identifier_classic_caption: 'Cada paquete de trabajo recibe un número secuencial que empieza por 1 y se incrementa con cada nuevo paquete. Los números son únicos dentro de esta instancia, por lo que siguen siendo los mismos aunque los paquetes de trabajo se trasladen de un proyecto a otro.
+  setting_work_packages_identifier_classic_caption: 'Cada paquete de trabajo recibe un número secuencial que empieza por 1 y se incrementa con cada nuevo paquete. Los números son únicos dentro de esta instancia, por lo que siguen siendo los mismos aunque los paquetes de trabajo se trasladen de un entorno a otro.
 
     '
-  setting_work_packages_identifier_semantic: Identificadores semánticos basados en proyectos
-  setting_work_packages_identifier_semantic_caption: 'Cada proyecto tiene un identificador único que se añade al principio del ID del paquete de trabajo. Si un paquete de trabajo se traslada a otro proyecto, se genera un nuevo identificador, pero el antiguo sigue funcionando.
+  setting_work_packages_identifier_semantic: Identificadores semánticos basados en entornos
+  setting_work_packages_identifier_semantic_caption: 'Cada entorno tiene un identificador único que se añade al principio del ID del paquete de trabajo. Si un paquete de trabajo se traslada a otro entorno, se genera un nuevo identificador, pero el antiguo sigue funcionando.
 
     '
   setting_work_package_list_default_highlighting_mode: Modo de resaltado predeterminado
@@ -5329,7 +5329,7 @@ es:
       whitelist_text_html: 'Define una lista de extensiones de archivo válidas o tipos MIME para los archivos cargados. <br/> Escriba las extensiones de archivo (por ejemplo, <code>%{ext_example}</code>) o tipos MIME (<code>%{mime_example}</code>). <br/> Deje vacío este campo para que pueda cargarse cualquier tipo de archivo. Se permiten varios valores (una línea para cada valor).
 
         '
-      show_work_package_attachments: 'Al desactivar esta opción se ocultará la lista de archivos adjuntos en la pestaña de archivos de los paquetes de trabajo para los nuevos proyectos. Los archivos adjuntos en la descripción de un paquete de trabajo seguirán cargándose en el almacenamiento interno de archivos adjuntos.
+      show_work_package_attachments: 'Al desactivar esta opción se ocultará la lista de archivos adjuntos en la pestaña de archivos de los paquetes de trabajo para los nuevos entornos. Los archivos adjuntos en la descripción de un paquete de trabajo seguirán cargándose en el almacenamiento interno de archivos adjuntos.
 
         '
     antivirus:
@@ -5385,32 +5385,32 @@ es:
     other: Otros
     passwords: Contraseñas
     project_attributes:
-      heading: Atributos del proyecto
-      label_for_all_projects: Todos los proyectos
-      label_new_attribute: Atributo del proyecto
+      heading: Atributos del entorno
+      label_for_all_projects: Todos los entornos
+      label_new_attribute: Atributo del entorno
       label_new_section: Sección
       label_edit_section: Editar título
       label_section_actions: Acciones de sección
-      heading_description: Estos atributos del proyecto aparecen en la página de resumen de cada proyecto. Puede añadir nuevos atributos, agruparlos en secciones y reordenarlos a su gusto. Estos atributos pueden activarse o desactivarse, pero no reordenarse a nivel de proyecto.
-      label_project_custom_field_actions: Acciones de atributos del proyecto
-      label_no_project_custom_fields: No hay atributos del proyecto definidos en esta sección
+      heading_description: Estos atributos del entorno aparecen en la página de resumen de cada entorno. Puede añadir nuevos atributos, agruparlos en secciones y reordenarlos a su gusto. Estos atributos pueden activarse o desactivarse, pero no reordenarse a nivel de entorno.
+      label_project_custom_field_actions: Acciones de atributos del entorno
+      label_no_project_custom_fields: No hay atributos del entorno definidos en esta sección
       edit:
-        description: Los cambios en este atributo del proyecto se reflejarán en todos los proyectos en los que esté habilitado. Los atributos obligatorios no pueden desactivarse por proyecto.
+        description: Los cambios en este atributo del entorno se reflejarán en todos los entornos en los que esté habilitado. Los atributos obligatorios no pueden desactivarse por entorno.
       new:
         heading: Nuevo atributo
-        description: Los cambios en este atributo del proyecto se reflejarán en todos los proyectos en los que esté habilitado. Los atributos obligatorios no pueden desactivarse por proyecto.
+        description: Los cambios en este atributo del entorno se reflejarán en todos los entornos en los que esté habilitado. Los atributos obligatorios no pueden desactivarse por entorno.
       sections:
         display_representation:
           overview:
-            label: 'Atributo del proyecto mostrado en:'
+            label: 'Atributo del entorno mostrado en:'
             main_area:
               label: Área principal
-              description: Añadir todos los atributos del proyecto como widgets individuales en la sección principal de la descripción general del proyecto.
+              description: Añadir todos los atributos del entorno como widgets individuales en la sección principal de la descripción general del entorno.
             side_panel:
               label: Panel lateral
-              description: Añadir todos los atributos del proyecto en una sección dentro del panel lateral derecho en la descripción del proyecto.
+              description: Añadir todos los atributos del entorno en una sección dentro del panel lateral derecho en la descripción del entorno.
     project_initiation_request:
-      header_description: 'OpenProject puede generar un asistente paso a paso para ayudar a los gestores de proyectos a completar una solicitud de inicio de proyecto. Puedes elegir qué atributos del proyecto deben incluirse y crear un archivo PDF como resultado.
+      header_description: 'OpenProject puede generar un asistente paso a paso para ayudar a los gestores de entornos a completar una solicitud de inicio de entorno. Puedes elegir qué atributos del entorno deben incluirse y crear un archivo PDF como resultado.
 
         '
       status:
@@ -5418,57 +5418,57 @@ es:
         submitted_description: Haz clic en el botón de abajo para ir al paquete de trabajo para el proceso de envío.
         submitted_button: Abrir solicitud de envío
         not_completed: Aún no se ha completado %{wizard_name}
-        not_completed_description: Proporciona la información necesaria rellenando los atributos y lanza el proyecto.
+        not_completed_description: Proporciona la información necesaria rellenando los atributos y lanza el entorno.
       wizard_status_button:
-        project_initiation_request: Abrir solicitud de inicio de proyecto
-        project_creation_wizard: Abrir el asistente de creación de proyectos
-        project_mandate: Abrir mandato del proyecto
+        project_initiation_request: Abrir solicitud de inicio de entorno
+        project_creation_wizard: Abrir el asistente de creación de entornos
+        project_mandate: Abrir mandato del entorno
       blankslate:
         title: Solicitud de inicio no habilitada
-        description: OpenProject puede generar un asistente paso a paso para ayudar a los gestores de proyectos a completar una solicitud de inicio de proyecto. Puedes elegir qué atributos del proyecto deben incluirse y qué hacer con el documento resultante. Habilítalo aquí para comenzar a configurar el asistente.
+        description: OpenProject puede generar un asistente paso a paso para ayudar a los gestores de entornos a completar una solicitud de inicio de entorno. Puedes elegir qué atributos del entorno deben incluirse y qué hacer con el documento resultante. Habilítalo aquí para comenzar a configurar el asistente.
       disable_dialog:
-        title: Desactivar solicitud de inicio de proyecto
-        heading: "¿Desactivar la solicitud de inicio de proyecto?"
-        confirmation_message: El asistente de solicitud de inicio ya no estará disponible para los nuevos proyectos basados en esta plantilla. Los gestores y propietarios de proyectos tendrán que configurar y rellenar manualmente la información relevante en la descripción general del proyecto.
+        title: Desactivar solicitud de inicio de entorno
+        heading: "¿Desactivar la solicitud de inicio de entorno?"
+        confirmation_message: El asistente de solicitud de inicio ya no estará disponible para los nuevos entornos basados en esta plantilla. Los gestores y propietarios de entornos tendrán que configurar y rellenar manualmente la información relevante en la descripción general del entorno.
         checkbox_message: Entiendo que esta acción es irreversible
       name:
         artifact_name: Nombre del artefacto
-        artifact_name_caption: Elige el nombre para este artefacto que recomiende tu marco de gestión de proyectos.
+        artifact_name_caption: Elige el nombre para este artefacto que recomiende tu marco de gestión de entornos.
         options:
-          project_initiation_request: Solicitud de inicio de proyecto
-          project_creation_wizard: Asistente de creación de proyectos
-          project_mandate: Mandato del proyecto
+          project_initiation_request: Solicitud de inicio de entorno
+          project_creation_wizard: Asistente de creación de entornos
+          project_mandate: Mandato del entorno
       submission:
         description_template: "**Este paquete de trabajo se ha creado automáticamente al completar el flujo de trabajo %{wizard_name}.** Se ha generado un artefacto en formato PDF con toda la información enviada y se ha adjuntado a este paquete de trabajo para fines de referencia y auditoría. Si necesitas actualizar o volver a ejecutar los pasos de inicio, puedes volver a abrir el asistente en cualquier momento utilizando el siguiente enlace:\n"
-        description: Cuando un usuario envía una solicitud de inicio de proyecto, se creará un nuevo paquete de trabajo con el artefacto de solicitud adjunto como archivo PDF. La configuración siguiente define el tipo, el estado y el asignado de este nuevo paquete de trabajo.
+        description: Cuando un usuario envía una solicitud de inicio de entorno, se creará un nuevo paquete de trabajo con el artefacto de solicitud adjunto como archivo PDF. La configuración siguiente define el tipo, el estado y el asignado de este nuevo paquete de trabajo.
         work_package_type: Tipo de paquete de trabajo
         work_package_type_caption: El tipo de paquete de trabajo que debe utilizarse para almacenar el artefacto completado.
         status_when_submitted: Estado al enviar
         status_when_submitted_caption: El estado al que pasará el paquete de trabajo generado una vez enviada la solicitud.
-        send_confirmation_email: Enviar un correo electrónico de confirmación al usuario que envió la solicitud de inicio del proyecto
+        send_confirmation_email: Enviar un correo electrónico de confirmación al usuario que envió la solicitud de inicio del entorno
         assignee: Asignado cuando se envía
-        assignee_caption_html: El usuario o grupo asignado a este atributo del proyecto también se convertirá en el responsable del nuevo paquete de trabajo. Esta lista incluye solo atributos de proyecto activos de tipo <i>Usuario</i>.
+        assignee_caption_html: El usuario o grupo asignado a este atributo del entorno también se convertirá en el responsable del nuevo paquete de trabajo. Esta lista incluye solo atributos de entorno activos de tipo <i>Usuario</i>.
         confirmation_email_text: Texto del correo electrónico de confirmación
         confirmation_email_default: |-
           Hola:
 
-          Has enviado una solicitud de inicio de proyecto para **%{project_name}**. Ahora está pendiente de revisión.
+          Has enviado una solicitud de inicio de entorno para **%{project_name}**. Ahora está pendiente de revisión.
           Haz clic en el enlace siguiente para acceder al paquete de trabajo con tu solicitud.
         work_package_comment: Comentario del paquete de trabajo
         work_package_comment_caption: La persona asignada seleccionada anteriormente será @mencionada automáticamente en el comentario.
-        work_package_comment_default: Se ha enviado una solicitud de inicio de proyecto para **%{project_name}** y está pendiente de revisión.
+        work_package_comment_default: Se ha enviado una solicitud de inicio de entorno para **%{project_name}** y está pendiente de revisión.
     project_phase_definitions:
-      heading: Ciclo de vida del proyecto
-      heading_description: El ciclo de vida del proyecto define las fases del proyecto que pueden utilizarse para la planificación de su proyecto y que aparecerán en la página de resumen de cada proyecto. Estos atributos pueden activarse o desactivarse, pero no reordenarse a nivel de proyecto.
+      heading: Ciclo de vida del entorno
+      heading_description: El ciclo de vida del entorno define las fases del entorno que pueden utilizarse para la planificación de su entorno y que aparecerán en la página de resumen de cada entorno. Estos atributos pueden activarse o desactivarse, pero no reordenarse a nivel de entorno.
       label_add: Añadir
-      label_add_description: Añadir definición de fase del proyecto
+      label_add_description: Añadir definición de fase del entorno
       filter:
-        label: Buscar fase del proyecto
+        label: Buscar fase del entorno
       section_header: Fases
       non_defined: Actualmente no hay fases definidas.
       phase_gates: Puertas de fase
       new:
-        description: Los cambios en esta fase del proyecto se reflejarán en todos los proyectos en los que esté activada.
+        description: Los cambios en esta fase del entorno se reflejarán en todos los entornos en los que esté activada.
         heading: Nueva fase
       both_gate: Puerta inicial y final
       no_gate: Sin puerta
@@ -5477,9 +5477,9 @@ es:
       finish_gate: Puerta de finalización
       finish_gate_caption: Añada una puerta con la fecha de finalización de la fase
     projects:
-      missing_dependencies: Se ha comprobado el módulo de proyecto %{module} que depende de %{dependencies}. Necesitas comprobar estas dependencias también.
-      section_new_projects: Configuración para nuevos proyectos
-      section_project_overview: Configuración de las listas de proyectos
+      missing_dependencies: Se ha comprobado el módulo de entorno %{module} que depende de %{dependencies}. Necesitas comprobar estas dependencias también.
+      section_new_projects: Configuración para nuevos entornos
+      section_project_overview: Configuración de las listas de entornos
     session: Sesión
     user:
       default_preferences: Preferencias predeterminadas
@@ -5517,9 +5517,9 @@ es:
   open_link_in_a_new_tab: Abrir vínculo en un nuevo panel
   text_are_you_sure_continue: "¿Seguro que quiere continuar?"
   text_are_you_sure_with_children: "¿Eliminar el paquete de trabajo y todos sus paquetes dependientes?"
-  text_are_you_sure_with_project_custom_fields: Al eliminar este atributo también se eliminarán sus valores en todos los proyectos. ¿Seguro que desea hacerlo?
-  text_are_you_sure_with_project_life_cycle_step: Si elimina esta fase, también se eliminarán sus usos en todos los proyectos. ¿Seguro que desea hacerlo?
-  text_assign_to_project: Asignar al proyecto
+  text_are_you_sure_with_project_custom_fields: Al eliminar este atributo también se eliminarán sus valores en todos los entornos. ¿Seguro que desea hacerlo?
+  text_are_you_sure_with_project_life_cycle_step: Si elimina esta fase, también se eliminarán sus usos en todos los entornos. ¿Seguro que desea hacerlo?
+  text_assign_to_project: Asignar al entorno
   text_form_configuration: 'Puede personalizar los campos que se mostrarán en forma de paquete de trabajo. Puede agrupar libremente los campos para adaptarlos a las necesidades de su dominio.
 
     '
@@ -5529,13 +5529,13 @@ es:
   text_comma_separated: Permitir múltiples valores (separados por comas).
   text_comment_wiki_page: 'Comentar a la página de wiki: %{page}'
   text_custom_field_possible_values_info: Una línea para cada valor
-  text_custom_field_hint_activate_per_project: 'Si utiliza campos personalizados: tenga en cuenta que los campos personalizados deben activarse también en cada proyecto por separado.
+  text_custom_field_hint_activate_per_project: 'Si utiliza campos personalizados: tenga en cuenta que los campos personalizados deben activarse también en cada entorno por separado.
 
     '
-  text_custom_field_hint_activate_per_project_and_type: 'Los campos personalizados se deben activar en cada tipo de paquete de trabajo y en cada proyecto por separado.
+  text_custom_field_hint_activate_per_project_and_type: 'Los campos personalizados se deben activar en cada tipo de paquete de trabajo y en cada entorno por separado.
 
     '
-  text_project_custom_field_html: 'Enterprise añadirá estas extensiones para los campos personalizados de los proyectos: <br> <ul> <li><b>Añadir campos personalizados para proyectos a tu lista de proyectos para crear una vista porfolio de proyectos</b></li> </ul>
+  text_project_custom_field_html: 'Enterprise añadirá estas extensiones para los campos personalizados de los entornos: <br> <ul> <li><b>Añadir campos personalizados para entornos a tu lista de entornos para crear una vista porfolio de entornos</b></li> </ul>
 
     '
   text_custom_logo_instructions: 'El logotipo se ajusta automáticamente al tamaño del encabezado. Para obtener los mejores resultados, sube un logotipo blanco en una imagen transparente de 130 × 47 píxeles. Puedes añadir todo el espacio que desees dentro de esa imagen.
@@ -5631,15 +5631,15 @@ es:
 
     '
   text_own_membership_delete_confirmation: |-
-    Estás a punto de eliminar algunos o todos tus permisos, y podrías no poder volver a editar este proyecto.
+    Estás a punto de eliminar algunos o todos tus permisos, y podrías no poder volver a editar este entorno.
     ¿Estás seguro/a de que quieres continuar?
   text_permanent_delete_confirmation_checkbox_label: Entiendo que esta eliminación no se puede revertir
   text_permanent_remove_confirmation_checkbox_label: Entiendo que esta eliminación no se puede revertir
   text_plugin_assets_writable: Directorio de extensiones activos escribible
   text_powered_by: Con tecnología de %{link}
   text_project_identifier_info: Se permiten sólo letras minúsculas (a-z), números, guiones y guiones bajos, debe comenzar con una letra minúscula.
-  text_project_identifier_description: El identificador del proyecto se antepone a todos los identificadores de los paquetes de trabajo. Si el identificador es «PROJ», por ejemplo, el identificador del paquete de trabajo será «PROJ-12» o «PROJ-246».
-  text_project_identifier_url_description: El identificador del proyecto aparece en la URL del proyecto.
+  text_project_identifier_description: El identificador del entorno se antepone a todos los identificadores de los paquetes de trabajo. Si el identificador es «PROJ», por ejemplo, el identificador del paquete de trabajo será «PROJ-12» o «PROJ-246».
+  text_project_identifier_url_description: El identificador del entorno aparece en la URL del entorno.
   text_project_identifier_handle_format: Debe empezar por una letra y contener solo letras mayúsculas, números y guiones bajos (máximo 10 caracteres).
   text_project_identifier_format: Debe empezar con una letra minúscula. Solo se permiten letras minúsculas (a-z), números, guiones y guiones bajos.
   text_reassign: 'Reasignar al paquete de trabajo:'
@@ -5670,7 +5670,7 @@ es:
   text_setup_mail_configuration: Configurar su proveedor de correo electrónico
   help_texts:
     views:
-      project: "%{plural} siempre están unidos a un proyecto. Solo puede seleccionar proyectos aquí donde el módulo %{plural} está activo. Después de crear un %{singular} puedes añadir paquetes de trabajo de otros proyectos.\n"
+      project: "%{plural} siempre están unidos a un entorno. Solo puede seleccionar entornos aquí donde el módulo %{plural} está activo. Después de crear un %{singular} puedes añadir paquetes de trabajo de otros entornos.\n"
       public: Publique esta vista para que otros usuarios puedan acceder a esta. Los usuarios con el permiso «Administrar vistas públicas» puede modificar o quitar vistas públicas. Esto no afecta a la visibilidad de los resultados de paquetes de trabajo en esa vista y, según sus permisos, los usuarios pueden ver resultados distintos.
       favoured: Marque esta vista como favorita y agréguela a la barra lateral de vistas guardadas de la izquierda.
   time:
@@ -5685,7 +5685,7 @@ es:
     show: Mostrar marco temporal
     end: a
     start: de
-  title_remove_and_delete_user: Eliminar al usurio invitado del proyecto y eliminarlo.
+  title_remove_and_delete_user: Eliminar al usurio invitado del entorno y eliminarlo.
   title_enterprise_upgrade: Mejora para desbloquear más usuarios.
   tooltip_user_default_timezone: 'La zona horaria por defecto para los nuevos usuarios. Puede ser modificada en la configuración del usuario.
 
@@ -5787,7 +5787,7 @@ es:
   menu_item_setting: Visibilidad
   wiki_menu_item_for: Elemento de menú para wiki '%{title}'
   wiki_menu_item_setting: Visibilidad
-  wiki_menu_item_new_main_item_explanation: 'Usted esta eliminando el único elemento de menú wiki principal. Ahora tiene que elegir un wiki para el cual un nuevo elemento de menú principal será generado. Para eliminar el wiki, éste módulo puede ser desactivado por los administradores del proyecto.
+  wiki_menu_item_new_main_item_explanation: 'Usted esta eliminando el único elemento de menú wiki principal. Ahora tiene que elegir un wiki para el cual un nuevo elemento de menú principal será generado. Para eliminar el wiki, éste módulo puede ser desactivado por los administradores del entorno.
 
     '
   wiki_menu_item_delete_not_permitted: El único elemento de menú de la única página wiki no puede ser eliminado.
@@ -5842,10 +5842,10 @@ es:
       one: 1 usuario
       other: "%{count} usuarios"
     filter:
-      project_member: Miembro del proyecto
-      not_project_member: No miembro del proyecto
-      project_group: Grupo del proyecto
-      not_project_group: No grupo del proyecto
+      project_member: Miembro del entorno
+      not_project_member: No miembro del entorno
+      project_group: Grupo del entorno
+      not_project_group: No grupo del entorno
       user: Usuario
       group: Grupo
       role: Rol
@@ -5875,45 +5875,45 @@ es:
       invited: 'Invitación enviada. '
       resend_invite: Reenviar.
       invite_resent: La invitación ha sido reenviada
-      not_project_member: No miembro del proyecto
-      project_group: Los miembros del grupo pueden tener privilegios adicionales (como miembros del proyecto)
+      not_project_member: No miembro del entorno
+      project_group: Los miembros del grupo pueden tener privilegios adicionales (como miembros del entorno)
       not_project_group: Grupo (compartido con todos los miembros)
-      additional_privileges_project: Puede tener privilegios adicionales (como miembros del proyecto)
+      additional_privileges_project: Puede tener privilegios adicionales (como miembros del entorno)
       additional_privileges_group: Puede tener privilegios adicionales (como miembros de un grupo)
-      additional_privileges_project_or_group: Puede tener privilegios adicionales (como miembros del proyecto o de un grupo)
+      additional_privileges_project_or_group: Puede tener privilegios adicionales (como miembros del entorno o de un grupo)
     project_queries:
-      publishing_denied: No tiene permiso para hacer públicas las listas de proyectos.
-      access_warning: Los usuarios sólo verán los proyectos a los que tienen acceso. Compartir listas de proyectos no afecta a los permisos individuales del proyecto.
+      publishing_denied: No tiene permiso para hacer públicas las listas de entornos.
+      access_warning: Los usuarios sólo verán los entornos a los que tienen acceso. Compartir listas de entornos no afecta a los permisos individuales del entorno.
       user_details:
         owner: Propietario de la lista
         can_view_because_public: Ya puede verla porque la lista se comparte con todos los usuarios
         can_manage_public_lists: Puede editar debido a permisos globales
       public_flag:
         label: Compartir con todos en %{instance_name}
-        caption: Todo el mundo puede ver esta lista de proyectos. Aquellos con permisos de edición global pueden modificarla.
+        caption: Todo el mundo puede ver esta lista de entornos. Aquellos con permisos de edición global pueden modificarla.
       blank_state:
         public:
           header: Compartido con todos
-          description: Todo el mundo puede ver esta lista de proyectos. También puede añadir usuarios individuales con permisos adicionales.
+          description: Todo el mundo puede ver esta lista de entornos. También puede añadir usuarios individuales con permisos adicionales.
         private:
           header: 'No compartida: Privado'
-          description: Esta lista de proyectos aún no se ha compartido con nadie. Sólo usted puede acceder a esta lista.
+          description: Esta lista de entornos aún no se ha compartido con nadie. Sólo usted puede acceder a esta lista.
       permissions:
         view: Ver
-        view_description: Puede ver esta lista de proyectos.
+        view_description: Puede ver esta lista de entornos.
         edit: Editar
-        edit_description: Puede ver, compartir y editar esta lista de proyectos.
+        edit_description: Puede ver, compartir y editar esta lista de entornos.
       upsell:
-        message: Compartir listas de proyectos con usuarios individuales es una extensión Enterprise.
+        message: Compartir listas de entornos con usuarios individuales es una extensión Enterprise.
   working_days:
-    info: 'Los días no seleccionados se omiten al programar los paquetes de trabajo y ciclos de vida de proyectos (y no se incluyen en el recuento de días). Esto puede anularse a nivel de paquete de trabajo.
+    info: 'Los días no seleccionados se omiten al programar los paquetes de trabajo y ciclos de vida de entornos (y no se incluyen en el recuento de días). Esto puede anularse a nivel de paquete de trabajo.
 
       '
     instance_wide_info: 'Las fechas añadidas a la lista siguiente se consideran no laborables y se omiten al programar los paquetes de trabajo.
 
       '
     change_button: Cambiar los días laborables
-    warning: 'Cambiar qué días de la semana se consideran laborables y cuáles no, puede afectar a las fechas de inicio y fin de todos los paquetes de trabajo y ciclos de vida en todos los proyectos de esta instancia.
+    warning: 'Cambiar qué días de la semana se consideran laborables y cuáles no, puede afectar a las fechas de inicio y fin de todos los paquetes de trabajo y ciclos de vida en todos los entornos de esta instancia.
 
       '
     journal_note:
@@ -5986,9 +5986,9 @@ es:
       schema: Esquema
     undisclosed:
       parent: 'Oculto: el elemento primario no se muestra porque no tiene los permisos necesarios.'
-      project: 'Oculto: el proyecto no se muestra porque no tiene los permisos necesarios.'
+      project: 'Oculto: el entorno no se muestra porque no tiene los permisos necesarios.'
       ancestor: No revelado - El antepasado es invisible por falta de permisos.
-      definingProject: 'Oculto: el proyecto no se muestra porque no tiene los permisos necesarios.'
+      definingProject: 'Oculto: el entorno no se muestra porque no tiene los permisos necesarios.'
       definingWorkspace: 'Oculto: el espacio de trabajo no se muestra porque no tiene los permisos necesarios.'
   doorkeeper:
     pre_authorization:
@@ -6070,7 +6070,7 @@ es:
         '
     scopes:
       api_v3: Acceso API v3 completo
-      api_v3_text: "La aplicación recibirá acceso completo de lectura y escritura al Proyecto Abierto API v3 \npara realizar acciones en su nombre."
+      api_v3_text: "La aplicación recibirá acceso completo de lectura y escritura al Entorno Abierto API v3 \npara realizar acciones en su nombre."
     grants:
       created_date: Aprobado el
       scopes: Permisos
