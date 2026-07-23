@@ -72,10 +72,40 @@ import { TypeCardFieldsByTypeId } from 'core-app/features/work-packages/componen
 import { WorkPackageViewSortByService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sort-by.service';
 import { WorkPackageViewOrderService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-order.service';
 import { QuerySortByResource } from 'core-app/features/hal/resources/query-sort-by-resource';
+import { WorkPackagesListService } from 'core-app/features/work-packages/components/wp-list/wp-list.service';
 
 export interface DisabledButtonPlaceholder {
   text:string;
   icon:string;
+}
+
+/**
+ * Populate this board column's own isolated query space after its query
+ * (re)loads.
+ *
+ * Board columns only ever called `WorkPackageStatesInitializationService
+ * .updateQuerySpace()` directly, unlike the table view which always goes
+ * through `WorkPackagesListService`'s `queryLoading` pipeline first (see
+ * `wp-list.service.ts`). That pipeline is the ONLY place that guarantees the
+ * query's form gets fetched and `updateStatesFromForm()` is called, which is
+ * what populates `querySpace.available.sortBy` (and `.columns`/`.groupBy`/
+ * `.displayRepresentation`). Because board columns skipped it entirely,
+ * `WorkPackageViewSortByService.available` was permanently empty for every
+ * board column, and the "Sort by..." picker always reported "No field is
+ * sortable on any list of this board" - regardless of the column's actual
+ * fields or custom fields.
+ *
+ * `WorkPackagesListService.conditionallyLoadForm` is reused as-is (same
+ * production code path already exercised by the table view) so this column's
+ * form is fetched at most once per distinct query, exactly like the table.
+ */
+export function applyLoadedBoardColumnQuery(
+  wpStatesInitialization:WorkPackageStatesInitializationService,
+  wpListService:WorkPackagesListService,
+  query:QueryResource,
+):void {
+  wpStatesInitialization.updateQuerySpace(query, query.results);
+  void wpListService.conditionallyLoadForm(query);
 }
 
 @Component({
@@ -119,6 +149,7 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
   readonly boardCardFields = inject(BoardCardFieldsService);
   readonly wpTableSortBy = inject(WorkPackageViewSortByService);
   readonly wpTableOrder = inject(WorkPackageViewOrderService);
+  readonly wpListService = inject(WorkPackagesListService);
 
   /**
    * Kanban board cards are the only `wp-single-card` consumer that opts
@@ -465,7 +496,7 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
     observable
       .subscribe(
         (query) => {
-          this.wpStatesInitialization.updateQuerySpace(query, query.results);
+          applyLoadedBoardColumnQuery(this.wpStatesInitialization, this.wpListService, query);
         },
         (error) => {
           const userIsNotAllowedToSeeSubprojectError = 'urn:openproject-org:api:v3:errors:InvalidQuery';
