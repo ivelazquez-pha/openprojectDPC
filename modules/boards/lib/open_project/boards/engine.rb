@@ -85,5 +85,9 @@ module OpenProject::Boards
     config.to_prepare do
       OpenProject::Boards::GridRegistration.register!
     end
+
+    add_api_endpoint "API::V3::Grids::GridsAPI", :id do
+      mount ::API::V3::Boards::BoardOrderAPI
+    end
   end
 end

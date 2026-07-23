@@ -32,5 +32,13 @@ class OrderedWorkPackage < ApplicationRecord
   belongs_to :query
   belongs_to :work_package
 
+  # Mirrors the composite unique index on (query_id, work_package_id) so that
+  # duplicate writes surface as a friendly ActiveRecord::RecordInvalid instead
+  # of a raw database error. This is validated at the application level in
+  # addition to (not instead of) the database constraint, since the unique
+  # index is only guaranteed to be present/enforced once the Release A/B
+  # writer rollout (see OrderedWorkPackages::WriteCoordinator) completes.
+  validates :work_package_id, uniqueness: { scope: :query_id }
+
   default_scope { order("position NULLS LAST") }
 end

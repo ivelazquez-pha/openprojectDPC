@@ -39,11 +39,20 @@ module Queries::Copy
     end
 
     def duplicate_query_order(query, new_query)
-      query.ordered_work_packages.find_each do |ordered_wp|
-        copied = ordered_wp.dup
-        copied.query_id = new_query.id
-        copied.work_package_id = lookup_work_package_id(ordered_wp.work_package_id)
-        copied.save
+      positions = query.ordered_work_packages.each_with_object({}) do |ordered_wp, hash|
+        mapped_work_package_id = lookup_work_package_id(ordered_wp.work_package_id)
+
+        hash[mapped_work_package_id] = ordered_wp.position
+      end
+
+      # Routed through the shared coordinator so a target work package that
+      # already has an ordered_work_packages row (e.g. re-running a copy, or
+      # a race with another writer) is updated instead of raising a duplicate
+      # key error (Release A/B compatible - see design "Writer / Index
+      # Rollout").
+      new_query.transaction do
+        new_query.lock!
+        OrderedWorkPackages::WriteCoordinator.write_positions(query: new_query, positions:)
       end
     end
 

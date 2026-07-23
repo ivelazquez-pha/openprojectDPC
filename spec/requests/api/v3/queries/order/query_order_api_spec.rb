@@ -124,6 +124,41 @@ RSpec.describe "/api/v3/queries/:id/order" do
           expect(body).to eq("t" => timestamp)
           expect(query.ordered_work_packages.to_a).to be_empty
         end
+
+        it "does not create a duplicate row when the same work package is patched twice (Release A compatibility)" do
+          patch path, { delta: { wp2.id.to_s => 100 } }.to_json
+          patch path, { delta: { wp2.id.to_s => 200 } }.to_json
+
+          expect(last_response).to have_http_status :ok
+          expect(query.ordered_work_packages.where(work_package_id: wp2.id).count).to eq 1
+          expect(query.ordered_work_packages.find_by(work_package_id: wp2.id).position).to eq 200
+        end
+      end
+    end
+
+    context "when the query is public and the user only has edit_work_packages (not manage_public_queries)" do
+      before do
+        query.update!(public: true)
+
+        mock_permissions_for(user) do |mock|
+          mock.allow_in_project :view_work_packages, :edit_work_packages, project: query.project
+        end
+      end
+
+      it "allows reordering via the reorder_work_packages policy even though the user " \
+         "does not own or manage the query" do
+        patch path, { delta: { wp2.id.to_s => 1234 } }.to_json
+        expect(last_response).to have_http_status :ok
+
+        query.reload
+        expect(query.ordered_work_packages.find_by(work_package: wp2).position).to eq 1234
+      end
+    end
+
+    context "when the query is private and the user has neither ownership nor edit_work_packages" do
+      it "responds with 404 Not Found" do
+        patch path, { delta: { wp2.id.to_s => 1234 } }.to_json
+        expect(last_response).to have_http_status :not_found
       end
     end
   end
