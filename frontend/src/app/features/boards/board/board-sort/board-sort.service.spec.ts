@@ -66,16 +66,19 @@ describe('BoardSortService', () => {
     expect(refresh).not.toHaveBeenCalled();
   });
 
-  it('delegates field intersection to the pure intersection logic', () => {
+  it('delegates field union to the pure union logic', () => {
     configure(() => of(undefined));
 
     const columnA = [
       { column: { id: 'subject', name: 'Subject', href: '/x/subject' }, direction: { href: 'asc' } },
     ] as unknown as QuerySortByResource[];
     const columnB = [
-      { column: { id: 'subject', name: 'Subject', href: '/x/subject' }, direction: { href: 'asc' } },
+      { column: { id: 'dueDate', name: 'Finish date', href: '/x/dueDate' }, direction: { href: 'asc' } },
     ] as unknown as QuerySortByResource[];
 
-    expect(service.intersectFields([columnA, columnB])).toEqual([{ id: 'subject', name: 'Subject' }]);
+    expect(service.unionFields([columnA, columnB])).toEqual([
+      { id: 'dueDate', name: 'Finish date' },
+      { id: 'subject', name: 'Subject' },
+    ]);
   });
 });

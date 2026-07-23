@@ -184,7 +184,7 @@ RSpec.describe Boards::BoardOrderService do
     end
   end
 
-  describe "sortable field intersection" do
+  describe "sortable field resolution across columns" do
     let(:query_a) { plain_query(name: "A") }
     let(:query_b) { plain_query(name: "B") }
     let!(:widget_a) { add_column(query_a, column: 1) }
@@ -192,7 +192,7 @@ RSpec.describe Boards::BoardOrderService do
 
     let(:field) { "assigned_to" }
 
-    it "rejects a field that is not a plain, cross-column sortable attribute" do
+    it "rejects a field that is not a plain, non-association sortable attribute" do
       expect(result).to be_failure
       expect(result.result).to eq :invalid_field
     end
@@ -203,6 +203,51 @@ RSpec.describe Boards::BoardOrderService do
       it "rejects it as invalid" do
         expect(result).to be_failure
         expect(result.result).to eq :invalid_field
+      end
+    end
+
+    # Bug fix: this used to require the field to be sortable on EVERY column
+    # (a strict intersection), which meant any board whose columns span
+    # multiple Types/projects could easily end up with zero sortable fields
+    # at all. It is now a UNION: sortable on at least one column is enough,
+    # and columns where the field genuinely doesn't apply (here: a custom
+    # field not enabled for that column's project) are treated as NULL for
+    # that field - sorting last - instead of rejecting the whole request.
+    context "when a custom field is enabled for only one column's project" do
+      let(:custom_field) { create(:integer_wp_custom_field, is_for_all: false) }
+      let(:type) { create(:type, custom_fields: [custom_field]) }
+
+      # Overrides the outer `project` (used by `board`, `plain_query`, etc.)
+      # so the CF is genuinely enabled there; `other_project` never gets it.
+      let(:project) { create(:project, types: [type], work_package_custom_fields: [custom_field]) }
+      let(:other_project) { create(:project) }
+
+      let(:user) do
+        create(:user,
+               member_with_permissions: {
+                 project => %i[show_board_views view_work_packages edit_work_packages],
+                 other_project => %i[show_board_views view_work_packages edit_work_packages]
+               })
+      end
+
+      let(:query_a) { plain_query(name: "A") }
+      let(:query_b) { create(:public_query, project: other_project, name: "B") }
+
+      let(:field) { custom_field.column_name }
+
+      let!(:with_value) { create(:work_package, type:, project:, custom_values: { custom_field.id => "2" }) }
+      let!(:without_value) { create(:work_package, type:, project:) }
+      let!(:other_project_wp) { create(:work_package, project: other_project) }
+
+      it "accepts the field, sorts the column where it applies, and sorts the other column's " \
+         "rows last (NULL) without erroring or excluding them" do
+        expect(result).to be_success
+
+        column_a_ids = query_a.ordered_work_packages.reload.order(:position).pluck(:work_package_id)
+        expect(column_a_ids).to eq [with_value.id, without_value.id]
+
+        column_b_ids = query_b.ordered_work_packages.reload.order(:position).pluck(:work_package_id)
+        expect(column_b_ids).to eq [other_project_wp.id]
       end
     end
   end

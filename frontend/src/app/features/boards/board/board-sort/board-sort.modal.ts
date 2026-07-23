@@ -42,8 +42,8 @@ export interface BoardSortModalLocals {
 }
 
 /**
- * The "Sort by..." modal for a Kanban board. Offers only the fields
- * sortable across every column (computed and passed in via locals by the
+ * The "Sort by..." modal for a Kanban board. Offers the union of fields
+ * sortable in at least one column (computed and passed in via locals by the
  * caller), and calls the bounded board sort command exactly once per
  * confirm - never inferring eligibility or the 500-card limit itself.
  */

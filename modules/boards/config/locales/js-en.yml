@@ -33,7 +33,7 @@ en:
         title: 'Sort board by...'
         field_label: 'Field'
         apply: 'Apply'
-        no_fields: 'No field is sortable across every list of this board.'
+        no_fields: 'No field is sortable on any list of this board.'
       error_attribute_not_writable: "Cannot move the work package, %{attribute} is not writable."
       error_loading_the_list: "Error loading the list: %{error_message}"
       error_permission_missing: "The permission to create public queries is missing"

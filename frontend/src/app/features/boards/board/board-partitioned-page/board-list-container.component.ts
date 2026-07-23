@@ -232,7 +232,7 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
   public availableSortFields():BoardSortField[] {
     const listComponents = this.lists?.toArray() ?? [];
 
-    return this.boardSortService.intersectFields(listComponents.map((list) => list.availableSortFields));
+    return this.boardSortService.unionFields(listComponents.map((list) => list.availableSortFields));
   }
 
   public openSortModal(board:Board):void {

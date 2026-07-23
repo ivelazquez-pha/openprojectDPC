@@ -60,7 +60,7 @@ describe('BoardSortModalComponent', () => {
     expect(component.direction).toBe('asc');
   });
 
-  it('offers only the fields provided (the already-intersected sortable fields)', () => {
+  it('offers only the fields provided (the already-unioned sortable fields)', () => {
     setup();
 
     expect(component.availableFields.map((field) => field.id)).toEqual(['subject', 'dueDate']);

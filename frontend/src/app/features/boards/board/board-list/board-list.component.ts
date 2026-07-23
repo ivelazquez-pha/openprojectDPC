@@ -275,8 +275,8 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
    * This column's own isolated sortable-fields list (see
    * `WorkPackageIsolatedQuerySpaceDirective` - `WorkPackageViewSortByService`
    * is provided once per `board-list`/column). Used by the board-level
-   * "Sort by..." action to intersect fields sortable across every column -
-   * never to infer the 500-card limit, which stays server-side only.
+   * "Sort by..." action to union fields sortable across all columns - never
+   * to infer the 500-card limit, which stays server-side only.
    */
   public sortByReady$():Observable<null> {
     return this.wpTableSortBy.onReadyWithAvailable();

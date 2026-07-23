@@ -1,7 +1,7 @@
 import { QuerySortByResource } from 'core-app/features/hal/resources/query-sort-by-resource';
 import {
   canSortBoard,
-  intersectSortableFields,
+  unionSortableFields,
   isAssociationBackedField,
   toQueryFieldName,
 } from 'core-app/features/boards/board/board-sort/board-sort-field';
@@ -14,21 +14,32 @@ function sortBy(id:string, name:string, direction = 'asc'):QuerySortByResource {
 }
 
 describe('board-sort-field', () => {
-  describe('intersectSortableFields', () => {
-    it('returns fields sortable across every column', () => {
+  describe('unionSortableFields', () => {
+    it('returns the union of fields sortable across all columns', () => {
       const columnA = [sortBy('subject', 'Subject'), sortBy('dueDate', 'Finish date')];
       const columnB = [sortBy('subject', 'Subject'), sortBy('startDate', 'Start date')];
 
-      expect(intersectSortableFields([columnA, columnB])).toEqual([
+      expect(unionSortableFields([columnA, columnB])).toEqual([
+        { id: 'dueDate', name: 'Finish date' },
+        { id: 'startDate', name: 'Start date' },
         { id: 'subject', name: 'Subject' },
       ]);
     });
 
-    it('excludes fields only sortable in some columns', () => {
+    it('offers a field that is sortable in only one of several columns', () => {
       const columnA = [sortBy('subject', 'Subject'), sortBy('dueDate', 'Finish date')];
       const columnB = [sortBy('subject', 'Subject')];
 
-      const result = intersectSortableFields([columnA, columnB]);
+      const result = unionSortableFields([columnA, columnB]);
+
+      expect(result.map((field) => field.id)).toContain('dueDate');
+    });
+
+    it('excludes a field that is sortable in zero columns', () => {
+      const columnA = [sortBy('subject', 'Subject')];
+      const columnB = [sortBy('subject', 'Subject')];
+
+      const result = unionSortableFields([columnA, columnB]);
 
       expect(result.map((field) => field.id)).not.toContain('dueDate');
     });
@@ -41,7 +52,7 @@ describe('board-sort-field', () => {
       ];
       const columnB = [sortBy('subject', 'Subject')];
 
-      const result = intersectSortableFields([columnA, columnB]);
+      const result = unionSortableFields([columnA, columnB]);
 
       expect(result).toEqual([{ id: 'subject', name: 'Subject' }]);
     });
@@ -50,20 +61,20 @@ describe('board-sort-field', () => {
       const columnA = [sortBy('subject', 'Subject'), sortBy('status', 'Status'), sortBy('assignee', 'Assignee')];
       const columnB = [sortBy('subject', 'Subject'), sortBy('status', 'Status'), sortBy('assignee', 'Assignee')];
 
-      const result = intersectSortableFields([columnA, columnB]);
+      const result = unionSortableFields([columnA, columnB]);
 
       expect(result).toEqual([{ id: 'subject', name: 'Subject' }]);
     });
 
     it('returns an empty list when there are no columns', () => {
-      expect(intersectSortableFields([])).toEqual([]);
+      expect(unionSortableFields([])).toEqual([]);
     });
 
     it('sorts the result alphabetically by display name', () => {
       const columnA = [sortBy('dueDate', 'Finish date'), sortBy('subject', 'Subject')];
       const columnB = [sortBy('dueDate', 'Finish date'), sortBy('subject', 'Subject')];
 
-      const result = intersectSortableFields([columnA, columnB]);
+      const result = unionSortableFields([columnA, columnB]);
 
       expect(result.map((field) => field.name)).toEqual(['Finish date', 'Subject']);
     });

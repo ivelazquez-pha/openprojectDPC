@@ -27,8 +27,9 @@ module Boards
   # On failure, result.result is one of:
   #   :unauthorized     - board is no longer visible, or a query no longer
   #                       authorizes reorder_work_packages (map to 404)
-  #   :invalid_field    - the field is not sortable across every column (map
-  #                       to 422/400)
+  #   :invalid_field    - the field is not a plain, non-association sortable
+  #                       attribute on ANY participating column (map to
+  #                       422/400)
   #   :limit_exceeded   - the effective canvas totals 501+ cards (map to 422,
   #                       zero writes)
   #   :retry_exhausted  - serialization/deadlock retries exhausted (map to
@@ -115,10 +116,10 @@ module Boards
       queries = locked_queries_in_ascending_id_order
       raise UnauthorizedError unless all_queries_present_and_authorized?(queries)
 
-      expression = intersecting_sortable_expression(queries.values)
-      raise UnsortableFieldError unless expression
+      sortable = resolve_sortable_field(queries.values)
+      raise UnsortableFieldError unless sortable
 
-      ids_by_query_id = bounded_materialization(queries, expression)
+      ids_by_query_id = bounded_materialization(queries, sortable)
 
       ids_by_query_id.each do |query_id, ids|
         query = queries.fetch(query_id)
@@ -140,7 +141,7 @@ module Boards
       queries.values.all? { |query| policy.allowed?(query, :reorder_work_packages) }
     end
 
-    def bounded_materialization(queries, expression)
+    def bounded_materialization(queries, sortable)
       cumulative = 0
       ids_by_query_id = {}
 
@@ -148,7 +149,7 @@ module Boards
         query = queries.fetch(query_id)
         remaining = @max_cards - cumulative
 
-        ids = ordered_ids(query, expression, remaining + 1)
+        ids = ordered_ids(query, sortable, remaining + 1)
         raise LimitExceededError if ids.size > remaining
 
         cumulative += ids.size
@@ -158,15 +159,26 @@ module Boards
       ids_by_query_id
     end
 
-    def ordered_ids(query, expression, limit)
+    ##
+    # Applies the resolved expression/join (see #resolve_sortable_field) to
+    # this specific column's query. The join is only added when this query's
+    # own persisted sort_criteria doesn't already bring it in via
+    # `Query::Results#sort_criteria_joins` - adding the identical raw-SQL
+    # join twice would duplicate its alias and fail in Postgres.
+    def ordered_ids(query, sortable, limit)
       direction_sql = @direction == "desc" ? "DESC" : "ASC"
 
-      query
-        .results
-        .work_packages
-        .reorder(Arel.sql("#{expression} #{direction_sql} NULLS LAST"), :id)
+      scope = query.results.work_packages
+      scope = scope.joins(sortable[:join]) if sortable[:join].present? && !query_already_joins_field?(query)
+
+      scope
+        .reorder(Arel.sql("#{sortable[:expression]} #{direction_sql} NULLS LAST"), :id)
         .limit(limit)
         .pluck(:id)
+    end
+
+    def query_already_joins_field?(query)
+      query.sort_criteria_columns.any? { |column, _direction| column.name.to_s == @field }
     end
 
     ##
@@ -192,28 +204,42 @@ module Boards
     end
 
     ##
-    # Only plain WorkPackage-table columns are supported for this bounded
-    # command (id, subject, dates, hours, etc.) - association-backed columns
-    # (status, priority, assignee...) and custom fields need additional joins
-    # that this batch intentionally does not resolve. See apply-progress
-    # "Deviations" for the rationale and follow-up.
-    def intersecting_sortable_expression(queries)
+    # Resolves the plain, non-association SQL expression (and its optional
+    # join) for @field by finding it as a sortable column on AT LEAST ONE
+    # participating query - NOT on every one (see board-sort-field.ts
+    # `unionSortableFields` for the matching frontend picker behavior; a
+    # field only sortable on some columns, e.g. a custom field enabled for
+    # one column's project but not another's, must still be accepted here).
+    #
+    # Only plain WorkPackage-table columns and custom fields are supported
+    # (id, subject, dates, hours, custom fields...) - other association-
+    # backed columns (status, priority, assignee...) are excluded, matching
+    # the frontend's `ASSOCIATION_BACKED_FIELD_IDS`.
+    #
+    # The same expression/join is applied to every column in #ordered_ids:
+    # for columns whose own project doesn't expose the field (typically a
+    # custom field not enabled there), the LEFT JOIN this returns naturally
+    # yields NULL for every row in that column - nothing to match - which
+    # sorts last via the existing "NULLS LAST" handling. It never errors and
+    # never excludes rows.
+    def resolve_sortable_field(queries)
       return nil if queries.empty?
 
-      expressions = queries.map { |query| plain_sortable_expression(query) }
-      return nil if expressions.any?(&:nil?)
-      return nil if expressions.uniq.size != 1
+      queries.each do |query|
+        column = plain_sortable_column(query)
+        return { expression: column.sortable, join: column.sortable_join_statement(query) } if column
+      end
 
-      expressions.first
+      nil
     end
 
-    def plain_sortable_expression(query)
+    def plain_sortable_column(query)
       column = query.sortable_columns.detect { |candidate| candidate.name.to_s == @field }
       return nil unless column
       return nil unless column.sortable.is_a?(String)
       return nil if column.respond_to?(:association) && column.association.present?
 
-      column.sortable
+      column
     end
   end
 end

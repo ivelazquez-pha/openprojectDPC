@@ -34,7 +34,7 @@ import { QuerySortByResource } from 'core-app/features/hal/resources/query-sort-
 import { BoardOrderDirection } from 'core-app/core/apiv3/endpoints/grids/apiv3-grid-board-order';
 import {
   BoardSortField,
-  intersectSortableFields,
+  unionSortableFields,
   toQueryFieldName,
 } from 'core-app/features/boards/board/board-sort/board-sort-field';
 
@@ -52,8 +52,8 @@ import {
 export class BoardSortService {
   private readonly apiV3Service = inject(ApiV3Service);
 
-  public intersectFields(perColumnAvailable:QuerySortByResource[][]):BoardSortField[] {
-    return intersectSortableFields(perColumnAvailable);
+  public unionFields(perColumnAvailable:QuerySortByResource[][]):BoardSortField[] {
+    return unionSortableFields(perColumnAvailable);
   }
 
   /**

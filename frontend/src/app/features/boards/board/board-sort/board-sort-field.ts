@@ -46,7 +46,7 @@ export interface BoardSortField {
  * This list is a curated, documented subset - not derived from Rails
  * metadata - because there is no API-exposed signal distinguishing
  * association-backed columns from plain ones. Keep it in sync with
- * `Boards::BoardOrderService#plain_sortable_expression` if that changes.
+ * `Boards::BoardOrderService#plain_sortable_column` if that changes.
  */
 const ASSOCIATION_BACKED_FIELD_IDS = new Set<string>([
   'status',
@@ -101,9 +101,21 @@ export function isAssociationBackedField(apiFieldId:string):boolean {
 }
 
 /**
- * Intersects the sortable fields available on every board column, excluding
+ * Unions the sortable fields available across all board columns, excluding
  * manual sorting, the hierarchy `/parent` pseudo-column, and known
  * association-backed columns (see `ASSOCIATION_BACKED_FIELD_IDS`).
+ *
+ * A field is offered as soon as it is sortable in AT LEAST ONE column - it
+ * does NOT need to be sortable in every column. This is deliberate: on a
+ * board whose columns span multiple Types or projects (e.g. a status board,
+ * or any board where a custom field is only assigned to one Type/project),
+ * requiring universal availability across every column would frequently
+ * leave zero candidate fields, even though the user may specifically want
+ * to sort by a field that only applies to some columns. Columns where the
+ * chosen field does not apply simply sort last (see
+ * `Boards::BoardOrderService`, which resolves the field from any
+ * participating column and treats the rest as NULL-for-that-field rather
+ * than rejecting the whole request).
  *
  * Each element of `perColumnAvailable` is one column's own
  * `WorkPackageViewSortByService#available` list (already scoped to that
@@ -111,14 +123,10 @@ export function isAssociationBackedField(apiFieldId:string):boolean {
  * from card counts, only from what each column's own schema reports as
  * sortable.
  */
-export function intersectSortableFields(perColumnAvailable:QuerySortByResource[][]):BoardSortField[] {
-  if (perColumnAvailable.length === 0) {
-    return [];
-  }
+export function unionSortableFields(perColumnAvailable:QuerySortByResource[][]):BoardSortField[] {
+  const union = new Map<string, string>();
 
-  const columnFieldMaps = perColumnAvailable.map((available) => {
-    const map = new Map<string, string>();
-
+  perColumnAvailable.forEach((available) => {
     available.forEach((sort) => {
       const href = sort.column.href;
       if (!href || href.endsWith('/manualSorting') || href.endsWith('/parent')) {
@@ -130,22 +138,12 @@ export function intersectSortableFields(perColumnAvailable:QuerySortByResource[]
         return;
       }
 
-      map.set(id, sort.column.name);
+      union.set(id, sort.column.name);
     });
-
-    return map;
   });
 
-  const [first, ...rest] = columnFieldMaps;
-  const intersected:BoardSortField[] = [];
-
-  first.forEach((name, id) => {
-    if (rest.every((columnMap) => columnMap.has(id))) {
-      intersected.push({ id, name });
-    }
-  });
-
-  return intersected.sort((a, b) => a.name.localeCompare(b.name));
+  return Array.from(union, ([id, name]) => ({ id, name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**
