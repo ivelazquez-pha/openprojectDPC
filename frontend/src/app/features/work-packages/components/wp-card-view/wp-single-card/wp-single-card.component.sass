@@ -184,3 +184,27 @@
       border: none
       box-shadow: none
       padding: 15px
+
+  &--content-type-fields
+    display: flex
+    flex-direction: column
+    margin-top: 4px
+
+  &--content-type-field
+    display: flex
+    align-items: baseline
+    gap: 4px
+    max-width: 100%
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+    font-size: var(--body-font-size-sm, 0.85em)
+
+  &--content-type-field-label
+    color: var(--fgColor-muted)
+    flex-shrink: 0
+
+  &--content-type-field-value
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap

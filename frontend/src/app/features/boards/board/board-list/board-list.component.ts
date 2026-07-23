@@ -63,10 +63,12 @@ import {
   HalEventsService,
 } from 'core-app/features/hal/services/hal-events.service';
 import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { WorkPackageIsolatedQuerySpaceDirective } from 'core-app/features/work-packages/directives/query-space/wp-isolated-query-space.directive';
 import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import { BoardCardFieldsService } from 'core-app/features/boards/board/board-card-fields/board-card-fields.service';
+import { TypeCardFieldsByTypeId } from 'core-app/features/work-packages/components/wp-card-view/wp-single-card/resolve-type-card-fields';
 
 export interface DisabledButtonPlaceholder {
   text:string;
@@ -111,6 +113,16 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
   readonly keepTab = inject(KeepTabService);
   readonly currentProject = inject(CurrentProjectService);
   readonly pathHelper = inject(PathHelperService);
+  readonly boardCardFields = inject(BoardCardFieldsService);
+
+  /**
+   * Kanban board cards are the only `wp-single-card` consumer that opts
+   * into rendering per-Type configured extra fields. Types are fetched
+   * GLOBALLY (not scoped to this board's root project) since a column's
+   * work packages can belong to a different project than the board's own
+   * (Subproject-type boards), and Types are enabled per-project.
+   */
+  public readonly typeCardFieldsByTypeId$:Observable<TypeCardFieldsByTypeId> = this.boardCardFields.map$();
 
   /** Output fired upon query removal */
   @Output() onRemove = new EventEmitter<void>();

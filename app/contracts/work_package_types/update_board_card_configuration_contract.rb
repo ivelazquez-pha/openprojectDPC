@@ -28,24 +28,33 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require_relative "base"
+module WorkPackageTypes
+  class UpdateBoardCardConfigurationContract < BaseContract
+    # `board_card_field_ids` is a `store_attribute`-backed virtual accessor on
+    # the `board_card_configuration` jsonb column (see `Type`). Using the
+    # dedicated `stored_attribute` DSL (rather than plain `attribute`) is
+    # required here: store_attribute dirties BOTH the virtual accessor and
+    # the underlying jsonb column, and `ModelContract`'s readonly-attribute
+    # check would otherwise reject the (correctly authorized) write to the
+    # underlying `board_card_configuration` column with `error_readonly`.
+    stored_attribute :board_card_field_ids, store: :board_card_configuration
 
-class Tables::Types < Tables::Base
-  def self.table(migration)
-    create_table migration do |t|
-      t.string :name, default: "", null: false
-      t.integer :position, default: 1
-      t.boolean :is_in_roadmap, default: true, null: false
-      t.boolean :is_milestone, default: false, null: false
-      t.boolean :is_default, default: false, null: false
-      t.belongs_to :color, index: { name: :index_types_on_color_id }, foreign_key: { on_delete: :nullify }
-      t.timestamps precision: nil, null: false
-      t.boolean :is_standard, default: false, null: false
-      t.text :attribute_groups
-      t.text :description
-      t.text :patterns, null: true
-      t.jsonb :pdf_export_templates_config, default: {}
-      t.jsonb :board_card_configuration, default: {}
+    validate :validate_field_ids
+
+    private
+
+    def validate_field_ids
+      ids = model.board_card_field_ids
+
+      return if ids.blank?
+
+      unless ids.is_a?(Array) && ids.all? { |id| id.is_a?(String) }
+        errors.add(:board_card_field_ids, :invalid)
+        return
+      end
+
+      unknown_ids = ids - model.work_package_attributes.keys
+      errors.add(:board_card_field_ids, :invalid) if unknown_ids.any?
     end
   end
 end

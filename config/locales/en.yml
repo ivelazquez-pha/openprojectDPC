@@ -1437,6 +1437,9 @@ en:
         confirm_reset: "Are you sure you want to reset the form configuration?"
         reset_description: >
           This will reset the attributes to their default group and disable ALL custom fields.
+      board_card_configuration:
+        tab: "Board card fields"
+        intro: "Select the attributes to show as additional rows on Kanban board cards for work packages of this type. This applies to every board."
       projects:
         tab: Projects
         enable_all: Enable for all projects

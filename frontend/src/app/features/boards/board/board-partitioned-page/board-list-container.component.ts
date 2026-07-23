@@ -42,6 +42,7 @@ import { PathHelperService } from 'core-app/core/path-helper/path-helper.service
 import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
 import { States } from 'core-app/core/states/states.service';
 import { resolveRoutingId } from 'core-app/features/work-packages/helpers/work-package-id-resolvers';
+import { BoardCardFieldsService } from 'core-app/features/boards/board/board-card-fields/board-card-fields.service';
 
 @Component({
   selector: 'board-list-container',
@@ -49,6 +50,10 @@ import { resolveRoutingId } from 'core-app/features/work-packages/helpers/work-p
   styleUrls: ['./board-list-container.component.sass'],
   providers: [
     BoardListCrossSelectionService,
+    // Shared once per board (not per column/board-list) so that Types are
+    // fetched globally exactly once per board load, regardless of how many
+    // columns are rendered.
+    BoardCardFieldsService,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,

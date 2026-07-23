@@ -32,6 +32,7 @@ import { QueryResource } from 'core-app/features/hal/resources/query-resource';
 import { HalEventsService } from 'core-app/features/hal/services/hal-events.service';
 import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
 import isNewResource from 'core-app/features/hal/helpers/is-new-resource';
+import { TypeCardFieldsByTypeId } from 'core-app/features/work-packages/components/wp-card-view/wp-single-card/resolve-type-card-fields';
 
 export type CardViewOrientation = 'horizontal'|'vertical';
 
@@ -84,6 +85,18 @@ export class WorkPackageCardViewComponent extends UntilDestroyedMixin implements
 
   /** Whether on special mobile version of the cards shall be shown */
   @Input() public shrinkOnMobile = false;
+
+  /**
+   * Board-only opt-in, forwarded to every `wp-single-card`: render the
+   * per-Type configured extra card fields. Defaults to `false` so that
+   * every non-board consumer of this component (WP table Cards mode, Team
+   * Planner) keeps the unchanged fixed baseline unless it explicitly opts
+   * in.
+   */
+  @Input() public renderTypeCardFields = false;
+
+  /** Map from a work package Type's id to its configured board card field ids. */
+  @Input() public typeCardFieldsByTypeId:TypeCardFieldsByTypeId = {};
 
   /** Container reference */
   @ViewChild('container', { static: true }) public container:ElementRef;

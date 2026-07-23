@@ -32,6 +32,13 @@ import { InputState } from '@openproject/reactivestates';
 export class TypeResource extends HalResource {
   public color:string;
 
+  /**
+   * Ordered list of extra work package attribute identifiers configured to
+   * render on Kanban board cards for work packages of this type. Board-only;
+   * has no effect outside of board card rendering. Read-only.
+   */
+  public boardCardFieldIds:string[]|undefined;
+
   public get state():InputState<this> {
     return this.states.types.get(this.href!) as any;
   }

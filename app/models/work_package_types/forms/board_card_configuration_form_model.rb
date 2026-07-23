@@ -28,24 +28,18 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require_relative "base"
+module WorkPackageTypes
+  module Forms
+    class BoardCardConfigurationFormModel
+      extend ActiveModel::Naming
 
-class Tables::Types < Tables::Base
-  def self.table(migration)
-    create_table migration do |t|
-      t.string :name, default: "", null: false
-      t.integer :position, default: 1
-      t.boolean :is_in_roadmap, default: true, null: false
-      t.boolean :is_milestone, default: false, null: false
-      t.boolean :is_default, default: false, null: false
-      t.belongs_to :color, index: { name: :index_types_on_color_id }, foreign_key: { on_delete: :nullify }
-      t.timestamps precision: nil, null: false
-      t.boolean :is_standard, default: false, null: false
-      t.text :attribute_groups
-      t.text :description
-      t.text :patterns, null: true
-      t.jsonb :pdf_export_templates_config, default: {}
-      t.jsonb :board_card_configuration, default: {}
+      attr_reader :field_ids, :available_attributes, :validation_errors
+
+      def initialize(field_ids:, available_attributes:, validation_errors: {})
+        @field_ids = field_ids
+        @available_attributes = available_attributes
+        @validation_errors = validation_errors
+      end
     end
   end
 end

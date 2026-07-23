@@ -28,24 +28,36 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require_relative "base"
+module WorkPackageTypes
+  # Admin-only tab for configuring the ordered list of extra work package
+  # attributes shown on Kanban board cards for this Type.
+  #
+  # Authorization is global admin only (inherited `require_admin` from
+  # BaseTabController), not the project-scoped `manage_types` permission,
+  # since this setting applies globally across all boards/projects.
+  class BoardCardConfigurationTabController < BaseTabController
+    current_menu_item %i[edit update] do
+      :types
+    end
 
-class Tables::Types < Tables::Base
-  def self.table(migration)
-    create_table migration do |t|
-      t.string :name, default: "", null: false
-      t.integer :position, default: 1
-      t.boolean :is_in_roadmap, default: true, null: false
-      t.boolean :is_milestone, default: false, null: false
-      t.boolean :is_default, default: false, null: false
-      t.belongs_to :color, index: { name: :index_types_on_color_id }, foreign_key: { on_delete: :nullify }
-      t.timestamps precision: nil, null: false
-      t.boolean :is_standard, default: false, null: false
-      t.text :attribute_groups
-      t.text :description
-      t.text :patterns, null: true
-      t.jsonb :pdf_export_templates_config, default: {}
-      t.jsonb :board_card_configuration, default: {}
+    def edit; end
+
+    def update
+      result = UpdateService.new(user: current_user, model: @type, contract_class: UpdateBoardCardConfigurationContract)
+                            .call(board_card_field_ids: permitted_field_ids)
+
+      if result.success?
+        redirect_to edit_type_board_card_configuration_path(type_id: @type.id), notice: I18n.t(:notice_successful_update)
+      else
+        render :edit, status: :unprocessable_entity
+      end
+    end
+
+    private
+
+    def permitted_field_ids
+      Array(params.dig(:work_package_types_forms_board_card_configuration_form_model, :board_card_field_ids))
+        .reject(&:blank?)
     end
   end
 end

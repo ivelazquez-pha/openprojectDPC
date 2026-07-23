@@ -22,6 +22,8 @@
       [draggable]="this.canDragOutOf(wp)"
       [orientation]="orientation"
       [shrinkOnMobile]="shrinkOnMobile"
+      [renderTypeCardFields]="renderTypeCardFields"
+      [typeCardFieldsByTypeId]="typeCardFieldsByTypeId"
       (onRemove)="removeCard(wp)"
       (stateLinkClicked)="stateLinkClicked.emit($event)" />
     @if (shrinkOnMobile) {

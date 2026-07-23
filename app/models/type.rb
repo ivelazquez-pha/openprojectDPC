@@ -41,6 +41,8 @@ class Type < ApplicationRecord
   store_attribute :pdf_export_templates_config, :export_templates_disabled, :json
   store_attribute :pdf_export_templates_config, :export_templates_order, :json
 
+  store_attribute :board_card_configuration, :board_card_field_ids, :json
+
   before_destroy :check_integrity
 
   belongs_to :color, optional: true, class_name: "Color"
@@ -140,6 +142,14 @@ class Type < ApplicationRecord
 
   def pdf_export_templates
     @pdf_export_templates ||= ::Type::PdfExportTemplates.new(self)
+  end
+
+  ##
+  # Board-only Kanban card field configuration for this type. Exposes the
+  # normalized (stale-identifier-safe) ordered list of extra field identifiers
+  # to render on Kanban board cards for work packages of this type.
+  def board_card_fields
+    @board_card_fields ||= ::Type::BoardCardConfiguration.new(self)
   end
 
   private

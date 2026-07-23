@@ -28,24 +28,46 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require_relative "base"
+module WorkPackageTypes
+  class BoardCardConfigurationComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpPrimer::ComponentHelpers
+    include OpTurbo::Streamable
 
-class Tables::Types < Tables::Base
-  def self.table(migration)
-    create_table migration do |t|
-      t.string :name, default: "", null: false
-      t.integer :position, default: 1
-      t.boolean :is_in_roadmap, default: true, null: false
-      t.boolean :is_milestone, default: false, null: false
-      t.boolean :is_default, default: false, null: false
-      t.belongs_to :color, index: { name: :index_types_on_color_id }, foreign_key: { on_delete: :nullify }
-      t.timestamps precision: nil, null: false
-      t.boolean :is_standard, default: false, null: false
-      t.text :attribute_groups
-      t.text :description
-      t.text :patterns, null: true
-      t.jsonb :pdf_export_templates_config, default: {}
-      t.jsonb :board_card_configuration, default: {}
+    def initialize(model, board_card_form_data: nil, **)
+      @board_card_form_data = board_card_form_data
+      super(model, **)
+    end
+
+    def form_options
+      {
+        url: type_board_card_configuration_path(type_id: model.id),
+        method: :put,
+        model: board_card_form_object
+      }
+    end
+
+    private
+
+    def board_card_form_object
+      Forms::BoardCardConfigurationFormModel.new(
+        field_ids: submitted_field_ids || model.board_card_fields.field_ids,
+        available_attributes: sorted_available_attributes,
+        validation_errors: model.errors
+      )
+    end
+
+    def submitted_field_ids
+      return nil if @board_card_form_data.blank?
+
+      Array(@board_card_form_data[:board_card_field_ids]).reject(&:blank?)
+    end
+
+    def sorted_available_attributes
+      model
+        .work_package_attributes
+        .map { |key, attr| [Type.translated_attribute_name(key, attr), key] }
+        .sort_by(&:first)
     end
   end
 end
