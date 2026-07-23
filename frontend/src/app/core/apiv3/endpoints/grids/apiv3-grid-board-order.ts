@@ -26,40 +26,38 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-import { ApiV3GettableResource } from 'core-app/core/apiv3/paths/apiv3-resource';
-import { GridResource } from 'core-app/features/hal/resources/grid-resource';
-import { SchemaResource } from 'core-app/features/hal/resources/schema-resource';
+import { Injector } from '@angular/core';
+import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiV3GridForm } from 'core-app/core/apiv3/endpoints/grids/apiv3-grid-form';
-import { ApiV3GridBoardOrder } from 'core-app/core/apiv3/endpoints/grids/apiv3-grid-board-order';
+import { SimpleResource } from 'core-app/core/apiv3/paths/path-resources';
 
-export class ApiV3GridPaths extends ApiV3GettableResource<GridResource> {
-  // Static paths
-  readonly form = this.subResource('form', ApiV3GridForm);
+export type BoardOrderDirection = 'asc'|'desc';
 
-  // The bounded, one-shot board "Sort by..." command (see Unit 1's
-  // Boards::BoardOrderService).
-  readonly boardOrder = new ApiV3GridBoardOrder(this.injector, this.path, 'board_order');
+/**
+ * `POST /api/v3/grids/:id/board_order` - the bounded, synchronous "Sort
+ * by..." command implemented by `Boards::BoardOrderService` (see Unit 1).
+ *
+ * Responds 204 with no body on success. Errors (404 unauthorized/missing,
+ * 422 invalid field or 500-card limit exceeded, 409 retry exhausted) are
+ * left to propagate as a raw `HttpErrorResponse` so callers can hand them to
+ * `HalResourceNotificationService`, exactly like other plain HttpClient
+ * commands in this codebase (see `ApiV3QueryOrder`).
+ */
+export class ApiV3GridBoardOrder extends SimpleResource {
+  @InjectField() http:HttpClient;
 
-  /**
-   * Update a grid resource or payload
-   * @param resource
-   * @param schema
-   */
-  public patch(resource:GridResource|object, schema:SchemaResource|null = null):Observable<GridResource> {
-    const payload = this.form.extractPayload(resource, schema);
-
-    return this
-      .halResourceService
-      .patch<GridResource>(this.path, payload);
+  constructor(readonly injector:Injector,
+    readonly basePath:string,
+    readonly id:string|number) {
+    super(basePath, id);
   }
 
-  /**
-   * Delete a grid resource
-   */
-  public delete():Observable<unknown> {
-    return this
-      .halResourceService
-      .delete(this.path);
+  public create(field:string, direction:BoardOrderDirection):Observable<void> {
+    return this.http.post<void>(
+      this.path,
+      { field, direction },
+      { withCredentials: true },
+    );
   }
 }

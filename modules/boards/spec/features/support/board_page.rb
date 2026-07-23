@@ -395,6 +395,27 @@ module Pages
       expect(page).to have_css(".new-list--action-select input")
     end
 
+    ##
+    # Open the board-wide "Sort by..." action (rendered next to "Add list")
+    # and confirm sorting by the given field/direction.
+    def sort_board(field:, direction: "asc")
+      page.find('[data-test-selector="board-sort--trigger"]').click
+
+      within page.find(".spot-modal") do
+        select field, from: "board-sort-field"
+        choose(option: direction)
+        page.find('[data-test-selector="board-sort--apply"]').click
+      end
+    end
+
+    def expect_sort_action(present: true)
+      expect(page).to have_conditional_selector(present, '[data-test-selector="board-sort--trigger"]')
+    end
+
+    def expect_sort_error(message)
+      expect(page).to have_css(".op-toast.-error", text: message, wait: 10)
+    end
+
     def add_list_modal_shows_warning(value, with_link: false)
       within page.find(".spot-modal") do
         warning = ".op-toast.-warning"

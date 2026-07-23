@@ -50,5 +50,19 @@
         </div>
       </div>
     }
+    @if (board.editable && canSortBoard()) {
+      <div class="boards-list--add-item -no-text-select"
+        role="button"
+        tabindex="0"
+        data-test-selector="board-sort--trigger"
+        (click)="openSortModal(board)"
+        (keydown.enter)="openSortModal(board)"
+        (keydown.space)="openSortModal(board)">
+        <div class="boards-list--add-item-text">
+          <op-icon icon-classes="icon-sort icon-context" />
+          <span [textContent]="text.sortBy"></span>
+        </div>
+      </div>
+    }
   </div>
 }

@@ -1,0 +1,68 @@
+<div class="spot-modal loading-indicator--location" data-indicator-name="modal">
+  <div id="spotModalTitle" class="spot-modal--header">{{ text.title }}</div>
+
+  <div class="spot-divider"></div>
+
+  <div class="spot-modal--body spot-container">
+    @if (availableFields.length === 0) {
+      <p [textContent]="text.noFields" data-test-selector="board-sort--no-fields"></p>
+    } @else {
+      <div class="form--field -full-width">
+        <label for="board-sort-field" class="form--label" [textContent]="text.fieldLabel"></label>
+        <div class="form--field-container">
+          <div class="form--select-container">
+            <select id="board-sort-field"
+              name="board-sort-field"
+              class="form--select"
+              data-test-selector="board-sort--field"
+              (change)="selectField($event.target.value)">
+              @for (field of availableFields; track field.id) {
+                <option [value]="field.id"
+                  [textContent]="field.name"
+                  [selected]="field.id === selectedFieldId"></option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form--field -full-width">
+        <div class="form--field-container">
+          <label class="option-label">
+            <input type="radio"
+              name="board-sort-direction"
+              value="asc"
+              [checked]="direction === 'asc'"
+              (change)="selectDirection('asc')"
+              data-test-selector="board-sort--direction-asc">
+            {{ text.ascending }}
+          </label>
+          <label class="option-label">
+            <input type="radio"
+              name="board-sort-direction"
+              value="desc"
+              [checked]="direction === 'desc'"
+              (change)="selectDirection('desc')"
+              data-test-selector="board-sort--direction-desc">
+            {{ text.descending }}
+          </label>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="spot-action-bar">
+    <div class="spot-action-bar--right">
+      <button class="button button_no-margin spot-modal--cancel-button spot-action-bar--action"
+        [textContent]="text.cancel"
+        (click)="closeMe($event)"></button>
+      @if (availableFields.length > 0) {
+        <button class="button button_no-margin -primary spot-action-bar--action"
+          [textContent]="text.apply"
+          [disabled]="!selectedFieldId || inFlight"
+          data-test-selector="board-sort--apply"
+          (click)="apply()"></button>
+      }
+    </div>
+  </div>
+</div>

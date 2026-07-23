@@ -69,6 +69,9 @@ import { CurrentProjectService } from 'core-app/core/current-project/current-pro
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { BoardCardFieldsService } from 'core-app/features/boards/board/board-card-fields/board-card-fields.service';
 import { TypeCardFieldsByTypeId } from 'core-app/features/work-packages/components/wp-card-view/wp-single-card/resolve-type-card-fields';
+import { WorkPackageViewSortByService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sort-by.service';
+import { WorkPackageViewOrderService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-order.service';
+import { QuerySortByResource } from 'core-app/features/hal/resources/query-sort-by-resource';
 
 export interface DisabledButtonPlaceholder {
   text:string;
@@ -114,6 +117,8 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
   readonly currentProject = inject(CurrentProjectService);
   readonly pathHelper = inject(PathHelperService);
   readonly boardCardFields = inject(BoardCardFieldsService);
+  readonly wpTableSortBy = inject(WorkPackageViewSortByService);
+  readonly wpTableOrder = inject(WorkPackageViewOrderService);
 
   /**
    * Kanban board cards are the only `wp-single-card` consumer that opts
@@ -264,6 +269,33 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
 
   public get errorMessage() {
     return this.i18n.t('js.boards.error_loading_the_list', { error_message: this.loadingError });
+  }
+
+  /**
+   * This column's own isolated sortable-fields list (see
+   * `WorkPackageIsolatedQuerySpaceDirective` - `WorkPackageViewSortByService`
+   * is provided once per `board-list`/column). Used by the board-level
+   * "Sort by..." action to intersect fields sortable across every column -
+   * never to infer the 500-card limit, which stays server-side only.
+   */
+  public sortByReady$():Observable<null> {
+    return this.wpTableSortBy.onReadyWithAvailable();
+  }
+
+  public get availableSortFields():QuerySortByResource[] {
+    return this.wpTableSortBy.available;
+  }
+
+  /**
+   * Called after a board-wide "Sort by..." command has committed
+   * successfully. Invalidates this column's own cached manual-order state
+   * (`WorkPackageViewOrderService`) and reloads the query, so that a drag
+   * immediately after a sort computes its delta against the freshly written
+   * positions rather than a stale pre-sort cache (design "D13").
+   */
+  public applySortedOrder():void {
+    this.wpTableOrder.clear('Board sort applied');
+    this.updateQuery(true);
   }
 
   public canMove(workPackage:WorkPackageResource) {

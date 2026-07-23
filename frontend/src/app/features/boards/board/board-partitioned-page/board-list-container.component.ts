@@ -43,6 +43,9 @@ import { CurrentProjectService } from 'core-app/core/current-project/current-pro
 import { States } from 'core-app/core/states/states.service';
 import { resolveRoutingId } from 'core-app/features/work-packages/helpers/work-package-id-resolvers';
 import { BoardCardFieldsService } from 'core-app/features/boards/board/board-card-fields/board-card-fields.service';
+import { BoardSortService } from 'core-app/features/boards/board/board-sort/board-sort.service';
+import { BoardSortModalComponent, BoardSortModalLocals } from 'core-app/features/boards/board/board-sort/board-sort.modal';
+import { BoardSortField, canSortBoard as computeCanSortBoard } from 'core-app/features/boards/board/board-sort/board-sort-field';
 
 @Component({
   selector: 'board-list-container',
@@ -76,6 +79,7 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
   readonly QueryUpdated = inject(QueryUpdatedService);
   readonly pathHelper = inject(PathHelperService);
   readonly currentProject = inject(CurrentProjectService);
+  readonly boardSortService = inject(BoardSortService);
 
   @Input() boardId:string;
   text = {
@@ -87,6 +91,7 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
     addList: this.I18n.t('js.boards.add_list'),
     unnamedList: this.I18n.t('js.boards.label_unnamed_list'),
     hiddenListWarning: this.I18n.t('js.boards.text_hidden_list_warning'),
+    sortBy: this.I18n.t('js.boards.sort_by.action'),
   };
 
   /** Container reference */
@@ -210,6 +215,34 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
         this.untilDestroyed(),
       )
       .subscribe((collection) => this.requestRefreshOfUpdatedLists(collection.elements));
+  }
+
+  /**
+   * Whether the board-wide "Sort by..." action should be offered: at least
+   * one column, and every column's query authorizes
+   * `reorder_work_packages` (surfaced as the `updateOrderedWorkPackages`
+   * HAL link - the same signal drag & drop already relies on).
+   */
+  public canSortBoard():boolean {
+    const listComponents = this.lists?.toArray() ?? [];
+
+    return computeCanSortBoard(listComponents.map((list) => !!list.query?.updateOrderedWorkPackages));
+  }
+
+  public availableSortFields():BoardSortField[] {
+    const listComponents = this.lists?.toArray() ?? [];
+
+    return this.boardSortService.intersectFields(listComponents.map((list) => list.availableSortFields));
+  }
+
+  public openSortModal(board:Board):void {
+    const locals:BoardSortModalLocals = {
+      gridId: board.id!,
+      availableFields: this.availableSortFields(),
+      refresh: () => this.lists.toArray().forEach((list) => list.applySortedOrder()),
+    };
+
+    this.opModalService.show(BoardSortModalComponent, this.injector, locals as unknown as Record<string, unknown>);
   }
 
   private showError(text = this.text.loadingError) {
