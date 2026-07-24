@@ -166,6 +166,25 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
   /* Output fired after it is assured whether a user has the right to see the list */
   @Output() visibilityChange = new EventEmitter<boolean>();
 
+  /**
+   * Output fired whenever this column's own state that
+   * `BoardListContainerComponent.canSortBoard()`/`.availableSortFields()`
+   * depend on (`canDragOutOf`, i.e. `query.updateOrderedWorkPackages`, and
+   * this column's `availableSortFields`) changes.
+   *
+   * The container reads that state synchronously through
+   * `@ViewChildren(BoardListComponent) lists`, which is invisible to its own
+   * `OnPush` change detection: this column is also `OnPush` and only calls
+   * its OWN `cdRef.detectChanges()` once its query resolves asynchronously,
+   * which never re-checks the PARENT's template. Binding this output in
+   * `board-list-container.component.html` is what makes the container
+   * re-check its view (and hence the "Sort by..." trigger's `@if`) as soon
+   * as this column's sortability state is actually known, instead of only
+   * appearing after an unrelated container-level change (e.g. a filter
+   * change) happens to trigger it later.
+   */
+  @Output() sortabilityChange = new EventEmitter<void>();
+
   /** Access to the board resource */
   @Input() public board:Board;
 
@@ -289,9 +308,23 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
       .subscribe(async (query) => {
         this.query = query;
         this.canDragOutOf = !!this.query.updateOrderedWorkPackages;
+        // Let the container know this column's `canDragOutOf` (read by
+        // `canSortBoard()`) is now known - see `sortabilityChange` doc above.
+        this.sortabilityChange.emit();
         await this.loadActionAttribute(query);
         this.cdRef.detectChanges();
       });
+
+    // This column's `availableSortFields` (read by the container's
+    // `availableSortFields()`) resolves on a separate, slightly later async
+    // chain than the query/`canDragOutOf` readiness above (see
+    // `applyLoadedBoardColumnQuery`'s doc comment: it depends on
+    // `WorkPackagesListService.conditionallyLoadForm`, not the query itself).
+    // Notify the container on that readiness too.
+    this
+      .sortByReady$()
+      .pipe(this.untilDestroyed())
+      .subscribe(() => this.sortabilityChange.emit());
   }
 
   ngOnDestroy() {
