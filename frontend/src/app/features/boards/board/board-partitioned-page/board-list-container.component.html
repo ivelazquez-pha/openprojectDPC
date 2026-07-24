@@ -22,7 +22,8 @@
         <board-list [resource]="boardWidget"
           [board]="board"
           (onRemove)="removeList(board, boardWidget)"
-          (visibilityChange)="changeVisibilityOfList(board, boardWidget, $event)" />
+          (visibilityChange)="changeVisibilityOfList(board, boardWidget, $event)"
+          (sortabilityChange)="onColumnSortabilityChange()" />
       </div>
     }
     @if (showHiddenListWarning) {

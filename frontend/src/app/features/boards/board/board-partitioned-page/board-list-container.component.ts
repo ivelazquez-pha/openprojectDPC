@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   inject,
@@ -80,6 +81,7 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
   readonly pathHelper = inject(PathHelperService);
   readonly currentProject = inject(CurrentProjectService);
   readonly boardSortService = inject(BoardSortService);
+  readonly cdRef = inject(ChangeDetectorRef);
 
   @Input() boardId:string;
   text = {
@@ -227,6 +229,22 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
     const listComponents = this.lists?.toArray() ?? [];
 
     return computeCanSortBoard(listComponents.map((list) => !!list.query?.updateOrderedWorkPackages));
+  }
+
+  /**
+   * Handler for `BoardListComponent`'s `(sortabilityChange)` output, bound
+   * on every `<board-list>` in the template. `canSortBoard()`/
+   * `availableSortFields()` above read each column's state synchronously
+   * via `@ViewChildren(BoardListComponent) lists`, which this (`OnPush`)
+   * container never re-checks on its own once a column's query resolves
+   * asynchronously (the column is also `OnPush` and only refreshes its OWN
+   * view). Binding this handler in the container's own template is what
+   * makes Angular re-check this view on every emission; `markForCheck()` is
+   * called explicitly too, to make the intent obvious and keep working even
+   * if this ever moves off a template-event trigger.
+   */
+  public onColumnSortabilityChange():void {
+    this.cdRef.markForCheck();
   }
 
   public availableSortFields():BoardSortField[] {
