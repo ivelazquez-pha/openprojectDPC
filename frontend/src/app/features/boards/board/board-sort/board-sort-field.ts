@@ -83,14 +83,37 @@ const API_TO_QUERY_FIELD_NAME:Record<string, string> = {
 };
 
 /**
+ * Matches a custom field API identifier (e.g. `customField1`), as produced
+ * by `CustomField#attribute_name(:camel_case)` on the backend.
+ */
+const CUSTOM_FIELD_ID_PATTERN = /^customField(\d+)$/;
+
+/**
  * Converts a `QueryColumn#id` (camelCase API attribute identifier) to the
  * snake_case field name `Boards::BoardOrderService` expects in its `field`
  * parameter.
+ *
+ * Post-deploy bug fix: custom fields need their OWN conversion rule, not the
+ * generic camelCase -> snake_case one. The backend's short column name for a
+ * custom field is `cf_<id>` (`CustomField#column_name`), NOT
+ * `custom_field_<id>` or `custom_field<id>` - see
+ * `API::Utilities::PropertyNameConverter#collapse_custom_field_name` and
+ * `app/services/api/v3/parse_query_params_service.rb`'s own documented
+ * example ("customField1 => cf_1"). Running `customField1` through the
+ * generic regex instead produces `custom_field1`, which never matches any
+ * column's `sortable_columns` entry - `Boards::BoardOrderService` then
+ * rejects the request as `:invalid_field` (422) for every custom field, on
+ * every board, unconditionally.
  */
 export function toQueryFieldName(apiFieldId:string):string {
   const specialCase = API_TO_QUERY_FIELD_NAME[apiFieldId];
   if (specialCase) {
     return specialCase;
+  }
+
+  const customFieldMatch = apiFieldId.match(CUSTOM_FIELD_ID_PATTERN);
+  if (customFieldMatch) {
+    return `cf_${customFieldMatch[1]}`;
   }
 
   return apiFieldId.replace(/([A-Z])/g, (_match, letter:string) => `_${letter.toLowerCase()}`);

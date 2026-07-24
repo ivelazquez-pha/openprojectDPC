@@ -212,6 +212,20 @@ describe('board-sort-field', () => {
       expect(toQueryFieldName('remainingTime')).toBe('remaining_hours');
       expect(toQueryFieldName('spentTime')).toBe('spent_hours');
     });
+
+    // Post-deploy bug: a real custom field (API id `customField1`) failed
+    // board sort with a 422 `invalid_field`. Root cause: the generic
+    // camelCase -> snake_case rule turned `customField1` into
+    // `custom_field1`, but `Boards::BoardOrderService`/`CustomField#column_name`
+    // (backend) and `API::Utilities::PropertyNameConverter#collapse_custom_field_name`
+    // both expect the short form `cf_<id>` (see
+    // `app/services/api/v3/parse_query_params_service.rb`'s own documented
+    // example: "customField1 => cf_1"). Every column's `plain_sortable_column`
+    // match therefore failed for every board, on every custom field, always.
+    it('converts custom field API ids to their backend cf_<id> column name', () => {
+      expect(toQueryFieldName('customField1')).toBe('cf_1');
+      expect(toQueryFieldName('customField42')).toBe('cf_42');
+    });
   });
 
   describe('canSortBoard', () => {
