@@ -122,6 +122,23 @@ export function isAssociationBackedField(apiFieldId:string):boolean {
  * column's isolated query space) - this function never infers eligibility
  * from card counts, only from what each column's own schema reports as
  * sortable.
+ *
+ * ROOT CAUSE this function must keep working around: the real
+ * `POST /api/v3/queries/:id/form` response only ever exposes each sort
+ * option's `column` as a bare `_links.column` reference (`{ href, title }`),
+ * never as an `_embedded` resource carrying its own `id`. When the frontend
+ * hydrates that link into a `HalResource`
+ * (`HalResourceService.createLinkedResource`), the resulting resource's
+ * `$source` has no `id` field at all, so `HalResource#id` falls back to
+ * parsing the href - but that generic fallback (`hal-resource.ts`) only
+ * accepts PURELY NUMERIC trailing href segments (e.g. `/statuses/5` -> `5`);
+ * query column identifiers are alphanumeric (`startDate`, `customField1`,
+ * ...), so `sort.column.id` is unconditionally `null` for every real sort
+ * option, in every column, on every board. Reading `sort.column.id` here -
+ * as this function used to - therefore excluded 100% of fields, not just
+ * association-backed ones, regardless of the schema's actual content. The
+ * fix mirrors `QuerySortByDirection#id` and derives the identifier directly
+ * from the (already href-validated) `href` instead of trusting `.id`.
  */
 export function unionSortableFields(perColumnAvailable:QuerySortByResource[][]):BoardSortField[] {
   const union = new Map<string, string>();
@@ -133,7 +150,7 @@ export function unionSortableFields(perColumnAvailable:QuerySortByResource[][]):
         return;
       }
 
-      const id = sort.column.id;
+      const id = href.split('/').pop();
       if (!id || isAssociationBackedField(id)) {
         return;
       }

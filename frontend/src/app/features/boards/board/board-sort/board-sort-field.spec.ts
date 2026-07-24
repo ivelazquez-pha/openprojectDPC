@@ -1,3 +1,10 @@
+import { TestBed } from '@angular/core/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { I18nService } from 'core-app/core/i18n/i18n.service';
+import { States } from 'core-app/core/states/states.service';
+import { OpenprojectHalModule } from 'core-app/features/hal/openproject-hal.module';
+import { HalResourceService } from 'core-app/features/hal/services/hal-resource.service';
 import { QuerySortByResource } from 'core-app/features/hal/resources/query-sort-by-resource';
 import {
   canSortBoard,
@@ -11,6 +18,28 @@ function sortBy(id:string, name:string, direction = 'asc'):QuerySortByResource {
     column: { id, name, href: `/api/v3/queries/columns/${id}` },
     direction: { href: `urn:openproject-org:api:v3:queries:directions:${direction}` },
   } as unknown as QuerySortByResource;
+}
+
+/**
+ * Builds a `QuerySortByResource` the way the REAL
+ * `POST /api/v3/queries/:id/form` response actually shapes it (confirmed via
+ * live Network tab capture on a real status board): `column` is exposed
+ * ONLY as a `_links.column` reference, never `_embedded`. This is the exact
+ * shape that exposed the "Sort by..." always-empty regression - a plain
+ * object literal fixture (like `sortBy()` above) hides this bug entirely
+ * because it never exercises `HalResource#id`'s numeric-only href fallback.
+ */
+function realApiSortByFixture(halResourceService:HalResourceService, columnId:string, columnTitle:string, direction:'asc'|'desc' = 'asc'):QuerySortByResource {
+  return halResourceService.createHalResource<QuerySortByResource>({
+    _type: 'QuerySortBy',
+    id: `${columnId}-${direction}`,
+    name: `${columnTitle} (${direction === 'asc' ? 'Ascendente' : 'Descendente'})`,
+    _links: {
+      self: { href: `/api/v3/queries/sort_bys/${columnId}-${direction}`, title: columnTitle },
+      column: { href: `/api/v3/queries/columns/${columnId}`, title: columnTitle },
+      direction: { href: `urn:openproject-org:api:v3:queries:directions:${direction}`, title: direction },
+    },
+  }, true);
 }
 
 describe('board-sort-field', () => {
@@ -77,6 +106,82 @@ describe('board-sort-field', () => {
       const result = unionSortableFields([columnA, columnB]);
 
       expect(result.map((field) => field.name)).toEqual(['Finish date', 'Subject']);
+    });
+  });
+
+  /**
+   * REGRESSION: "Sort by..." reported "No field is sortable on any list of
+   * this board" for EVERY field (including plain, always-sortable ones like
+   * due date) on a real status board, despite `POST /api/v3/queries/:id/form`
+   * returning 200 OK with a rich, non-empty `sortBy.allowedValues` array
+   * (confirmed via live Network tab capture).
+   *
+   * Root cause: `unionSortableFields` read `sort.column.id`. In the real API
+   * response `column` is only ever a `_links.column` reference (`{ href,
+   * title }`), never `_embedded`. Once hydrated into a real `HalResource`,
+   * `id` falls back to parsing the href - but that generic fallback only
+   * accepts purely numeric trailing segments, and query column identifiers
+   * (`startDate`, `customField1`, ...) are alphanumeric, so `.id` was always
+   * `null`. Every field was therefore silently dropped by `if (!id) return`,
+   * regardless of board type, column count, or field kind.
+   *
+   * This spec builds fixtures through the REAL `HalResourceService` from raw
+   * JSON matching the exact captured API shape (not a plain object literal
+   * with a hand-set `.id`), so it exercises the actual `HalResource#id`
+   * fallback that caused the bug - reverting the `href`-based fix in
+   * `unionSortableFields` makes this fail again.
+   */
+  describe('unionSortableFields against the real API response shape (regression)', () => {
+    let halResourceService:HalResourceService;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [OpenprojectHalModule],
+        providers: [
+          HalResourceService,
+          States,
+          I18nService,
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting(),
+        ],
+      }).compileComponents();
+
+      halResourceService = TestBed.inject(HalResourceService);
+    });
+
+    it('offers plain fields (e.g. due date) whose column is only ever a _links reference, never embedded', () => {
+      const columnA = [
+        realApiSortByFixture(halResourceService, 'dueDate', 'Fecha de fin'),
+        realApiSortByFixture(halResourceService, 'startDate', 'Fecha de inicio'),
+      ];
+
+      const result = unionSortableFields([columnA]);
+
+      expect(result).toEqual([
+        { id: 'dueDate', name: 'Fecha de fin' },
+        { id: 'startDate', name: 'Fecha de inicio' },
+      ]);
+    });
+
+    it('offers a real custom field sortable via the same link-only column shape', () => {
+      const columnA = [realApiSortByFixture(halResourceService, 'customField1', 'My Custom Field')];
+
+      const result = unionSortableFields([columnA]);
+
+      expect(result).toEqual([{ id: 'customField1', name: 'My Custom Field' }]);
+    });
+
+    it('still excludes association-backed fields and manual sorting once hydrated as real HalResources', () => {
+      const columnA = [
+        realApiSortByFixture(halResourceService, 'status', 'Status'),
+        realApiSortByFixture(halResourceService, 'assignee', 'Assignee'),
+        realApiSortByFixture(halResourceService, 'manualSorting', 'Manual'),
+        realApiSortByFixture(halResourceService, 'subject', 'Subject'),
+      ];
+
+      const result = unionSortableFields([columnA]);
+
+      expect(result).toEqual([{ id: 'subject', name: 'Subject' }]);
     });
   });
 
