@@ -86,5 +86,57 @@ RSpec.describe Type::BoardCardConfiguration do
         expect(configuration.field_ids).to eq(%w[priority assignee])
       end
     end
+
+    # POST-DEPLOY BUG FIX: the merged "date" pseudo-attribute must never be
+    # treated as available; the real start_date/due_date identifiers (in API
+    # camelCase format) must be available instead.
+    context "when startDate/dueDate (API camelCase) are configured" do
+      before do
+        type.board_card_field_ids = %w[startDate dueDate]
+      end
+
+      it "keeps both, not the merged 'date' pseudo-key" do
+        expect(configuration.field_ids).to eq(%w[startDate dueDate])
+      end
+    end
+
+    context "when the merged 'date' pseudo-key is (stale-)configured" do
+      before do
+        type.board_card_field_ids = %w[date priority]
+      end
+
+      it "drops it as unavailable, since it is not a real work package attribute" do
+        expect(configuration.field_ids).to eq(%w[priority])
+      end
+    end
+
+    # POST-DEPLOY BUG FIX: custom field identifiers must be available in API
+    # camelCase format (customField<id>), not the Rails-internal snake_case
+    # format (custom_field_<id>).
+    context "when a custom field is configured in API camelCase format" do
+      let(:custom_field) { create(:work_package_custom_field) }
+      let(:type) { build(:type, custom_fields: [custom_field]) }
+
+      before do
+        type.board_card_field_ids = ["customField#{custom_field.id}"]
+      end
+
+      it "is available and kept" do
+        expect(configuration.field_ids).to eq(["customField#{custom_field.id}"])
+      end
+    end
+
+    context "when a custom field is configured in the old snake_case format" do
+      let(:custom_field) { create(:work_package_custom_field) }
+      let(:type) { build(:type, custom_fields: [custom_field]) }
+
+      before do
+        type.board_card_field_ids = ["custom_field_#{custom_field.id}"]
+      end
+
+      it "drops it as unavailable (wrong format is treated as stale)" do
+        expect(configuration.field_ids).to eq([])
+      end
+    end
   end
 end

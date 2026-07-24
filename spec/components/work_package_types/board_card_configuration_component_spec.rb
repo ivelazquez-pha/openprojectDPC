@@ -83,4 +83,39 @@ RSpec.describe WorkPackageTypes::BoardCardConfigurationComponent, type: :compone
       expect(page).not_to have_css("input[type=checkbox][value=stale_removed_attribute]")
     end
   end
+
+  # POST-DEPLOY BUG FIX: the merged "date" pseudo-attribute (an artifact of the
+  # Type form-layout-configuration screen, where start+due date are edited as
+  # a single visual row) is not a real work package attribute/schema property
+  # and must never be offered as a selectable board card field.
+  context "regarding the merged date pseudo-attribute (post-deploy bug fix)" do
+    it "never offers the merged pseudo 'date' attribute as a selectable option" do
+      render_component
+
+      expect(page).not_to have_css("input[type=checkbox][value=date]")
+    end
+
+    it "offers the real start_date and due_date attributes separately, in API camelCase format" do
+      render_component
+
+      expect(page).to have_css("input[type=checkbox][value=startDate]")
+      expect(page).to have_css("input[type=checkbox][value=dueDate]")
+    end
+  end
+
+  # POST-DEPLOY BUG FIX: custom field keys must be offered in the API v3
+  # camelCase format (customField<id>), matching the format the frontend's
+  # work package schema/resource actually uses, not the Rails-internal
+  # snake_case format (custom_field_<id>).
+  context "regarding custom field key format (post-deploy bug fix)" do
+    let(:custom_field) { create(:work_package_custom_field) }
+    let(:type) { create(:type, custom_fields: [custom_field]) }
+
+    it "offers the custom field in API camelCase format, not the internal snake_case key" do
+      render_component
+
+      expect(page).to have_css("input[type=checkbox][value=customField#{custom_field.id}]")
+      expect(page).not_to have_css("input[type=checkbox][value=custom_field_#{custom_field.id}]")
+    end
+  end
 end

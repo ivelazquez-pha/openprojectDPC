@@ -44,6 +44,14 @@
 # form again (at which point the contract only accepts currently-valid
 # identifiers).
 class Type::BoardCardConfiguration
+  # `"date"` is a genuine work package API attribute, but only ever rendered
+  # for Milestone-type work packages (see
+  # `lib/api/v3/work_packages/work_package_representer.rb`'s `date_property
+  # :date`). Board card configuration is not milestone-aware, so `"date"` is
+  # never treated as available here; `start_date`/`due_date` (offered via
+  # `merge_date: false`) already cover the general case.
+  MILESTONE_ONLY_DATE_ATTRIBUTE = "date"
+
   def initialize(type)
     @type = type
   end
@@ -59,13 +67,35 @@ class Type::BoardCardConfiguration
     configured & available_field_ids
   end
 
+  ##
+  # The identifiers of every work package attribute currently selectable as a
+  # board card field for this type, in the API v3 camelCase format (e.g.
+  # `startDate`, `customField1`) that both the admin picker
+  # (`BoardCardConfigurationComponent#sorted_available_attributes`) and the
+  # `UpdateBoardCardConfigurationContract` validation rely on, so that the
+  # same set of identifiers is offered, validated, and stored everywhere.
+  #
+  # Uses `merge_date: false` so the real `start_date`/`due_date` attributes
+  # are available individually, instead of the merged pseudo `"date"` entry
+  # that only exists for the Type's form-layout-configuration screen.
+  #
+  # `"date"` itself is excluded: it is a genuine work package API attribute,
+  # but only ever rendered for Milestone-type work packages (see
+  # `lib/api/v3/work_packages/work_package_representer.rb`'s `date_property
+  # :date`). Board card configuration is not milestone-aware, so offering it
+  # here could crash/fail to resolve for non-milestone work packages of the
+  # same type; `start_date`/`due_date` already cover the general case.
+  def available_field_ids
+    @type
+      .work_package_attributes(merge_date: false)
+      .keys
+      .reject { |key| key == MILESTONE_ONLY_DATE_ATTRIBUTE }
+      .map { |key| API::Utilities::PropertyNameConverter.from_ar_name(key) }
+  end
+
   private
 
   def configured
     Array(@type.board_card_field_ids)
-  end
-
-  def available_field_ids
-    @type.work_package_attributes.keys
   end
 end

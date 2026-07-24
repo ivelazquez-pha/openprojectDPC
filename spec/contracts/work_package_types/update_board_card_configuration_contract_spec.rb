@@ -95,5 +95,46 @@ module WorkPackageTypes
         expect(contract.validate).to be_falsey
       end
     end
+
+    # POST-DEPLOY BUG FIX: startDate/dueDate (API camelCase) must be accepted
+    # as valid identifiers now that the merged "date" pseudo-attribute is no
+    # longer offered/required.
+    context "when startDate/dueDate (API camelCase) are submitted" do
+      before do
+        model.board_card_field_ids = %w[startDate dueDate]
+      end
+
+      it "is valid" do
+        expect(contract.validate).to be_truthy
+      end
+    end
+
+    # POST-DEPLOY BUG FIX: a custom field identifier must be accepted only in
+    # the API camelCase format, matching what the frontend schema exposes.
+    context "when a custom field is submitted in API camelCase format" do
+      let(:custom_field) { create(:work_package_custom_field) }
+
+      before do
+        model.custom_fields = [custom_field]
+        model.board_card_field_ids = ["customField#{custom_field.id}"]
+      end
+
+      it "is valid" do
+        expect(contract.validate).to be_truthy
+      end
+    end
+
+    context "when a custom field is submitted in the old snake_case format" do
+      let(:custom_field) { create(:work_package_custom_field) }
+
+      before do
+        model.custom_fields = [custom_field]
+        model.board_card_field_ids = ["custom_field_#{custom_field.id}"]
+      end
+
+      it "is invalid" do
+        expect(contract.validate).to be_falsey
+      end
+    end
   end
 end

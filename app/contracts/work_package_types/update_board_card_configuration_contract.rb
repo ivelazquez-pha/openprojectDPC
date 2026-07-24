@@ -53,7 +53,7 @@ module WorkPackageTypes
         return
       end
 
-      unknown_ids = ids - model.work_package_attributes.keys
+      unknown_ids = ids - model.board_card_fields.available_field_ids
       errors.add(:board_card_field_ids, :invalid) if unknown_ids.any?
     end
   end

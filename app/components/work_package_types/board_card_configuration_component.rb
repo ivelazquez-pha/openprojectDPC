@@ -63,11 +63,28 @@ module WorkPackageTypes
       Array(@board_card_form_data[:board_card_field_ids]).reject(&:blank?)
     end
 
+    # Available options are filtered down to `model.board_card_fields
+    # .available_field_ids` — the single source of truth also used to
+    # validate/store `board_card_field_ids` (see `Type::BoardCardConfiguration`)
+    # — so the picker, the stored value, and the contract validation always
+    # agree on exactly which identifiers, and in which format, are selectable.
     def sorted_available_attributes
+      allowed_ids = model.board_card_fields.available_field_ids
+
       model
-        .work_package_attributes
-        .map { |key, attr| [Type.translated_attribute_name(key, attr), key] }
+        .work_package_attributes(merge_date: false)
+        .map { |key, attr| [Type.translated_attribute_name(key, attr), api_attribute_name(key)] }
+        .select { |_, api_key| allowed_ids.include?(api_key) }
         .sort_by(&:first)
+    end
+
+    # Board card field identifiers are stored/round-tripped in the API v3
+    # camelCase format (e.g. `startDate`, `customField1`) so they match the
+    # frontend work package resource/schema property names directly, instead
+    # of the Rails-internal snake_case attribute keys (`start_date`,
+    # `custom_field_1`) that `work_package_attributes` returns.
+    def api_attribute_name(key)
+      API::Utilities::PropertyNameConverter.from_ar_name(key)
     end
   end
 end
