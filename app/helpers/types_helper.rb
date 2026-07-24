@@ -49,6 +49,11 @@ module ::TypesHelper
         enterprise_feature: :work_package_subject_generation
       },
       {
+        name: "board_card_configuration",
+        path: edit_type_board_card_configuration_path(type_id: @type.id),
+        label: I18n.t("types.edit.board_card_configuration.tab")
+      },
+      {
         name: "projects",
         path: edit_type_projects_path(@type),
         label: I18n.t("types.edit.projects.tab")

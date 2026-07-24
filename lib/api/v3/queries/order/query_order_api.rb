@@ -32,23 +32,6 @@ module API
       module Order
         class QueryOrderAPI < ::API::OpenProjectAPI
           resource :order do
-            helpers do
-              ##
-              # Remove the order for the given work package
-              def remove_order(wp_id)
-                @query.ordered_work_packages.where(work_package_id: wp_id).delete_all
-              end
-
-              def upsert_order(wp_id, position)
-                record = @query
-                  .ordered_work_packages
-                  .find_or_initialize_by(work_package_id: wp_id)
-
-                upsert_attributes = record.attributes.merge(position:).compact
-                OrderedWorkPackage.upsert(upsert_attributes)
-              end
-            end
-
             get do
               sql = <<~SQL.squish
                 SELECT json_object_agg(work_package_id, position)
@@ -71,16 +54,13 @@ module API
               optional :delta, type: Hash
             end
             patch do
-              authorize_by_policy(:update) do
+              authorize_by_policy(:reorder_work_packages) do
                 raise API::Errors::NotFound
               end
 
-              params[:delta].each do |work_package_id, new_position|
-                if new_position == -1
-                  remove_order(work_package_id)
-                else
-                  upsert_order(work_package_id, new_position)
-                end
+              @query.transaction do
+                @query.lock!
+                OrderedWorkPackages::WriteCoordinator.write_positions(query: @query, positions: params[:delta])
               end
 
               @query.touch

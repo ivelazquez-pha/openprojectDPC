@@ -31,10 +31,15 @@ import { GridResource } from 'core-app/features/hal/resources/grid-resource';
 import { SchemaResource } from 'core-app/features/hal/resources/schema-resource';
 import { Observable } from 'rxjs';
 import { ApiV3GridForm } from 'core-app/core/apiv3/endpoints/grids/apiv3-grid-form';
+import { ApiV3GridBoardOrder } from 'core-app/core/apiv3/endpoints/grids/apiv3-grid-board-order';
 
 export class ApiV3GridPaths extends ApiV3GettableResource<GridResource> {
   // Static paths
   readonly form = this.subResource('form', ApiV3GridForm);
+
+  // The bounded, one-shot board "Sort by..." command (see Unit 1's
+  // Boards::BoardOrderService).
+  readonly boardOrder = new ApiV3GridBoardOrder(this.injector, this.path, 'board_order');
 
   /**
    * Update a grid resource or payload

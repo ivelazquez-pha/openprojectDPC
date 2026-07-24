@@ -5945,9 +5945,12 @@ es:
         links_not_an_object: _links debe ser un objeto JSON.
       conflict:
         multiple_reminders_not_allowed: Solo puede establecer un recordatorio a la vez en un paquete de trabajo. Elimine o actualice el recordatorio existente.
+        board_sort_retry_exhausted: El tablero no se pudo ordenar debido a actualizaciones conflictivas repetidas. Vuelva a intentarlo.
       not_found:
         work_package: No se encuentra el paquete de trabajo que busca, o bien se ha eliminado.
         reminder: No se encuentra el recordatorio que busca, o bien se ha eliminado.
+      unprocessable:
+        board_sort_limit_exceeded: Hay más de 500 tarjetas visibles en este tablero. Aplique filtros para reducirlas antes de ordenar.
       expected:
         date: AAAA-MM-DD (ISO 8601 fecha solamente)
         datetime: YYYY-MM-DDThh:mm:ss[.lll][+hh:mm] (cualquier valor de fecha/hora compatible con el formato ISO 8601)

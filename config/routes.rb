@@ -177,6 +177,7 @@ Rails.application.routes.draw do
     end
     resource :settings, controller: "settings_tab", only: %i[update edit]
     resource :subject_configuration, controller: "subject_configuration_tab", only: %i[update edit]
+    resource :board_card_configuration, controller: "board_card_configuration_tab", only: %i[update edit]
 
     resources :pdf_export_template, only: %i[],
                                     controller: "pdf_export_template",

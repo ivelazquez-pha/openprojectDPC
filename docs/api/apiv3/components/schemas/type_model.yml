@@ -38,6 +38,15 @@ properties:
     type: boolean
     description: Do work packages of this type represent a milestone?
     readOnly: true
+  boardCardFieldIds:
+    type: array
+    items:
+      type: string
+    description: |-
+      Ordered list of work package attribute identifiers configured to render as
+      additional rows on Kanban board cards for work packages of this type.
+      Board-only; has no effect outside of board card rendering.
+    readOnly: true
   createdAt:
     type: string
     format: date-time
@@ -71,5 +80,8 @@ example:
   position: 1
   isDefault: true
   isMilestone: false
+  boardCardFieldIds:
+  - priority
+  - assignee
   createdAt: '2014-05-21T08:51:20.624Z'
   updatedAt: '2014-05-21T08:51:20.624Z'

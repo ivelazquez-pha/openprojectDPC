@@ -44,6 +44,13 @@ module API
         property :is_default
         property :is_milestone
 
+        # Board-only Kanban card field configuration: an ordered, read-only
+        # list of extra work package attribute identifiers configured for
+        # this type. Stale/no-longer-available identifiers are already
+        # filtered out by Type::BoardCardConfiguration#field_ids.
+        property :board_card_field_ids,
+                 getter: ->(*) { board_card_fields.field_ids }
+
         date_time_property :created_at
         date_time_property :updated_at
 

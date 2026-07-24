@@ -173,6 +173,26 @@
           class="op-wp-single-card--content-dates"
           containerType="single-view" />
       }
+      @if (extraCardFieldIds.length > 0) {
+        <div
+          class="op-wp-single-card--content-type-fields"
+          data-test-selector="op-wp-single-card--content-type-fields">
+          @for (fieldId of extraCardFieldIds; track fieldId) {
+            <div
+              class="op-wp-single-card--content-type-field"
+              data-test-selector="op-wp-single-card--content-type-field"
+              [attr.data-qa-field-name]="fieldId"
+              [title]="extraCardFieldTooltip(workPackage, fieldId)">
+              <span class="op-wp-single-card--content-type-field-label">{{ extraCardFieldLabel(workPackage, fieldId) }}:</span>
+              <display-field [resource]="workPackage"
+                [displayFieldOptions]="{ writable: false, placeholder: '' }"
+                fieldName="{{ fieldId }}"
+                class="op-wp-single-card--content-type-field-value"
+                containerType="single-view" />
+            </div>
+          }
+        </div>
+      }
     </div>
   }
 </div>

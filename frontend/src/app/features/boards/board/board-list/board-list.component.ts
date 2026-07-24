@@ -63,14 +63,49 @@ import {
   HalEventsService,
 } from 'core-app/features/hal/services/hal-events.service';
 import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { WorkPackageIsolatedQuerySpaceDirective } from 'core-app/features/work-packages/directives/query-space/wp-isolated-query-space.directive';
 import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import { BoardCardFieldsService } from 'core-app/features/boards/board/board-card-fields/board-card-fields.service';
+import { TypeCardFieldsByTypeId } from 'core-app/features/work-packages/components/wp-card-view/wp-single-card/resolve-type-card-fields';
+import { WorkPackageViewSortByService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sort-by.service';
+import { WorkPackageViewOrderService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-order.service';
+import { QuerySortByResource } from 'core-app/features/hal/resources/query-sort-by-resource';
+import { WorkPackagesListService } from 'core-app/features/work-packages/components/wp-list/wp-list.service';
 
 export interface DisabledButtonPlaceholder {
   text:string;
   icon:string;
+}
+
+/**
+ * Populate this board column's own isolated query space after its query
+ * (re)loads.
+ *
+ * Board columns only ever called `WorkPackageStatesInitializationService
+ * .updateQuerySpace()` directly, unlike the table view which always goes
+ * through `WorkPackagesListService`'s `queryLoading` pipeline first (see
+ * `wp-list.service.ts`). That pipeline is the ONLY place that guarantees the
+ * query's form gets fetched and `updateStatesFromForm()` is called, which is
+ * what populates `querySpace.available.sortBy` (and `.columns`/`.groupBy`/
+ * `.displayRepresentation`). Because board columns skipped it entirely,
+ * `WorkPackageViewSortByService.available` was permanently empty for every
+ * board column, and the "Sort by..." picker always reported "No field is
+ * sortable on any list of this board" - regardless of the column's actual
+ * fields or custom fields.
+ *
+ * `WorkPackagesListService.conditionallyLoadForm` is reused as-is (same
+ * production code path already exercised by the table view) so this column's
+ * form is fetched at most once per distinct query, exactly like the table.
+ */
+export function applyLoadedBoardColumnQuery(
+  wpStatesInitialization:WorkPackageStatesInitializationService,
+  wpListService:WorkPackagesListService,
+  query:QueryResource,
+):void {
+  wpStatesInitialization.updateQuerySpace(query, query.results);
+  void wpListService.conditionallyLoadForm(query);
 }
 
 @Component({
@@ -111,6 +146,19 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
   readonly keepTab = inject(KeepTabService);
   readonly currentProject = inject(CurrentProjectService);
   readonly pathHelper = inject(PathHelperService);
+  readonly boardCardFields = inject(BoardCardFieldsService);
+  readonly wpTableSortBy = inject(WorkPackageViewSortByService);
+  readonly wpTableOrder = inject(WorkPackageViewOrderService);
+  readonly wpListService = inject(WorkPackagesListService);
+
+  /**
+   * Kanban board cards are the only `wp-single-card` consumer that opts
+   * into rendering per-Type configured extra fields. Types are fetched
+   * GLOBALLY (not scoped to this board's root project) since a column's
+   * work packages can belong to a different project than the board's own
+   * (Subproject-type boards), and Types are enabled per-project.
+   */
+  public readonly typeCardFieldsByTypeId$:Observable<TypeCardFieldsByTypeId> = this.boardCardFields.map$();
 
   /** Output fired upon query removal */
   @Output() onRemove = new EventEmitter<void>();
@@ -252,6 +300,33 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
 
   public get errorMessage() {
     return this.i18n.t('js.boards.error_loading_the_list', { error_message: this.loadingError });
+  }
+
+  /**
+   * This column's own isolated sortable-fields list (see
+   * `WorkPackageIsolatedQuerySpaceDirective` - `WorkPackageViewSortByService`
+   * is provided once per `board-list`/column). Used by the board-level
+   * "Sort by..." action to union fields sortable across all columns - never
+   * to infer the 500-card limit, which stays server-side only.
+   */
+  public sortByReady$():Observable<null> {
+    return this.wpTableSortBy.onReadyWithAvailable();
+  }
+
+  public get availableSortFields():QuerySortByResource[] {
+    return this.wpTableSortBy.available;
+  }
+
+  /**
+   * Called after a board-wide "Sort by..." command has committed
+   * successfully. Invalidates this column's own cached manual-order state
+   * (`WorkPackageViewOrderService`) and reloads the query, so that a drag
+   * immediately after a sort computes its delta against the freshly written
+   * positions rather than a stale pre-sort cache (design "D13").
+   */
+  public applySortedOrder():void {
+    this.wpTableOrder.clear('Board sort applied');
+    this.updateQuery(true);
   }
 
   public canMove(workPackage:WorkPackageResource) {
@@ -421,7 +496,7 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
     observable
       .subscribe(
         (query) => {
-          this.wpStatesInitialization.updateQuerySpace(query, query.results);
+          applyLoadedBoardColumnQuery(this.wpStatesInitialization, this.wpListService, query);
         },
         (error) => {
           const userIsNotAllowedToSeeSubprojectError = 'urn:openproject-org:api:v3:errors:InvalidQuery';

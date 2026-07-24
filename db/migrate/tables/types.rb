@@ -45,6 +45,7 @@ class Tables::Types < Tables::Base
       t.text :description
       t.text :patterns, null: true
       t.jsonb :pdf_export_templates_config, default: {}
+      t.jsonb :board_card_configuration, default: {}
     end
   end
 end

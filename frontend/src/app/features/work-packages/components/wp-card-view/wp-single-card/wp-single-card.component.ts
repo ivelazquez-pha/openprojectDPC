@@ -48,6 +48,10 @@ import {
 } from 'core-app/features/work-packages/components/wp-single-view-tabs/keep-tab/keep-tab.service';
 import { WP_ID_URL_PATTERN } from 'core-app/shared/helpers/work-package-id-pattern';
 import { matchesRoutingId } from 'core-app/features/work-packages/helpers/work-package-id-resolvers';
+import {
+  resolveTypeCardFields,
+  TypeCardFieldsByTypeId,
+} from 'core-app/features/work-packages/components/wp-card-view/wp-single-card/resolve-type-card-fields';
 
 const DETAILS_URL_PATTERN = new RegExp(`/details/(${WP_ID_URL_PATTERN})(?:/|$)`);
 
@@ -88,6 +92,24 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
   @Input() public isClosed = false;
 
   @Input() public showAsGhost = false;
+
+  /**
+   * Board-only opt-in: render the additional `label: value` rows configured
+   * per-Type for Kanban board cards (Type::BoardCardConfiguration on the
+   * backend). Defaults to `false` so that every other consumer of this
+   * shared card component (WP table Cards mode, Team Planner, the Team
+   * Planner "add existing" pane, Gantt-related views) keeps rendering only
+   * the unchanged fixed baseline unless it explicitly opts in.
+   */
+  @Input() public renderTypeCardFields = false;
+
+  /**
+   * Map from a work package Type's id to its ordered list of configured
+   * board card field identifiers. Only meaningful when
+   * `renderTypeCardFields` is `true`. Built once per board load by
+   * `BoardCardFieldsService` and passed down through `wp-card-view`.
+   */
+  @Input() public typeCardFieldsByTypeId:TypeCardFieldsByTypeId = {};
 
   @Output() onRemove = new EventEmitter<WorkPackageResource>();
 
@@ -133,7 +155,26 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
 
   combinedDateDisplayField = CombinedDateDisplayField;
 
+  /**
+   * Whether the work package's schema has resolved. Board card fields are
+   * gated on this flag as a whole (never per-field), since resolving a
+   * single field synchronously via the deprecated `SchemaCacheService#of`
+   * throws if the schema isn't loaded yet.
+   */
+  public schemaLoaded = false;
+
   ngOnInit():void {
+    if (this.renderTypeCardFields) {
+      this.schemaCache
+        .state(this.workPackage)
+        .values$()
+        .pipe(this.untilDestroyed())
+        .subscribe(() => {
+          this.schemaLoaded = true;
+          this.cdRef.detectChanges();
+        });
+    }
+
     // Update selection state
     // Use merge instead of combineLatest: params$ only emits on uiRouter transitions and
     // may never emit on pages that don't use uiRouter (e.g. boards). With merge, any
@@ -225,6 +266,54 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
 
   public wpProjectName(wp:WorkPackageResource):string {
     return wp.project?.name;
+  }
+
+  /**
+   * Ordered list of extra field identifiers to render as additional
+   * `label: value` rows below the fixed baseline for this card, resolved
+   * from this work package's OWN type (so mixed Types on the same board
+   * each render only their own configured fields).
+   *
+   * Gated as a whole on `renderTypeCardFields` (board-only opt-in) and on
+   * `schemaLoaded` (never renders a partial/erroring section while the
+   * schema for this work package hasn't resolved yet).
+   */
+  public get extraCardFieldIds():string[] {
+    if (!this.renderTypeCardFields || !this.schemaLoaded) {
+      return [];
+    }
+
+    return resolveTypeCardFields(this.workPackage, this.typeCardFieldsByTypeId);
+  }
+
+  /**
+   * Human-readable label for a configured extra card field, resolved from
+   * the (by this point, confirmed loaded) work package schema. Falls back
+   * to the raw field identifier if the schema doesn't know about it (e.g. a
+   * field became invisible/unavailable for this particular work package
+   * after the type-level configuration was normalized).
+   */
+  public extraCardFieldLabel(wp:WorkPackageResource, fieldName:string):string {
+    return this.schemaCache.of(wp).ofProperty(fieldName)?.name || fieldName;
+  }
+
+  /**
+   * Plain-text rendition of a field's current value, used as the native
+   * `title` attribute so that long values are both truncated (via CSS) and
+   * available on hover/focus as a tooltip.
+   */
+  public extraCardFieldTooltip(wp:WorkPackageResource, fieldName:string):string {
+    const value = (wp as unknown as Record<string, unknown>)[fieldName];
+
+    if (value === null || value === undefined) {
+      return '';
+    }
+
+    if (typeof value === 'object' && 'name' in (value as Record<string, unknown>)) {
+      return String((value as Record<string, unknown>).name);
+    }
+
+    return String(value);
   }
 
   public fullWorkPackageLink(wp:WorkPackageResource):string {

@@ -99,6 +99,22 @@ RSpec.describe API::V3::Types::TypeRepresenter do
       end
     end
 
+    describe "boardCardFieldIds" do
+      let(:type) { build_stubbed(:type, board_card_configuration: { board_card_field_ids: %w[priority assignee] }) }
+
+      it "indicates the ordered, effective board card field identifiers" do
+        expect(subject).to be_json_eql(%w[priority assignee].to_json).at_path("boardCardFieldIds")
+      end
+
+      context "with no configuration" do
+        let(:type) { build_stubbed(:type) }
+
+        it "is an empty array" do
+          expect(subject).to be_json_eql([].to_json).at_path("boardCardFieldIds")
+        end
+      end
+    end
+
     it_behaves_like "has UTC ISO 8601 date and time" do
       let(:date) { type.created_at }
       let(:json_path) { "createdAt" }
