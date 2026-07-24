@@ -52,6 +52,7 @@ import { StatusBoardHeaderComponent } from 'core-app/features/boards/board/board
 import { OpenprojectAutocompleterModule } from 'core-app/shared/components/autocompleter/openproject-autocompleter.module';
 import { OpenprojectEnterpriseModule } from 'core-app/features/enterprise/openproject-enterprise.module';
 import { BoardSortModalComponent } from 'core-app/features/boards/board/board-sort/board-sort.modal';
+import { BoardSortTriggerComponent } from 'core-app/features/boards/board/board-sort/board-sort-trigger.component';
 
 @NgModule({
   imports: [
@@ -84,6 +85,7 @@ import { BoardSortModalComponent } from 'core-app/features/boards/board/board-so
     SubtasksBoardHeaderComponent,
     StatusBoardHeaderComponent,
     BoardSortModalComponent,
+    BoardSortTriggerComponent,
   ],
 })
 export class OpenprojectBoardsModule {
