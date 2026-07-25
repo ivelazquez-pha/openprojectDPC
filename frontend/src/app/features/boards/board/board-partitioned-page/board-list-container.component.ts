@@ -34,7 +34,7 @@ import { I18nService } from 'core-app/core/i18n/i18n.service';
 import {
   BoardListCrossSelectionService,
 } from 'core-app/features/boards/board/board-list/board-list-cross-selection.service';
-import { catchError, filter, finalize, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, take, tap } from 'rxjs/operators';
 import {
   BoardActionsRegistryService,
 } from 'core-app/features/boards/board/board-actions/board-actions-registry.service';
@@ -47,6 +47,7 @@ import { BoardCardFieldsService } from 'core-app/features/boards/board/board-car
 import { BoardSortService } from 'core-app/features/boards/board/board-sort/board-sort.service';
 import { BoardSortModalComponent, BoardSortModalLocals } from 'core-app/features/boards/board/board-sort/board-sort.modal';
 import { BoardSortField, canSortBoard as computeCanSortBoard } from 'core-app/features/boards/board/board-sort/board-sort-field';
+import { BoardSortTriggerService } from 'core-app/features/boards/board/board-sort/board-sort-trigger.service';
 
 @Component({
   selector: 'board-list-container',
@@ -81,6 +82,7 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
   readonly pathHelper = inject(PathHelperService);
   readonly currentProject = inject(CurrentProjectService);
   readonly boardSortService = inject(BoardSortService);
+  readonly boardSortTrigger = inject(BoardSortTriggerService);
   readonly cdRef = inject(ChangeDetectorRef);
 
   @Input() boardId:string;
@@ -93,7 +95,6 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
     addList: this.I18n.t('js.boards.add_list'),
     unnamedList: this.I18n.t('js.boards.label_unnamed_list'),
     hiddenListWarning: this.I18n.t('js.boards.text_hidden_list_warning'),
-    sortBy: this.I18n.t('js.boards.sort_by.action'),
   };
 
   /** Container reference */
@@ -242,9 +243,16 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
    * makes Angular re-check this view on every emission; `markForCheck()` is
    * called explicitly too, to make the intent obvious and keep working even
    * if this ever moves off a template-event trigger.
+   *
+   * Also re-publishes the recomputed state into `BoardSortTriggerService`,
+   * since the "Sort by..." trigger itself now lives in the board toolbar
+   * (a different branch of the component tree, see
+   * `BoardSortTriggerService`) rather than in this component's own
+   * template.
    */
   public onColumnSortabilityChange():void {
     this.cdRef.markForCheck();
+    this.publishSortTriggerState();
   }
 
   public availableSortFields():BoardSortField[] {
@@ -261,6 +269,31 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
     };
 
     this.opModalService.show(BoardSortModalComponent, this.injector, locals as unknown as Record<string, unknown>);
+  }
+
+  /**
+   * Recomputes the current sort trigger state and pushes it into
+   * `BoardSortTriggerService`, so the toolbar-level trigger (a different
+   * branch of the component tree) can react to it. `openModal` resolves the
+   * current board itself (via `take(1)` on `board$`) so the toolbar button
+   * never needs a direct reference to it.
+   */
+  private publishSortTriggerState():void {
+    this.boardSortTrigger.publish({
+      canSort: this.canSortBoard(),
+      openModal: () => this.openSortModalForCurrentBoard(),
+    });
+  }
+
+  private openSortModalForCurrentBoard():void {
+    this.board$
+      .pipe(take(1))
+      .subscribe((board) => this.openSortModal(board));
+  }
+
+  public override ngOnDestroy():void {
+    super.ngOnDestroy();
+    this.boardSortTrigger.clear();
   }
 
   private showError(text = this.text.loadingError) {

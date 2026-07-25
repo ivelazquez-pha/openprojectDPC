@@ -15,6 +15,8 @@ import { DragAndDropService } from 'core-app/shared/helpers/drag-and-drop/drag-a
 import { WorkPackageFilterButtonComponent } from 'core-app/features/work-packages/components/wp-buttons/wp-filter-button/wp-filter-button.component';
 import { ZenModeButtonComponent } from 'core-app/features/work-packages/components/wp-buttons/zen-mode-toggle-button/zen-mode-toggle-button.component';
 import { BoardsMenuButtonComponent } from 'core-app/features/boards/board/toolbar-menu/boards-menu-button.component';
+import { BoardSortTriggerComponent } from 'core-app/features/boards/board/board-sort/board-sort-trigger.component';
+import { BoardSortTriggerService } from 'core-app/features/boards/board/board-sort/board-sort-trigger.service';
 import {
   catchError,
   finalize,
@@ -49,6 +51,7 @@ export function boardCardViewHandlerFactory(injector:Injector) {
   providers: [
     DragAndDropService,
     BoardFiltersService,
+    BoardSortTriggerService,
   ],
   standalone: false,
 })
@@ -120,6 +123,16 @@ export class BoardPartitionedPageComponent extends UntilDestroyedMixin implement
   toolbarButtonComponents:ToolbarButtonComponentDefinition[] = [
     {
       component: WorkPackageFilterButtonComponent,
+      containerClasses: 'hidden-for-tablet',
+    },
+    {
+      // Board-wide "Sort by..." trigger, kept next to the filter button for
+      // visual parity. Gating on `canSortBoard()` happens reactively INSIDE
+      // this component (via `BoardSortTriggerService#state$ | async`), not
+      // via `show` here - `show` is only re-evaluated when this page's own
+      // (OnPush) view is checked, which nothing would trigger when the
+      // underlying board-list-container's async column state resolves.
+      component: BoardSortTriggerComponent,
       containerClasses: 'hidden-for-tablet',
     },
     {

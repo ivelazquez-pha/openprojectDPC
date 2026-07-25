@@ -28,6 +28,11 @@ import { CurrentProjectService } from 'core-app/core/current-project/current-pro
 import { States } from 'core-app/core/states/states.service';
 import { BoardSortService } from 'core-app/features/boards/board/board-sort/board-sort.service';
 import {
+  BoardSortTriggerService,
+  BoardSortTriggerState,
+} from 'core-app/features/boards/board/board-sort/board-sort-trigger.service';
+import { BoardSortModalComponent } from 'core-app/features/boards/board/board-sort/board-sort.modal';
+import {
   BoardListContainerComponent,
 } from 'core-app/features/boards/board/board-partitioned-page/board-list-container.component';
 import { BoardListComponent } from 'core-app/features/boards/board/board-list/board-list.component';
@@ -36,41 +41,25 @@ import { GridResource } from 'core-app/features/hal/resources/grid-resource';
 import { GridWidgetResource } from 'core-app/features/hal/resources/grid-widget-resource';
 
 /**
- * Regression coverage for the live-production bug: the board-wide
- * "Sort by..." trigger (`@if (board.editable && canSortBoard())` in
- * `board-list-container.component.html`) never appeared when a board first
- * loaded, even once every column had genuinely finished loading and the
- * user had permission - it only appeared AFTER some UNRELATED user action
- * (e.g. applying a filter) happened to trigger the container's own change
- * detection afterwards.
+ * Regression coverage for the "Sort by..." cross-component reach.
  *
- * Root cause: `BoardListContainerComponent` is `OnPush` and reads each
- * column's state synchronously through `@ViewChildren(BoardListComponent)
- * lists` (`canSortBoard()`/`availableSortFields()`). Each `BoardListComponent`
- * is ALSO `OnPush` and only calls its OWN `cdRef.detectChanges()` once its
- * query resolves asynchronously - that never re-checks the PARENT's
- * template, so the button's underlying condition became true quietly and
- * Angular never re-rendered it until something else happened to trigger the
- * container's own change detection.
+ * The trigger BUTTON itself moved out of this component's own template into
+ * the board toolbar (`BoardSortTriggerComponent`, registered next to the
+ * filter button in `BoardPartitionedPageComponent.toolbarButtonComponents`) -
+ * see that component's own spec for its rendering/gating/click behaviour.
+ * This spec instead proves `BoardListContainerComponent` - which remains the
+ * SOLE owner of the real per-column state via
+ * `@ViewChildren(BoardListComponent) lists` - correctly PUBLISHES that state
+ * into the shared `BoardSortTriggerService` reactively, and that this
+ * component's own template no longer renders a "Sort by..." trigger at all
+ * (proving the move actually happened, not just an addition alongside it).
  *
- * This spec substitutes the real `BoardListComponent` (whose own
- * constructor dependency graph is unrelated to this bug and would make this
- * test unnecessarily heavy) with a minimal `FakeBoardListComponent` that
- * re-provides itself AS `BoardListComponent` via DI aliasing
- * (`useExisting`), so `@ViewChildren(BoardListComponent) lists` - the exact
- * production query used by `canSortBoard()`/`availableSortFields()` - still
- * matches it. Everything else (the real `BoardListContainerComponent` class
- * AND its real, unmodified `board-list-container.component.html` template,
- * including the `(sortabilityChange)` binding under test) is exercised as-is.
- *
- * The test genuinely exercises the async/OnPush timing: it uses
- * `fixture.autoDetectChanges()` (mirrors a real running app's automatic
- * change detection) plus a real `Promise` resolution and
- * `fixture.whenStable()` to simulate the column's query resolving AFTER the
- * container's initial render, with NO other trigger (like a filter change,
- * or a manually-forced extra `fixture.detectChanges()` call) happening in
- * between - so reverting the fix (removing the `(sortabilityChange)`
- * binding/emit) makes it fail again exactly like the real bug.
+ * This also preserves the original regression intent from the previous
+ * OnPush/ViewChildren reactivity bug fix: the underlying state must become
+ * correctly known EVEN THOUGH nothing else re-triggers this (OnPush)
+ * container's change detection - see `FakeBoardListComponent` below, which
+ * mirrors the real `BoardListComponent`'s async query resolution via its own
+ * `(sortabilityChange)` output.
  */
 @Component({
   selector: 'board-list',
@@ -103,7 +92,7 @@ class FakeBoardListComponent {
    * Simulates the REAL `BoardListComponent`'s async query resolution
    * (`querySpace.query.values$()` subscribe): sets `query` (so
    * `canSortBoard()`'s underlying data becomes true) and fires
-   * `sortabilityChange`, exactly as the fixed production code now does.
+   * `sortabilityChange`, exactly as production code does.
    */
   resolveQueryAsync(query:{ updateOrderedWorkPackages?:unknown }):void {
     this.query = query;
@@ -114,9 +103,11 @@ class FakeBoardListComponent {
 describe('BoardListContainerComponent "Sort by..." trigger reactivity (regression)', () => {
   let fixture:ComponentFixture<BoardListContainerComponent>;
   let component:BoardListContainerComponent;
+  let boardSortTrigger:BoardSortTriggerService;
+  let opModalServiceShow:ReturnType<typeof vi.fn>;
   let board:Board;
 
-  function sortTriggerButton() {
+  function sortTriggerButtonInOwnTemplate() {
     return fixture.debugElement.query(By.css('[data-test-selector="board-sort--trigger"]'));
   }
 
@@ -124,6 +115,12 @@ describe('BoardListContainerComponent "Sort by..." trigger reactivity (regressio
     return fixture.debugElement
       .query(By.directive(FakeBoardListComponent))
       .injector.get(FakeBoardListComponent);
+  }
+
+  function latestPublishedState():BoardSortTriggerState {
+    let latest!:BoardSortTriggerState;
+    boardSortTrigger.state$.subscribe((state) => { latest = state; }).unsubscribe();
+    return latest;
   }
 
   beforeEach(() => {
@@ -134,6 +131,7 @@ describe('BoardListContainerComponent "Sort by..." trigger reactivity (regressio
       widgets: [{ id: 1, options: { queryId: '1' } } as unknown as GridWidgetResource],
     } as unknown as GridResource;
     board = new Board(grid);
+    opModalServiceShow = vi.fn();
 
     TestBed.configureTestingModule({
       declarations: [BoardListContainerComponent, FakeBoardListComponent],
@@ -145,7 +143,7 @@ describe('BoardListContainerComponent "Sort by..." trigger reactivity (regressio
         { provide: BoardPartitionedPageComponent, useValue: {} },
         { provide: BoardListsService, useValue: {} },
         { provide: BoardActionsRegistryService, useValue: {} },
-        { provide: OpModalService, useValue: { show: () => undefined } },
+        { provide: OpModalService, useValue: { show: opModalServiceShow } },
         {
           provide: ApiV3Service,
           useValue: { boards: { id: () => ({ requireAndStream: () => of(board) }) } },
@@ -157,6 +155,7 @@ describe('BoardListContainerComponent "Sort by..." trigger reactivity (regressio
         { provide: CurrentProjectService, useValue: {} },
         { provide: States, useValue: {} },
         { provide: BoardSortService, useValue: { unionFields: () => [] } },
+        BoardSortTriggerService,
       ],
       schemas: [NO_ERRORS_SCHEMA],
     });
@@ -164,31 +163,43 @@ describe('BoardListContainerComponent "Sort by..." trigger reactivity (regressio
     fixture = TestBed.createComponent(BoardListContainerComponent);
     component = fixture.componentInstance;
     component.boardId = '1';
+    boardSortTrigger = TestBed.inject(BoardSortTriggerService);
   });
 
-  it('shows the trigger once a column\'s query becomes ready asynchronously after the initial render, with no other trigger in between', async () => {
+  it('never renders a "Sort by..." trigger in its own template - the button moved to the board toolbar', async () => {
     fixture.autoDetectChanges();
     await fixture.whenStable();
 
-    // Sanity: the board actually rendered and our fake column is in place.
-    expect(fixture.debugElement.query(By.directive(FakeBoardListComponent))).not.toBeNull();
-
-    // Before the column's query resolves: nothing is known to be sortable
-    // yet -> the trigger must not be shown.
-    expect(sortTriggerButton()).toBeNull();
-
-    // Simulate the column's query resolving AFTER the initial render -
-    // purely via real async resolution, no manual `fixture.detectChanges()`
-    // and no unrelated container-level action (like a filter change).
     await Promise.resolve().then(() => {
       fakeBoardListInstance().resolveQueryAsync({ updateOrderedWorkPackages: { href: '/reorder' } });
     });
     await fixture.whenStable();
 
-    expect(sortTriggerButton()).not.toBeNull();
+    // Even once fully sortable, this component's OWN template must never
+    // render the trigger anymore.
+    expect(sortTriggerButtonInOwnTemplate()).toBeNull();
   });
 
-  it('keeps the trigger hidden if the column\'s query resolves without reorder permission', async () => {
+  it('publishes canSort=false to BoardSortTriggerService before any column resolves', async () => {
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+
+    expect(latestPublishedState().canSort).toBe(false);
+  });
+
+  it('publishes canSort=true to BoardSortTriggerService once a column\'s query becomes ready asynchronously, with no other trigger in between', async () => {
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+
+    await Promise.resolve().then(() => {
+      fakeBoardListInstance().resolveQueryAsync({ updateOrderedWorkPackages: { href: '/reorder' } });
+    });
+    await fixture.whenStable();
+
+    expect(latestPublishedState().canSort).toBe(true);
+  });
+
+  it('publishes canSort=false if the column resolves without reorder permission', async () => {
     fixture.autoDetectChanges();
     await fixture.whenStable();
 
@@ -197,6 +208,36 @@ describe('BoardListContainerComponent "Sort by..." trigger reactivity (regressio
     });
     await fixture.whenStable();
 
-    expect(sortTriggerButton()).toBeNull();
+    expect(latestPublishedState().canSort).toBe(false);
+  });
+
+  it('the published openModal() callback opens the same BoardSortModalComponent used before the move', async () => {
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+
+    await Promise.resolve().then(() => {
+      fakeBoardListInstance().resolveQueryAsync({ updateOrderedWorkPackages: { href: '/reorder' } });
+    });
+    await fixture.whenStable();
+
+    latestPublishedState().openModal();
+
+    expect(opModalServiceShow).toHaveBeenCalledTimes(1);
+    expect(opModalServiceShow.mock.calls[0][0]).toBe(BoardSortModalComponent);
+  });
+
+  it('clears BoardSortTriggerService state on destroy', async () => {
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+
+    await Promise.resolve().then(() => {
+      fakeBoardListInstance().resolveQueryAsync({ updateOrderedWorkPackages: { href: '/reorder' } });
+    });
+    await fixture.whenStable();
+    expect(latestPublishedState().canSort).toBe(true);
+
+    fixture.destroy();
+
+    expect(latestPublishedState().canSort).toBe(false);
   });
 });
