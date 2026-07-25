@@ -50,11 +50,12 @@ import { BoardSortTriggerService } from 'core-app/features/boards/board/board-so
       @if (state.canSort) {
         <button
           type="button"
-          class="button toolbar-icon"
+          class="button"
           [attr.title]="text.sortBy"
           data-test-selector="board-sort--trigger"
           (click)="state.openModal()">
           <op-icon icon-classes="icon-sort button--icon" />
+          <span class="button--text">{{ text.sortBy }}</span>
         </button>
       }
     }
