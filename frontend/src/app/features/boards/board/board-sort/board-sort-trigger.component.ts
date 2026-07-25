@@ -48,17 +48,14 @@ import { BoardSortTriggerService } from 'core-app/features/boards/board/board-so
   template: `
     @if (state$ | async; as state) {
       @if (state.canSort) {
-        <div
-          class="board--sort-toolbar-button"
-          role="button"
-          tabindex="0"
-          [title]="text.sortBy"
+        <button
+          type="button"
+          class="button toolbar-icon"
+          [attr.title]="text.sortBy"
           data-test-selector="board-sort--trigger"
-          (click)="state.openModal()"
-          (keydown.enter)="state.openModal()"
-          (keydown.space)="state.openModal()">
-          <op-icon icon-classes="icon-sort icon-context" />
-        </div>
+          (click)="state.openModal()">
+          <op-icon icon-classes="icon-sort button--icon" />
+        </button>
       }
     }
   `,
