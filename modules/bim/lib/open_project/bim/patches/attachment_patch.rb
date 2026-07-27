@@ -32,13 +32,13 @@ module OpenProject::Bim::Patches::AttachmentPatch
   end
 
   module InstanceMethods
-    def external_url_options(expires_in: nil)
+    def external_url_options(expires_in: nil, disposition: nil)
       return super unless ifc_file?
 
       super.merge content_disposition: ifc_content_disposition
     end
 
-    def content_disposition(include_filename: true)
+    def content_disposition(include_filename: true, force: nil)
       return super unless ifc_file? && include_filename
 
       ifc_content_disposition

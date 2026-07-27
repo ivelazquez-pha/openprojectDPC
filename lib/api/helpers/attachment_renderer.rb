@@ -31,7 +31,17 @@
 module API
   module Helpers
     module AttachmentRenderer
-      def self.content_endpoint(&)
+      # Values the `disposition` param may force the content disposition to.
+      # Only ever a downgrade to a stricter disposition (e.g. "attachment") -
+      # never usable to force "inline" (security: prevents stored-XSS via types
+      # the backend normally never serves inline).
+      FORCED_DISPOSITIONS = %w[attachment].freeze
+
+      # @param allow_disposition_override [Boolean] opt-in to accepting an optional
+      #   `disposition` query param (allowlisted to FORCED_DISPOSITIONS) that forces the
+      #   response's Content-Disposition, for both local and external (Fog) storage.
+      #   Defaults to false so existing callers (avatar, bim viewpoints) are unaffected.
+      def self.content_endpoint(allow_disposition_override: false, &)
         ->(*) {
           helpers ::API::Helpers::AttachmentRenderer
 
@@ -39,9 +49,16 @@ module API
             set_cache_headers
           end
 
+          if allow_disposition_override
+            params do
+              optional :disposition, type: String, values: FORCED_DISPOSITIONS
+            end
+          end
+
           get do
-            attachment = instance_exec(&)
-            respond_with_attachment attachment, cache_seconds: fog_cache_seconds
+            respond_with_attachment instance_exec(&),
+                                    cache_seconds: fog_cache_seconds,
+                                    disposition: (params[:disposition] if allow_disposition_override)
           end
         }
       end
@@ -55,14 +72,15 @@ module API
       # @param attachment [Attachment] Attachment to be responded with.
       # @param cache_seconds [integer] Time in seconds the cache headers signal the browser to cache the attachment.
       #                                Defaults to no cache headers.
-      def respond_with_attachment(attachment, cache_seconds: nil)
+      # @param disposition [String, nil] optional forced content disposition (see FORCED_DISPOSITIONS).
+      def respond_with_attachment(attachment, cache_seconds: nil, disposition: nil)
         validate_attachment_access!(attachment)
         prepare_cache_headers(cache_seconds) if cache_seconds
 
         if attachment.external_storage?
-          redirect_to_external_attachment(attachment, cache_seconds)
+          redirect_to_external_attachment(attachment, cache_seconds, disposition)
         else
-          send_attachment(attachment)
+          send_attachment(attachment, disposition)
         end
       end
 
@@ -80,18 +98,18 @@ module API
         end
       end
 
-      def redirect_to_external_attachment(attachment, cache_seconds)
+      def redirect_to_external_attachment(attachment, cache_seconds, disposition = nil)
         set_cache_headers!
-        redirect attachment.external_url(expires_in: cache_seconds).to_s
+        redirect attachment.external_url(expires_in: cache_seconds, disposition:).to_s
       end
 
-      def send_attachment(attachment)
+      def send_attachment(attachment, disposition = nil)
         if attachment.diskfile.nil?
           raise ::API::Errors::NotFound.new
         end
 
         content_type attachment_content_type(attachment)
-        header["Content-Disposition"] = attachment.content_disposition
+        header["Content-Disposition"] = attachment.content_disposition(force: disposition)
         # Ensure we set nosniff on attachments served from our app
         # so that browsers do not reinterpret the content
         header["X-Content-Type-Options"] = "nosniff"

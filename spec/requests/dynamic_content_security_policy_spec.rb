@@ -88,5 +88,30 @@ RSpec.describe "" do
       csp = parse_csp(last_response.headers["Content-Security-Policy"])
       expect(csp["img-src"].count("'self'")).to eq(1)
     end
+
+    context "with remote storage hosts configured (e.g. Fog/OBS)" do
+      it "includes the configured remote storage hosts in frame-src, so an iframe pointed " \
+         "at a redirecting attachment content endpoint is not CSP-blocked" do
+        # NOTE: the content_security_policy block is built once (cached by Rails on first
+        # access) rather than re-evaluated per request, so stubbing OpenProject::Configuration
+        # and issuing a live `get` will NOT pick up the stub. We invoke the stored policy
+        # builder proc directly instead, which runs the real initializer code fresh.
+        allow(OpenProject::Configuration).to receive(:remote_storage_hosts).and_return(["storage.example.com"])
+
+        policy = ActionDispatch::ContentSecurityPolicy.new
+        OpenProject::ContentSecurityPolicyConfig.apply(policy)
+
+        expect(policy.build(nil, nil, [])).to include("storage.example.com")
+      end
+    end
+
+    it "keeps 'self' in frame-src CSP directive when no remote storage host is configured" do
+      allow(OpenProject::Configuration).to receive(:remote_storage_hosts).and_return([])
+
+      get "/"
+
+      csp = parse_csp(last_response.headers["Content-Security-Policy"])
+      expect(csp["frame-src"]).to include("'self'")
+    end
   end
 end

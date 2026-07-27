@@ -35,9 +35,16 @@
 # https://guides.rubyonrails.org/security.html#content-security-policy-header
 
 # rubocop:disable Lint/PercentStringArray
-Rails.application.config.after_initialize do
-  Rails.application.configure do
-    config.content_security_policy do |policy|
+
+# Extracted into a standalone method (rather than inlined in the
+# content_security_policy block below) so it can be invoked directly and in
+# isolation in specs: Rails only evaluates the content_security_policy block
+# once (the built policy object is then reused for the app's lifetime), so a
+# request-time RSpec stub of e.g. OpenProject::Configuration.remote_storage_hosts
+# has no effect on a live `get` request. Tests exercise this method directly
+# against a fresh ActionDispatch::ContentSecurityPolicy instance instead.
+module OpenProject::ContentSecurityPolicyConfig
+  def self.apply(policy)
       # Valid for assets
       assets_src = ["'self'"]
       asset_host = OpenProject::Configuration.rails_asset_host
@@ -124,7 +131,7 @@ Rails.application.config.after_initialize do
       policy.base_uri("'self'")
       policy.font_src(*assets_src, "data:")
       policy.form_action(*form_action)
-      policy.frame_src(*frame_src, "'self'")
+      policy.frame_src(*frame_src, *OpenProject::Configuration.remote_storage_hosts, "'self'")
       policy.frame_ancestors("'self'")
       img_src = %w('self') + Array(OpenProject::Configuration.csp_img_src)
       img_src << asset_host if asset_host.present?
@@ -135,6 +142,13 @@ Rails.application.config.after_initialize do
       policy.object_src(OpenProject::Configuration[:security_badge_url])
       policy.connect_src(*connect_src)
       policy.media_src(*media_src)
+  end
+end
+
+Rails.application.config.after_initialize do
+  Rails.application.configure do
+    config.content_security_policy do |policy|
+      OpenProject::ContentSecurityPolicyConfig.apply(policy)
     end
 
     # Generate session nonces for permitted importmap, inline scripts, and inline styles.
