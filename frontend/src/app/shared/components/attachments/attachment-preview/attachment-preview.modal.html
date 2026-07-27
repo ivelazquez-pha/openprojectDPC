@@ -1,0 +1,43 @@
+<div
+  class="spot-modal op-attachment-preview-modal loading-indicator--location"
+  data-indicator-name="modal"
+  tabindex="0"
+  cdkFocusInitial
+  cdkTrapFocus
+  [cdkTrapFocusAutoCapture]="true"
+  >
+  <div id="spotModalTitle" class="spot-modal--header" [textContent]="text.title"></div>
+
+  <div class="spot-modal--body spot-container op-attachment-preview-modal--body">
+    @switch (previewKind) {
+      @case ('pdf') {
+        <iframe
+          class="op-attachment-preview-modal--iframe"
+          [src]="safeContentUrl"
+          [title]="attachment.fileName"
+          data-test-selector="attachment-preview-modal--pdf-frame"
+        ></iframe>
+      }
+      @default {
+        <p
+          class="op-attachment-preview-modal--no-preview spot-body-small"
+          data-test-selector="attachment-preview-modal--no-preview"
+          [textContent]="text.noPreviewAvailable"
+        ></p>
+      }
+    }
+  </div>
+
+  <div class="spot-action-bar">
+    <div class="spot-action-bar--right">
+      <a
+        class="button -primary spot-action-bar--action"
+        data-test-selector="attachment-preview-modal--download"
+        [href]="downloadUrl"
+        >
+        <svg download-icon size="small"></svg>
+        <span [textContent]="text.download"></span>
+      </a>
+    </div>
+  </div>
+</div>

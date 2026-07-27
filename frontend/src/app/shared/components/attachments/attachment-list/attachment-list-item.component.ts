@@ -26,7 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
@@ -41,6 +41,8 @@ import { ConfirmDialogService } from 'core-app/shared/components/modals/confirm-
 import { ConfirmDialogOptions } from 'core-app/shared/components/modals/confirm-dialog/confirm-dialog.modal';
 import { getIconForMimeType } from 'core-app/shared/components/storages/functions/storages.functions';
 import { IFileIcon } from 'core-app/shared/components/storages/icons.mapping';
+import { OpModalService } from 'core-app/shared/components/modal/modal.service';
+import { OpAttachmentPreviewModalComponent } from 'core-app/shared/components/attachments/attachment-preview/attachment-preview.modal';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -56,6 +58,8 @@ export class OpAttachmentListItemComponent extends UntilDestroyedMixin implement
   private readonly confirmDialogService = inject(ConfirmDialogService);
   private readonly principalsResourceService = inject(PrincipalsResourceService);
   private readonly principalRendererService = inject(PrincipalRendererService);
+  private readonly opModalService = inject(OpModalService);
+  private readonly injector = inject(Injector);
 
   @Input() public attachment:IAttachment;
 
@@ -119,6 +123,35 @@ export class OpAttachmentListItemComponent extends UntilDestroyedMixin implement
 
   ngAfterViewInit():void {
     this.viewInitialized$.next(true);
+  }
+
+  /**
+   * Intercept a plain, unmodified left-click on the attachment filename link and open the
+   * preview modal instead of navigating. Bails out (letting the browser handle the click
+   * natively) for modifier-clicks, middle-click, quarantined attachments, and attachments
+   * that open in their own storage-provider UI (`originOpen`, never emitted for local
+   * attachments) so that behaviour outside this change's PDF-only scope is left untouched.
+   * @param evt MouseEvent
+   */
+  public openPreview(evt:MouseEvent):void {
+    if (this.attachment._links.originOpen || this.attachment.status === 'quarantined') {
+      return;
+    }
+
+    if (evt.button !== 0 || evt.ctrlKey || evt.metaKey || evt.shiftKey || evt.altKey) {
+      return;
+    }
+
+    evt.preventDefault();
+
+    this.opModalService.show(
+      OpAttachmentPreviewModalComponent,
+      this.injector,
+      {
+        attachment: this.attachment,
+        triggerElement: evt.currentTarget as HTMLElement,
+      },
+    );
   }
 
   /**
