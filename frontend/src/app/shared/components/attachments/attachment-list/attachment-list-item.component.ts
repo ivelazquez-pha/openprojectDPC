@@ -128,9 +128,17 @@ export class OpAttachmentListItemComponent extends UntilDestroyedMixin implement
   /**
    * Intercept a plain, unmodified left-click on the attachment filename link and open the
    * preview modal instead of navigating. Bails out (letting the browser handle the click
-   * natively) for modifier-clicks, middle-click, quarantined attachments, and attachments
-   * that open in their own storage-provider UI (`originOpen`, never emitted for local
-   * attachments) so that behaviour outside this change's PDF-only scope is left untouched.
+   * natively) for modifier-clicks, quarantined attachments, and attachments that open in
+   * their own storage-provider UI (`originOpen` - currently never emitted by the backend
+   * for local `Attachment` resources, only relevant for the separate FileLink/storages
+   * domain; kept here defensively rather than removed).
+   *
+   * Note on middle-click: browsers dispatch `auxclick`, not `click`, for the middle mouse
+   * button, so this handler is never invoked on a real middle-click - the browser's native
+   * "open in background tab" behaviour already applies untouched, without this code running
+   * at all. The `evt.button !== 0` check below is a no-op for real pointer input; it only
+   * guards against a `click` synthesized with a non-zero `button` (e.g. in a test or from
+   * other JS), so it is not meaningful DOM-verified middle-click protection.
    * @param evt MouseEvent
    */
   public openPreview(evt:MouseEvent):void {

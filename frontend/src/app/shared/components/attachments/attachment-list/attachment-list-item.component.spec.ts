@@ -163,7 +163,11 @@ describe('OpAttachmentListItemComponent - preview click interception', () => {
     expect(showSpy).not.toHaveBeenCalled();
   });
 
-  it('does not open the modal on middle-click', () => {
+  // NOTE: real middle-clicks dispatch `auxclick`, not `click`, so openPreview() is never
+  // actually invoked by the browser on a middle-click - this only verifies the isolated
+  // `button !== 0` branch, not real DOM middle-click behaviour (which the browser already
+  // handles natively, since (click) never fires for it).
+  it('does not proceed when called with a non-primary button value', () => {
     const showSpy = vi.fn();
     const component = buildComponent(showSpy);
     component.attachment = buildAttachment();
