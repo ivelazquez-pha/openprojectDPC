@@ -34,7 +34,7 @@ require "rack/test"
 # Covers the opt-in `?disposition=attachment` force-download override on the
 # attachment content endpoint (GET /api/v3/attachments/:id/content), for both
 # local storage and external (Fog/OBS) storage.
-RSpec.describe "attachment content disposition override", content_type: :json, type: :request do
+RSpec.describe "attachment content disposition override", content_type: :json do
   include Rack::Test::Methods
   include API::V3::Utilities::PathHelper
   include FileHelpers
@@ -84,7 +84,7 @@ RSpec.describe "attachment content disposition override", content_type: :json, t
       before { get path, disposition: "inline" }
 
       it "responds 400 and does not reach the model layer" do
-        expect(response.status).to eq 400
+        expect(response).to have_http_status(400)
       end
     end
 
@@ -92,7 +92,7 @@ RSpec.describe "attachment content disposition override", content_type: :json, t
       before { get path, disposition: "evil" }
 
       it "responds 400" do
-        expect(response.status).to eq 400
+        expect(response).to have_http_status(400)
       end
     end
   end
@@ -122,7 +122,7 @@ RSpec.describe "attachment content disposition override", content_type: :json, t
     before { get path, disposition: "evil" }
 
     it "responds 400 and never reaches the model/redirect layer" do
-      expect(response.status).to eq 400
+      expect(response).to have_http_status(400)
     end
   end
 
@@ -146,7 +146,7 @@ RSpec.describe "attachment content disposition override", content_type: :json, t
       before { get path }
 
       it "redirects with the default (inline) disposition" do
-        expect(response.status).to eq 302
+        expect(response).to have_http_status(302)
         expect(response.headers["Location"]).to include("response-content-disposition=inline")
       end
     end
@@ -155,7 +155,7 @@ RSpec.describe "attachment content disposition override", content_type: :json, t
       before { get path, disposition: "attachment" }
 
       it "redirects with the forced attachment disposition" do
-        expect(response.status).to eq 302
+        expect(response).to have_http_status(302)
         expect(response.headers["Location"]).to include("response-content-disposition=attachment")
       end
     end

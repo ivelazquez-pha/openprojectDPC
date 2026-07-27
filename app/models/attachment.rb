@@ -123,7 +123,11 @@ class Attachment < ApplicationRecord
   #                            This can only ever downgrade to a stricter disposition (e.g. "attachment"),
   #                            never force "inline".
   def content_disposition(include_filename: true, force: nil)
-    disposition = FORCED_DISPOSITIONS.include?(force) ? force : (inlineable? ? "inline" : "attachment")
+    disposition = if FORCED_DISPOSITIONS.include?(force)
+                    force
+                  else
+                    (inlineable? ? "inline" : "attachment")
+                  end
 
     if include_filename
       "#{disposition}; filename=#{filename}"

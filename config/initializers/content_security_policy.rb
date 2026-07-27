@@ -44,6 +44,17 @@
 # has no effect on a live `get` request. Tests exercise this method directly
 # against a fresh ActionDispatch::ContentSecurityPolicy instance instead.
 module OpenProject::ContentSecurityPolicyConfig
+  # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
+  # Not split into smaller methods: several of the local *_src arrays here are
+  # deliberately aliased rather than duplicated (e.g. `media_src = default_src`
+  # further down, mutated in place via `<<`, so appends to media_src are also
+  # visible on default_src by the time `policy.default_src(*default_src)` runs).
+  # This is pre-existing behavior carried over unchanged from before this file
+  # was extracted into a method; splitting it into independent helper methods
+  # would require either preserving that aliasing across method boundaries
+  # (fragile) or subtly changing which hosts end up in which CSP directive
+  # (a real security-relevant behavior change). Not worth the risk for a
+  # rubocop complexity nit.
   def self.apply(policy)
     # Valid for assets
     assets_src = ["'self'"]
@@ -143,6 +154,7 @@ module OpenProject::ContentSecurityPolicyConfig
     policy.connect_src(*connect_src)
     policy.media_src(*media_src)
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 end
 
 Rails.application.config.after_initialize do

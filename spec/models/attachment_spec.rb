@@ -397,7 +397,9 @@ RSpec.describe Attachment do
   describe "#external_url with disposition:", :with_direct_uploads do
     let(:author) { create(:user) }
     let(:pdf_attachment) do
-      FogAttachment.new(author:, file: FileHelpers.mock_uploaded_file(name: "test.pdf", content_type: "application/pdf")).tap do |att|
+      FogAttachment.new(author:,
+                        file: FileHelpers.mock_uploaded_file(name: "test.pdf",
+                                                             content_type: "application/pdf")).tap do |att|
         att.save!
         att.send(:write_attribute, :content_type, "application/pdf")
         att.save!
