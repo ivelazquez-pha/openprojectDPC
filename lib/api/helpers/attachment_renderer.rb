@@ -31,15 +31,9 @@
 module API
   module Helpers
     module AttachmentRenderer
-      # Values the `disposition` param may force the content disposition to.
-      # Only ever a downgrade to a stricter disposition (e.g. "attachment") -
-      # never usable to force "inline" (security: prevents stored-XSS via types
-      # the backend normally never serves inline).
-      FORCED_DISPOSITIONS = %w[attachment].freeze
-
       # @param allow_disposition_override [Boolean] opt-in to accepting an optional
-      #   `disposition` query param (allowlisted to FORCED_DISPOSITIONS) that forces the
-      #   response's Content-Disposition, for both local and external (Fog) storage.
+      #   `disposition` query param (allowlisted to Attachment::FORCED_DISPOSITIONS) that forces
+      #   the response's Content-Disposition, for both local and external (Fog) storage.
       #   Defaults to false so existing callers (avatar, bim viewpoints) are unaffected.
       def self.content_endpoint(allow_disposition_override: false, &)
         ->(*) {
@@ -51,7 +45,7 @@ module API
 
           if allow_disposition_override
             params do
-              optional :disposition, type: String, values: FORCED_DISPOSITIONS
+              optional :disposition, type: String, values: Attachment::FORCED_DISPOSITIONS
             end
           end
 

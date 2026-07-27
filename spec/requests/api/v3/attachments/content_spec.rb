@@ -125,4 +125,39 @@ RSpec.describe "attachment content disposition override", content_type: :json, t
       expect(response.status).to eq 400
     end
   end
+
+  # These bypass the STI limitation described above by stubbing Attachment.find
+  # to return the already-correctly-mounted FogAttachment instance directly,
+  # exercising the actual redirect/forced-disposition behavior at this layer.
+  context "with disposition override on external storage", :with_direct_uploads do
+    let(:attachment) do
+      att = FogAttachment.new(author: current_user, file: mock_file)
+      att.save!
+      att.send(:write_attribute, :content_type, mock_file.content_type)
+      att.save!
+      att
+    end
+
+    before do
+      allow(Attachment).to receive(:find).with(attachment.id).and_return(attachment)
+    end
+
+    context "without the disposition param" do
+      before { get path }
+
+      it "redirects with the default (inline) disposition" do
+        expect(response.status).to eq 302
+        expect(response.headers["Location"]).to include("response-content-disposition=inline")
+      end
+    end
+
+    context "with disposition=attachment" do
+      before { get path, disposition: "attachment" }
+
+      it "redirects with the forced attachment disposition" do
+        expect(response.status).to eq 302
+        expect(response.headers["Location"]).to include("response-content-disposition=attachment")
+      end
+    end
+  end
 end

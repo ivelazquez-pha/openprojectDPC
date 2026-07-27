@@ -101,16 +101,20 @@ RSpec.describe "" do
         policy = ActionDispatch::ContentSecurityPolicy.new
         OpenProject::ContentSecurityPolicyConfig.apply(policy)
 
-        expect(policy.build(nil, nil, [])).to include("storage.example.com")
+        csp = parse_csp(policy.build(nil, nil, []))
+        expect(csp["frame-src"]).to include("storage.example.com")
       end
     end
 
     it "keeps 'self' in frame-src CSP directive when no remote storage host is configured" do
+      # NOTE: same rationale as above - the content_security_policy block is built once, so
+      # a request-time stub on a live `get` has no effect. We invoke the policy builder directly.
       allow(OpenProject::Configuration).to receive(:remote_storage_hosts).and_return([])
 
-      get "/"
+      policy = ActionDispatch::ContentSecurityPolicy.new
+      OpenProject::ContentSecurityPolicyConfig.apply(policy)
 
-      csp = parse_csp(last_response.headers["Content-Security-Policy"])
+      csp = parse_csp(policy.build(nil, nil, []))
       expect(csp["frame-src"]).to include("'self'")
     end
   end
