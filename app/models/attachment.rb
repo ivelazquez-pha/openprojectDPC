@@ -77,11 +77,19 @@ class Attachment < ApplicationRecord
   scope :pending_direct_upload, -> { status_prepared }
   scope :not_pending_direct_upload, -> { not_status_prepared }
 
+  # Values `disposition`/`force` may downgrade the content disposition to.
+  # This must never include "inline" as that would defeat the
+  # `application/octet-stream` guard for non-inlineable types (stored-XSS risk).
+  FORCED_DISPOSITIONS = %w[attachment].freeze
+
   ##
   # Returns an URL if the attachment is stored in an external (fog) attachment storage
   # or nil otherwise.
-  def external_url(expires_in: nil)
-    url = URI.parse file.download_url(external_url_options(expires_in:)) # returns a path if local
+  #
+  # @param disposition [String, nil] optionally force the content disposition to one of
+  #                                   FORCED_DISPOSITIONS, overriding the default inlineable? logic.
+  def external_url(expires_in: nil, disposition: nil)
+    url = URI.parse file.download_url(external_url_options(expires_in:, disposition:)) # returns a path if local
 
     url if url.host
   rescue URI::InvalidURIError
@@ -92,8 +100,8 @@ class Attachment < ApplicationRecord
   # Do not include the filename in the content disposition as this may break for Unicode file names
   # specifically when using S3 for attachments. In the case of S3 the file name for the downloaded
   # file will still be correct as it's part of the URL before the query.
-  def external_url_options(expires_in: nil)
-    { content_disposition: content_disposition(include_filename: false), expires_in: }
+  def external_url_options(expires_in: nil, disposition: nil)
+    { content_disposition: content_disposition(include_filename: false, force: disposition), expires_in: }
   end
 
   def external_storage?
@@ -109,8 +117,17 @@ class Attachment < ApplicationRecord
     container.respond_to?(:project) ? container.project : nil
   end
 
-  def content_disposition(include_filename: true)
-    disposition = inlineable? ? "inline" : "attachment"
+  ##
+  # @param force [String, nil] if it is one of FORCED_DISPOSITIONS, forces that disposition,
+  #                            overriding the default inlineable? logic. Any other value is ignored.
+  #                            This can only ever downgrade to a stricter disposition (e.g. "attachment"),
+  #                            never force "inline".
+  def content_disposition(include_filename: true, force: nil)
+    disposition = if FORCED_DISPOSITIONS.include?(force)
+                    force
+                  else
+                    (inlineable? ? "inline" : "attachment")
+                  end
 
     if include_filename
       "#{disposition}; filename=#{filename}"

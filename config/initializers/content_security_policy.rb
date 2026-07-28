@@ -35,106 +35,132 @@
 # https://guides.rubyonrails.org/security.html#content-security-policy-header
 
 # rubocop:disable Lint/PercentStringArray
+
+# Extracted into a standalone method (rather than inlined in the
+# content_security_policy block below) so it can be invoked directly and in
+# isolation in specs: Rails only evaluates the content_security_policy block
+# once (the built policy object is then reused for the app's lifetime), so a
+# request-time RSpec stub of e.g. OpenProject::Configuration.remote_storage_hosts
+# has no effect on a live `get` request. Tests exercise this method directly
+# against a fresh ActionDispatch::ContentSecurityPolicy instance instead.
+module OpenProject::ContentSecurityPolicyConfig
+  # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
+  # Not split into smaller methods: several of the local *_src arrays here are
+  # deliberately aliased rather than duplicated (e.g. `media_src = default_src`
+  # further down, mutated in place via `<<`, so appends to media_src are also
+  # visible on default_src by the time `policy.default_src(*default_src)` runs).
+  # This is pre-existing behavior carried over unchanged from before this file
+  # was extracted into a method; splitting it into independent helper methods
+  # would require either preserving that aliasing across method boundaries
+  # (fragile) or subtly changing which hosts end up in which CSP directive
+  # (a real security-relevant behavior change). Not worth the risk for a
+  # rubocop complexity nit.
+  def self.apply(policy)
+    # Valid for assets
+    assets_src = ["'self'"]
+    asset_host = OpenProject::Configuration.rails_asset_host
+    assets_src << asset_host if asset_host.present?
+
+    # Valid for iframes
+    frame_src = []
+    frame_src << OpenProject::Configuration[:security_badge_url] if OpenProject::Configuration[:security_badge_displayed]
+
+    # Default src
+    default_src = %w('self') # rubocop:disable Lint/PercentStringArray
+
+    # Attachment uploaders
+    default_src += OpenProject::Configuration.remote_storage_hosts
+
+    # Chargebee self-service
+    chargebee_src = ["https://*.chargebee.com"]
+
+    assets_src += chargebee_src
+    frame_src += chargebee_src
+    default_src += chargebee_src
+
+    # Allow requests to CLI in dev mode
+    connect_src = default_src + [OpenProject::Configuration.enterprise_trial_creation_host]
+
+    # Allow connections to asset host for source maps
+    connect_src << asset_host if asset_host.present?
+
+    # Rules for media (e.g. video sources)
+    media_src = default_src
+    media_src << asset_host if asset_host.present?
+    # Getting started video
+    onboarding = Addressable::URI.parse(OpenProject::Static::Links.url_for(:onboarding_video_url))
+    media_src << "#{onboarding.scheme}://#{onboarding.host}"
+    enterprise_video = Addressable::URI.parse(OpenProject::Static::Links.url_for(:enterprise_welcome_video))
+    media_src << "#{enterprise_video.scheme}://#{enterprise_video.host}"
+    media_src.uniq!
+
+    if OpenProject::Configuration.appsignal_frontend_key
+      connect_src += ["https://appsignal-endpoint.net"]
+    end
+
+    # Allow connections to S3 for BIM
+    if OpenProject::Configuration.fog_directory.present?
+      connect_src += [
+        OpenProject::Configuration.fog_s3_upload_host
+      ]
+    end
+
+    # Add proxy configuration for Angular CLI to csp
+    if FrontendAssetHelper.assets_proxied?
+      proxied = ["ws://#{Setting.host_name}", "http://#{Setting.host_name}",
+                 FrontendAssetHelper.cli_proxy.sub("http", "ws"), FrontendAssetHelper.cli_proxy]
+      connect_src += proxied
+      assets_src += proxied
+      media_src += proxied
+    end
+
+    # Allow to extend the script-src in specific situations
+    script_src = assets_src + %w(js.chargebee.com)
+
+    # Allow unsafe-eval for rack-mini-profiler
+    if Rails.env.development? && ENV.fetch("OPENPROJECT_RACK_PROFILER_ENABLED", false)
+      script_src += %w('unsafe-eval') # rubocop:disable Lint/PercentStringArray
+    end
+
+    # Allow ANDI bookmarklet to run in development mode
+    # https://www.ssa.gov/accessibility/andi/help/install.html
+    if Rails.env.development?
+      script_src += ["https://www.ssa.gov"]
+      assets_src += ["https://www.ssa.gov"]
+    end
+
+    form_action = default_src
+
+    # Allow test s3 bucket for direct uploads in tests
+    if Rails.env.test?
+      connect_src += ["test-bucket.s3.amazonaws.com"]
+      form_action += ["test-bucket.s3.amazonaws.com"]
+    end
+
+    # Configure CSP directives
+    policy.default_src(*default_src)
+    policy.base_uri("'self'")
+    policy.font_src(*assets_src, "data:")
+    policy.form_action(*form_action)
+    policy.frame_src(*frame_src, *OpenProject::Configuration.remote_storage_hosts, "'self'")
+    policy.frame_ancestors("'self'")
+    img_src = %w('self') + Array(OpenProject::Configuration.csp_img_src)
+    img_src << asset_host if asset_host.present?
+    policy.img_src(*img_src.compact.uniq)
+    policy.script_src(*script_src)
+    policy.script_src_attr("'none'")
+    policy.style_src(*assets_src, "'unsafe-inline'")
+    policy.object_src(OpenProject::Configuration[:security_badge_url])
+    policy.connect_src(*connect_src)
+    policy.media_src(*media_src)
+  end
+  # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
+end
+
 Rails.application.config.after_initialize do
   Rails.application.configure do
     config.content_security_policy do |policy|
-      # Valid for assets
-      assets_src = ["'self'"]
-      asset_host = OpenProject::Configuration.rails_asset_host
-      assets_src << asset_host if asset_host.present?
-
-      # Valid for iframes
-      frame_src = []
-      frame_src << OpenProject::Configuration[:security_badge_url] if OpenProject::Configuration[:security_badge_displayed]
-
-      # Default src
-      default_src = %w('self') # rubocop:disable Lint/PercentStringArray
-
-      # Attachment uploaders
-      default_src += OpenProject::Configuration.remote_storage_hosts
-
-      # Chargebee self-service
-      chargebee_src = ["https://*.chargebee.com"]
-
-      assets_src += chargebee_src
-      frame_src += chargebee_src
-      default_src += chargebee_src
-
-      # Allow requests to CLI in dev mode
-      connect_src = default_src + [OpenProject::Configuration.enterprise_trial_creation_host]
-
-      # Allow connections to asset host for source maps
-      connect_src << asset_host if asset_host.present?
-
-      # Rules for media (e.g. video sources)
-      media_src = default_src
-      media_src << asset_host if asset_host.present?
-      # Getting started video
-      onboarding = Addressable::URI.parse(OpenProject::Static::Links.url_for(:onboarding_video_url))
-      media_src << "#{onboarding.scheme}://#{onboarding.host}"
-      enterprise_video = Addressable::URI.parse(OpenProject::Static::Links.url_for(:enterprise_welcome_video))
-      media_src << "#{enterprise_video.scheme}://#{enterprise_video.host}"
-      media_src.uniq!
-
-      if OpenProject::Configuration.appsignal_frontend_key
-        connect_src += ["https://appsignal-endpoint.net"]
-      end
-
-      # Allow connections to S3 for BIM
-      if OpenProject::Configuration.fog_directory.present?
-        connect_src += [
-          OpenProject::Configuration.fog_s3_upload_host
-        ]
-      end
-
-      # Add proxy configuration for Angular CLI to csp
-      if FrontendAssetHelper.assets_proxied?
-        proxied = ["ws://#{Setting.host_name}", "http://#{Setting.host_name}",
-                   FrontendAssetHelper.cli_proxy.sub("http", "ws"), FrontendAssetHelper.cli_proxy]
-        connect_src += proxied
-        assets_src += proxied
-        media_src += proxied
-      end
-
-      # Allow to extend the script-src in specific situations
-      script_src = assets_src + %w(js.chargebee.com)
-
-      # Allow unsafe-eval for rack-mini-profiler
-      if Rails.env.development? && ENV.fetch("OPENPROJECT_RACK_PROFILER_ENABLED", false)
-        script_src += %w('unsafe-eval') # rubocop:disable Lint/PercentStringArray
-      end
-
-      # Allow ANDI bookmarklet to run in development mode
-      # https://www.ssa.gov/accessibility/andi/help/install.html
-      if Rails.env.development?
-        script_src += ["https://www.ssa.gov"]
-        assets_src += ["https://www.ssa.gov"]
-      end
-
-      form_action = default_src
-
-      # Allow test s3 bucket for direct uploads in tests
-      if Rails.env.test?
-        connect_src += ["test-bucket.s3.amazonaws.com"]
-        form_action += ["test-bucket.s3.amazonaws.com"]
-      end
-
-      # Configure CSP directives
-      policy.default_src(*default_src)
-      policy.base_uri("'self'")
-      policy.font_src(*assets_src, "data:")
-      policy.form_action(*form_action)
-      policy.frame_src(*frame_src, "'self'")
-      policy.frame_ancestors("'self'")
-      img_src = %w('self') + Array(OpenProject::Configuration.csp_img_src)
-      img_src << asset_host if asset_host.present?
-      policy.img_src(*img_src.compact.uniq)
-      policy.script_src(*script_src)
-      policy.script_src_attr("'none'")
-      policy.style_src(*assets_src, "'unsafe-inline'")
-      policy.object_src(OpenProject::Configuration[:security_badge_url])
-      policy.connect_src(*connect_src)
-      policy.media_src(*media_src)
+      OpenProject::ContentSecurityPolicyConfig.apply(policy)
     end
 
     # Generate session nonces for permitted importmap, inline scripts, and inline styles.
