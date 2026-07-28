@@ -28,22 +28,26 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { A11yModule } from '@angular/cdk/a11y';
 
 import { IconModule } from 'core-app/shared/components/icon/icon.module';
 
 import { OpAttachmentsComponent } from './attachments.component';
 import { OpAttachmentListComponent } from './attachment-list/attachment-list.component';
 import { OpAttachmentListItemComponent } from './attachment-list/attachment-list-item.component';
+import { OpAttachmentPreviewModalComponent } from './attachment-preview/attachment-preview.modal';
 
 @NgModule({
   imports: [
     CommonModule,
     IconModule,
+    A11yModule,
   ],
   declarations: [
     OpAttachmentsComponent,
     OpAttachmentListComponent,
     OpAttachmentListItemComponent,
+    OpAttachmentPreviewModalComponent,
   ],
   exports: [
     OpAttachmentListComponent,
