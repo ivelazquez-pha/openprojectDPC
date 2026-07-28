@@ -60,7 +60,7 @@ module API
 
             delete &::API::V3::Utilities::Endpoints::Delete.new(model: Attachment).mount
 
-            namespace :content, &::API::Helpers::AttachmentRenderer.content_endpoint(&-> {
+            namespace :content, &::API::Helpers::AttachmentRenderer.content_endpoint(allow_disposition_override: true, &-> {
               @attachment
             })
 

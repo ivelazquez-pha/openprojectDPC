@@ -354,6 +354,72 @@ RSpec.describe Attachment do
     end
   end
 
+  describe "#content_disposition with force:" do
+    let(:attachment) { described_class.new }
+
+    context "with a non-inlineable attachment and no force value" do
+      before { attachment.content_type = "application/octet-stream" }
+
+      it "defaults to attachment" do
+        expect(attachment.content_disposition(include_filename: false))
+          .to eq "attachment"
+      end
+    end
+
+    context "with a non-inlineable attachment and force: 'inline' (not allowlisted)" do
+      before { attachment.content_type = "application/octet-stream" }
+
+      it "ignores the disallowed value and falls back to the default (attachment)" do
+        expect(attachment.content_disposition(include_filename: false, force: "inline"))
+          .to eq "attachment"
+      end
+    end
+
+    context "with an inlineable (PDF) attachment and force: 'attachment' (allowlisted)" do
+      before { attachment.content_type = "application/pdf" }
+
+      it "overrides the default inline behavior to force attachment" do
+        expect(attachment.content_disposition(include_filename: false, force: "attachment"))
+          .to eq "attachment"
+      end
+    end
+
+    context "with an inlineable (PDF) attachment and an unknown force value" do
+      before { attachment.content_type = "application/pdf" }
+
+      it "ignores the unknown value and falls back to the default (inline)" do
+        expect(attachment.content_disposition(include_filename: false, force: "evil"))
+          .to eq "inline"
+      end
+    end
+  end
+
+  describe "#external_url with disposition:", :with_direct_uploads do
+    let(:author) { create(:user) }
+    let(:pdf_attachment) do
+      FogAttachment.new(author:,
+                        file: FileHelpers.mock_uploaded_file(name: "test.pdf",
+                                                             content_type: "application/pdf")).tap do |att|
+        att.save!
+        att.send(:write_attribute, :content_type, "application/pdf")
+        att.save!
+      end
+    end
+
+    context "with an inlineable (PDF) attachment and no disposition override" do
+      it "keeps the default inline response-content-disposition" do
+        expect(pdf_attachment.external_url.to_s).to include "response-content-disposition=inline"
+      end
+    end
+
+    context "with an inlineable (PDF) attachment and disposition: 'attachment'" do
+      it "forces the attachment response-content-disposition, so Download really downloads" do
+        expect(pdf_attachment.external_url(disposition: "attachment").to_s)
+          .to include "response-content-disposition=attachment"
+      end
+    end
+  end
+
   describe "virus scan job on commit" do
     shared_let(:work_package) { create(:work_package) }
     let(:created_attachment) do

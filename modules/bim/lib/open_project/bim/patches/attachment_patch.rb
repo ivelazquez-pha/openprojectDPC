@@ -32,13 +32,23 @@ module OpenProject::Bim::Patches::AttachmentPatch
   end
 
   module InstanceMethods
-    def external_url_options(expires_in: nil)
+    # NOTE: `disposition` is accepted only for signature compatibility with `super`.
+    # It is intentionally ignored: IFC files are always served as `attachment`
+    # (see #ifc_content_disposition) regardless of any override, since they are
+    # never inlineable. Do not assume this is an oversight if extending
+    # Attachment::FORCED_DISPOSITIONS in the future.
+    def external_url_options(expires_in: nil, disposition: nil)
       return super unless ifc_file?
 
       super.merge content_disposition: ifc_content_disposition
     end
 
-    def content_disposition(include_filename: true)
+    # NOTE: `force` is accepted only for signature compatibility with `super`.
+    # It is intentionally ignored: IFC files are always served as `attachment`
+    # (see #ifc_content_disposition) regardless of any override, since they are
+    # never inlineable. Do not assume this is an oversight if extending
+    # Attachment::FORCED_DISPOSITIONS in the future.
+    def content_disposition(include_filename: true, force: nil)
       return super unless ifc_file? && include_filename
 
       ifc_content_disposition
