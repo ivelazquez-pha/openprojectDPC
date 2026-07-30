@@ -53,13 +53,16 @@ RSpec.describe WorkPackageTypes::BoardCardConfigurationComponent, type: :compone
   end
 
   context "when the type has previously configured fields" do
-    let(:type) { create(:type, board_card_configuration: { board_card_field_ids: %w[priority assignee] }) }
+    # NOTE: uses `category` (not `assignee`) as the "second field" example,
+    # since `assignee` is a fixed baseline attribute no longer offered as a
+    # picker option at all — see the "fixed baseline fields" context below.
+    let(:type) { create(:type, board_card_configuration: { board_card_field_ids: %w[priority category] }) }
 
     it "checks the configured attribute checkboxes" do
       render_component
 
       expect(page.find("input[type=checkbox][value=priority]")).to be_checked
-      expect(page.find("input[type=checkbox][value=assignee]")).to be_checked
+      expect(page.find("input[type=checkbox][value=category]")).to be_checked
     end
   end
 
@@ -71,7 +74,7 @@ RSpec.describe WorkPackageTypes::BoardCardConfigurationComponent, type: :compone
       render_component
 
       expect(page.find("input[type=checkbox][value=priority]")).to be_checked
-      expect(page.find("input[type=checkbox][value=assignee]")).not_to be_checked
+      expect(page.find("input[type=checkbox][value=category]")).not_to be_checked
     end
   end
 
@@ -95,12 +98,12 @@ RSpec.describe WorkPackageTypes::BoardCardConfigurationComponent, type: :compone
       expect(page).not_to have_css("input[type=checkbox][value=date]")
     end
 
-    it "offers the real start_date and due_date attributes separately, in API camelCase format" do
-      render_component
-
-      expect(page).to have_css("input[type=checkbox][value=startDate]")
-      expect(page).to have_css("input[type=checkbox][value=dueDate]")
-    end
+    # NOTE: startDate/dueDate's camelCase resolution itself is still covered
+    # at the model level (spec/models/type/board_card_configuration_spec.rb).
+    # They are no longer offered as picker *options* here at all — see the
+    # "fixed baseline fields" context below: this admin picker's own fixed
+    # baseline (assignee/startDate/dueDate) already always renders on every
+    # card regardless of configuration, so toggling them had no effect.
   end
 
   # POST-DEPLOY BUG FIX: custom field keys must be offered in the API v3
@@ -116,6 +119,62 @@ RSpec.describe WorkPackageTypes::BoardCardConfigurationComponent, type: :compone
 
       expect(page).to have_css("input[type=checkbox][value=customField#{custom_field.id}]")
       expect(page).not_to have_css("input[type=checkbox][value=custom_field_#{custom_field.id}]")
+    end
+  end
+
+  # CONFIRMED BUG FIX: previously every WorkPackageCustomField in the system
+  # was offered as a checkable option for every Type, regardless of whether it
+  # was actually associated with that Type (Type#custom_fields). Only custom
+  # fields actually associated with this Type should be offered.
+  context "regarding custom fields not associated with this type (confirmed bug fix)" do
+    let(:associated_custom_field) { create(:work_package_custom_field) }
+    let(:unassociated_custom_field) { create(:work_package_custom_field) }
+    let(:type) { create(:type, custom_fields: [associated_custom_field]) }
+
+    before do
+      unassociated_custom_field
+    end
+
+    it "offers the associated custom field" do
+      render_component
+
+      expect(page).to have_css("input[type=checkbox][value=customField#{associated_custom_field.id}]")
+    end
+
+    it "does not offer the unassociated custom field" do
+      render_component
+
+      expect(page).not_to have_css("input[type=checkbox][value=customField#{unassociated_custom_field.id}]")
+    end
+  end
+
+  # CONFIRMED, USER-DECIDED BEHAVIOR: the fixed baseline fields the card
+  # already always renders regardless of board_card_field_ids (assignee,
+  # startDate, dueDate) are removed from the picker's option list entirely,
+  # since toggling them has no visible effect on the card.
+  context "regarding the fixed baseline fields (confirmed, user-decided)" do
+    it "does not offer assignee as a selectable option" do
+      render_component
+
+      expect(page).not_to have_css("input[type=checkbox][value=assignee]")
+    end
+
+    it "does not offer startDate as a selectable option" do
+      render_component
+
+      expect(page).not_to have_css("input[type=checkbox][value=startDate]")
+    end
+
+    it "does not offer dueDate as a selectable option" do
+      render_component
+
+      expect(page).not_to have_css("input[type=checkbox][value=dueDate]")
+    end
+
+    it "still offers other plain attributes such as priority" do
+      render_component
+
+      expect(page).to have_css("input[type=checkbox][value=priority]")
     end
   end
 end

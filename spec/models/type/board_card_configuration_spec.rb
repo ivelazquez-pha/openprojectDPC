@@ -139,4 +139,42 @@ RSpec.describe Type::BoardCardConfiguration do
       end
     end
   end
+
+  # CONFIRMED BUG FIX: `available_field_ids` (the single source of truth
+  # shared by the admin picker, the contract validation, and `field_ids`
+  # above) previously listed EVERY `WorkPackageCustomField` in the entire
+  # system as available for EVERY Type, regardless of whether the custom
+  # field was actually associated with that Type (`Type#custom_fields`).
+  # This happened because `Type#work_package_attributes` only checks the
+  # custom-field-in-project constraint when a `project:` is given, and no
+  # project is ever passed in this admin-form context, so that check was
+  # always skipped entirely — `Type#custom_fields` was never consulted here.
+  describe "#available_field_ids" do
+    context "when a custom field exists in the system but is NOT associated with this type" do
+      let(:unassociated_custom_field) { create(:work_package_custom_field) }
+      let(:type) { build(:type) }
+
+      before do
+        # Force the custom field to exist before computing available_field_ids.
+        unassociated_custom_field
+      end
+
+      it "is not offered as an available field" do
+        expect(configuration.available_field_ids).not_to include("customField#{unassociated_custom_field.id}")
+      end
+    end
+
+    context "when a custom field IS associated with this type" do
+      let(:associated_custom_field) { create(:work_package_custom_field) }
+      let(:type) { build(:type, custom_fields: [associated_custom_field]) }
+
+      it "is offered as an available field" do
+        expect(configuration.available_field_ids).to include("customField#{associated_custom_field.id}")
+      end
+    end
+
+    it "still includes plain, non-custom-field attributes regardless of the type's custom_fields association" do
+      expect(configuration.available_field_ids).to include("priority")
+    end
+  end
 end

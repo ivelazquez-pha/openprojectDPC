@@ -63,6 +63,15 @@ module WorkPackageTypes
       Array(@board_card_form_data[:board_card_field_ids]).reject(&:blank?)
     end
 
+    # Fixed baseline fields that `wp-single-card.component.html` already
+    # always renders for every card, regardless of `board_card_field_ids`
+    # (assignee, and the combined start/due date row). Toggling these in the
+    # picker has no visible effect on the card, so they are excluded from the
+    # picker's option list entirely rather than shown as misleadingly
+    # toggleable. `available_field_ids`/`field_ids` (the contract's own
+    # validation/storage) are intentionally left untouched by this exclusion.
+    FIXED_BASELINE_ATTRIBUTES = %w[assignee startDate dueDate].freeze
+
     # Available options are filtered down to `model.board_card_fields
     # .available_field_ids` — the single source of truth also used to
     # validate/store `board_card_field_ids` (see `Type::BoardCardConfiguration`)
@@ -74,7 +83,7 @@ module WorkPackageTypes
       model
         .work_package_attributes(merge_date: false)
         .map { |key, attr| [Type.translated_attribute_name(key, attr), api_attribute_name(key)] }
-        .select { |_, api_key| allowed_ids.include?(api_key) }
+        .select { |_, api_key| allowed_ids.include?(api_key) && !FIXED_BASELINE_ATTRIBUTES.include?(api_key) }
         .sort_by(&:first)
     end
 

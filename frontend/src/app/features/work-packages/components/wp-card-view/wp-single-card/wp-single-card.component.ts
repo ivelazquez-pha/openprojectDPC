@@ -316,6 +316,169 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
     return String(value);
   }
 
+  /**
+   * HARDCODED, INTENTIONALLY NON-SCALABLE SPECIAL CASE — explicitly requested
+   * by the user ahead of a commercial-department presentation. This is NOT a
+   * generic per-type field configuration system and must NOT be turned into
+   * one without checking with the user first. It exists purely so that "Type
+   * = Licitacion" board cards render a fixed extra layout (4 labeled fields +
+   * colored tag badges) instead of going through the generic, admin-configurable
+   * `extraCardFieldIds`/`resolveTypeCardFields` mechanism above, which remains
+   * completely untouched for every other Type.
+   *
+   * Matched by Type NAME (not id) because this is a one-off, throwaway special
+   * case for a single, specific Type in this installation — there is no
+   * existing pattern of ad-hoc Type-id-based branching in this component to
+   * follow instead, and a name match is trivially easy to find/rip out later.
+   */
+  private static readonly LICITACION_TYPE_NAME = 'Licitacion';
+
+  /**
+   * Custom field labels rendered as `label: value` rows for Licitacion cards.
+   * These are resolved to their actual schema property key (e.g. `customField12`)
+   * via `ISchemaProxy#attributeFromLocalizedName`, exactly like the existing
+   * `{{attribute}}` macro (`attribute-value-macro.component.ts`) does — so field
+   * value rendering still goes through the same `<display-field>` mechanism as
+   * every other card field, nothing about value fetching/rendering is reinvented.
+   */
+  private static readonly LICITACION_LABEL_FIELD_NAMES = [
+    'Cliente',
+    'Localidad / Provincia',
+    'Nro de Contratacion',
+    'Gestion',
+  ];
+
+  private static readonly LICITACION_TAGS_FIELD_NAME = 'Etiquetas';
+
+  /**
+   * Small, fixed Trello-label-style palette. Colors are chosen by us (not by
+   * whatever color a custom field option might have configured), and a given
+   * tag text always deterministically hashes to the same palette index, so
+   * the same tag always looks the same everywhere without any manual
+   * per-tag color configuration.
+   */
+  private static readonly LICITACION_TAG_COLOR_PALETTE = [
+    '#61bd4f', // green
+    '#f2d600', // yellow
+    '#ff9f1a', // orange
+    '#eb5a46', // red
+    '#0079bf', // blue
+    '#c377e0', // purple
+  ];
+
+  public isLicitacionType(wp:WorkPackageResource):boolean {
+    return wp?.type?.name === WorkPackageSingleCardComponent.LICITACION_TYPE_NAME;
+  }
+
+  /**
+   * Non-empty `{ label, fieldId }` entries only — a label field with no
+   * value on this work package does not render a row at all (no more
+   * "Campo: -" placeholders).
+   */
+  public get licitacionLabelFields():{ label:string, fieldId:string }[] {
+    if (!this.schemaLoaded) {
+      return [];
+    }
+
+    const schema = this.schemaCache.of(this.workPackage);
+
+    return WorkPackageSingleCardComponent.LICITACION_LABEL_FIELD_NAMES
+      .map((label) => ({ label, fieldId: schema.attributeFromLocalizedName(label) }))
+      .filter((entry):entry is { label:string, fieldId:string } => !!entry.fieldId
+        && this.hasFieldValue(this.workPackage, entry.fieldId));
+  }
+
+  /**
+   * Distinct tag texts configured on the "Etiquetas" custom field for this
+   * work package, in whatever order the underlying value exposes them.
+   */
+  public get licitacionTags():string[] {
+    if (!this.schemaLoaded) {
+      return [];
+    }
+
+    const schema = this.schemaCache.of(this.workPackage);
+    const fieldId = schema.attributeFromLocalizedName(WorkPackageSingleCardComponent.LICITACION_TAGS_FIELD_NAME);
+
+    if (!fieldId) {
+      return [];
+    }
+
+    return this.fieldValueNames(this.workPackage, fieldId);
+  }
+
+  /**
+   * Deterministic tag text -> palette color. Same tag text always yields the
+   * same color; different tag texts are spread across the small fixed
+   * palette. Not a cryptographic hash — just enough to avoid every tag
+   * looking identical.
+   */
+  public tagColor(tag:string):string {
+    const palette = WorkPackageSingleCardComponent.LICITACION_TAG_COLOR_PALETTE;
+    let hash = 0;
+
+    for (let i = 0; i < tag.length; i += 1) {
+      hash = (Math.imul(hash, 31) + tag.charCodeAt(i)) | 0;
+    }
+
+    const index = Math.abs(hash) % palette.length;
+    return palette[index];
+  }
+
+  private hasFieldValue(wp:WorkPackageResource, fieldId:string):boolean {
+    const value = (wp as unknown as Record<string, unknown>)[fieldId];
+
+    if (value === null || value === undefined) {
+      return false;
+    }
+
+    if (typeof value === 'string') {
+      return value.trim().length > 0;
+    }
+
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+
+    if (typeof value === 'object') {
+      const maybeCollection = value as { elements?:unknown[] };
+      if (Array.isArray(maybeCollection.elements)) {
+        return maybeCollection.elements.length > 0;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Extracts human-readable names out of a field value, mirroring
+   * `ResourcesDisplayField#stringValue`'s handling of HAL collections
+   * (`.elements`), plain arrays, and single named resources.
+   */
+  private fieldValueNames(wp:WorkPackageResource, fieldId:string):string[] {
+    const value = (wp as unknown as Record<string, unknown>)[fieldId];
+
+    if (!value) {
+      return [];
+    }
+
+    if (Array.isArray(value)) {
+      return (value as Record<string, unknown>[]).map((entry) => String(entry?.name ?? entry));
+    }
+
+    const maybeCollection = value as { elements?:Record<string, unknown>[] };
+    if (Array.isArray(maybeCollection.elements)) {
+      return maybeCollection.elements.map((entry) => String(entry?.name ?? entry));
+    }
+
+    const maybeNamed = value as { name?:unknown };
+    if (maybeNamed.name !== undefined) {
+      return [String(maybeNamed.name)];
+    }
+
+    return [];
+  }
+
   public fullWorkPackageLink(wp:WorkPackageResource):string {
     return this.keepTabService.currentShowHref(wp.displayId);
   }

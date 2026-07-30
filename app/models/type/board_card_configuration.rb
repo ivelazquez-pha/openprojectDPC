@@ -90,6 +90,7 @@ class Type::BoardCardConfiguration
       .work_package_attributes(merge_date: false)
       .keys
       .reject { |key| key == MILESTONE_ONLY_DATE_ATTRIBUTE }
+      .select { |key| available_custom_field_key?(key) }
       .map { |key| API::Utilities::PropertyNameConverter.from_ar_name(key) }
   end
 
@@ -97,5 +98,32 @@ class Type::BoardCardConfiguration
 
   def configured
     Array(@type.board_card_field_ids)
+  end
+
+  # CONFIRMED BUG FIX: `Type#work_package_attributes` lists EVERY
+  # `WorkPackageCustomField` in the system, regardless of whether it is
+  # actually associated with this Type (`Type#custom_fields`) — its
+  # project-scoped constraint check is only exercised when a `project:` is
+  # given, and no project is ever passed in this admin-form context. Plain,
+  # non-custom-field attributes (assignee, dates, category, etc.) are
+  # unaffected and always pass through.
+  def available_custom_field_key?(key)
+    return true unless CustomField.custom_field_attribute?(key)
+
+    associated_custom_field_ids.include?(custom_field_id_from_key(key))
+  end
+
+  # `custom_field_ids` (the standard HABTM ids accessor, already used the
+  # same way in `Type::Attributes#active_custom_field_attributes`) correctly
+  # reflects in-memory-assigned associations on unsaved/new `Type` records
+  # too (e.g. `build(:type, custom_fields: [cf])` in specs), unlike querying
+  # `@type.custom_fields` directly, which would issue a DB lookup scoped to
+  # the (nil, for a new record) owner id and always come back empty.
+  def associated_custom_field_ids
+    @associated_custom_field_ids ||= @type.custom_field_ids
+  end
+
+  def custom_field_id_from_key(key)
+    key[/\Acustom_field_(\d+)\z/, 1].to_i
   end
 end
