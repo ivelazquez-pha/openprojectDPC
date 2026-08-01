@@ -28,10 +28,11 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Injector, Input, OnInit, inject } from '@angular/core';
 import { StateService } from '@uirouter/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { distinctUntilChanged, first, map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, EMPTY } from 'rxjs';
+import { distinctUntilChanged, first, map, switchMap } from 'rxjs/operators';
 
 import { I18nService } from 'core-app/core/i18n/i18n.service';
+import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
 import {
@@ -108,6 +109,7 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
   private readonly displayFieldService = inject(DisplayFieldService);
   private readonly projectsResourceService = inject(ProjectsResourceService);
   private readonly projectStoragesService = inject(ProjectStoragesResourceService);
+  private readonly apiV3Service = inject(ApiV3Service);
 
   @Input() public workPackage:WorkPackageResource;
 
@@ -155,6 +157,19 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
 
   projectStorages = new BehaviorSubject<IProjectStorage[]>([]);
 
+  /**
+   * Freshest known `Type#due_date_label` for the work package's current
+   * type, resolved from the dedicated per-Type cache (`apiV3Service.types`)
+   * rather than from `workPackage.type` directly. That embedded `type` is
+   * only fully rendered (with `dueDateLabel` present) when the work package
+   * itself was fetched with `embed_links: true` (the single-WP GET) -- a
+   * work package cached from a collection/board query carries a link-only
+   * `type` instead, and the frontend's per-work-package cache does not
+   * distinguish "complete" from "incomplete" cached values. See
+   * date-field-label.ts for the full explanation.
+   */
+  private dueDateLabelOverride:string|undefined;
+
   public ngOnInit():void {
     this.element = this.elementRef.nativeElement as HTMLElement;
 
@@ -177,6 +192,25 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
         map(() => this.halEditing.changeFor(this.workPackage)),
       )
       .subscribe((changeset:WorkPackageChangeset) => this.refresh(changeset));
+
+    // Keep the outer "combined date" trigger's Type-based label override
+    // fresh from the dedicated Types cache. Deliberately independent of the
+    // subscription above: it must also update the display once the fresh
+    // Type value resolves, not just when the projected resource's own
+    // context (project/schema/isNew) changes.
+    this.halEditing
+      .temporaryEditResource(this.workPackage)
+      .values$()
+      .pipe(
+        this.untilDestroyed(),
+        map((resource) => idFromLink(resource.type?.href ?? null)),
+        distinctUntilChanged(),
+        switchMap((typeId) => (typeId ? this.apiV3Service.types.id(typeId).requireAndStream() : EMPTY)),
+      )
+      .subscribe((type) => {
+        this.dueDateLabelOverride = type.dueDateLabel;
+        this.refresh(this.halEditing.changeFor(this.workPackage));
+      });
   }
 
   private refresh(change:WorkPackageChangeset) {
@@ -372,7 +406,10 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
       // `Type#due_date_label` (the same setting used for the `dueDate`
       // schema field's name). This does NOT affect the date-picker modal's
       // internal "Start date"/"Finish date" captions -- see dateFieldLabel.
-      label: dateFieldLabel(change.projectedResource, this.I18n.t('js.work_packages.properties.date')),
+      // `this.dueDateLabelOverride` is resolved from the dedicated Types
+      // cache (kept fresh in ngOnInit), NOT from `change.projectedResource`
+      // directly -- see date-field-label.ts for why.
+      label: dateFieldLabel(this.dueDateLabelOverride, this.I18n.t('js.work_packages.properties.date')),
       spanAll: false,
       multiple: false,
     };
