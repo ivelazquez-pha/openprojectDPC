@@ -149,6 +149,7 @@ module API
           schema :due_date,
                  type: "Date",
                  required: false,
+                 name_source: ->(*) { represented.type&.due_date_label.presence || WorkPackage.human_attribute_name(:due_date) },
                  show_if: ->(*) { !represented.milestone? }
 
           schema :derived_start_date,

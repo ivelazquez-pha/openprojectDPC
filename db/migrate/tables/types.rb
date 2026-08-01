@@ -46,6 +46,7 @@ class Tables::Types < Tables::Base
       t.text :patterns, null: true
       t.jsonb :pdf_export_templates_config, default: {}
       t.jsonb :board_card_configuration, default: {}
+      t.string :due_date_label
     end
   end
 end

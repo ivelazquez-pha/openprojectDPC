@@ -531,6 +531,38 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter do
           expect(subject).not_to have_json_path("dueDate")
         end
       end
+
+      context "when the work package's type has a due_date_label override configured" do
+        before do
+          wp_type.due_date_label = "Fecha apertura"
+        end
+
+        it_behaves_like "has basic schema properties" do
+          let(:path) { "dueDate" }
+          let(:type) { "Date" }
+          let(:name) { "Fecha apertura" }
+          let(:required) { false }
+          let(:writable) { true }
+        end
+      end
+
+      context "when a different type has a due_date_label override but this work package's type does not" do
+        before do
+          # A stray override on an unrelated Type must never leak into the
+          # rendered name for a work package of a different Type.
+          build_stubbed(:type, due_date_label: "Fecha apertura")
+
+          wp_type.due_date_label = nil
+        end
+
+        it_behaves_like "has basic schema properties" do
+          let(:path) { "dueDate" }
+          let(:type) { "Date" }
+          let(:name) { I18n.t("attributes.due_date") }
+          let(:required) { false }
+          let(:writable) { true }
+        end
+      end
     end
 
     describe "derivedStartDate" do
