@@ -56,6 +56,7 @@ import { ProjectStoragesResourceService } from 'core-app/core/state/project-stor
 import { IProjectStorage } from 'core-app/core/state/project-storages/project-storage.model';
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
 import isNewResource from 'core-app/features/hal/helpers/is-new-resource';
+import { dateFieldLabel } from 'core-app/features/work-packages/components/wp-single-view/date-field-label';
 
 export interface FieldDescriptor {
   name:string;
@@ -366,7 +367,12 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
   private getDateField(change:WorkPackageChangeset):FieldDescriptor {
     const object:FieldDescriptor = {
       name: 'date',
-      label: this.I18n.t('js.work_packages.properties.date'),
+      // The outer "combined date" trigger label defaults to the standard
+      // translation below, but is overridable per work-package Type via
+      // `Type#due_date_label` (the same setting used for the `dueDate`
+      // schema field's name). This does NOT affect the date-picker modal's
+      // internal "Start date"/"Finish date" captions -- see dateFieldLabel.
+      label: dateFieldLabel(change.projectedResource, this.I18n.t('js.work_packages.properties.date')),
       spanAll: false,
       multiple: false,
     };

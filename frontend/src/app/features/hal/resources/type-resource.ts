@@ -39,6 +39,15 @@ export class TypeResource extends HalResource {
    */
   public boardCardFieldIds:string[]|undefined;
 
+  /**
+   * Optional override for the label shown on a work package's full/detail
+   * view "combined date" trigger (e.g. instead of the standard "Date"
+   * label). Undefined/blank means the standard translated label is used.
+   * Does not affect the date-picker modal's internal "Start date"/"Finish
+   * date" captions. Read-only.
+   */
+  public dueDateLabel:string|undefined;
+
   public get state():InputState<this> {
     return this.states.types.get(this.href!) as any;
   }

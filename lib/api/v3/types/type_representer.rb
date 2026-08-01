@@ -51,6 +51,15 @@ module API
         property :board_card_field_ids,
                  getter: ->(*) { board_card_fields.field_ids }
 
+        # Per-Type override for the label shown on a work package's
+        # full/detail view "combined date" trigger (the compact summary that
+        # opens the scheduling modal). This is the SAME setting already used
+        # by WorkPackageSchemaRepresenter's `schema :due_date` `name_source:`
+        # -- blank/nil means "use the standard translated label". Read-only.
+        property :due_date_label,
+                 getter: ->(*) { due_date_label.presence },
+                 render_nil: true
+
         date_time_property :created_at
         date_time_property :updated_at
 

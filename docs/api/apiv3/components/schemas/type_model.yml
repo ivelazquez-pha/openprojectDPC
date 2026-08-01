@@ -47,6 +47,17 @@ properties:
       additional rows on Kanban board cards for work packages of this type.
       Board-only; has no effect outside of board card rendering.
     readOnly: true
+  dueDateLabel:
+    type:
+    - "string"
+    - "null"
+    description: |-
+      Optional override for the label shown on a work package's full/detail
+      view "combined date" trigger (e.g. instead of the standard "Date"
+      label). Blank/null means the standard translated label is used. Does
+      not affect the date-picker modal's internal "Start date"/"Finish date"
+      captions.
+    readOnly: true
   createdAt:
     type: string
     format: date-time
