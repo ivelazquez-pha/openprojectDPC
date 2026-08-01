@@ -173,39 +173,7 @@
           class="op-wp-single-card--content-dates"
           containerType="single-view" />
       }
-      @if (isLicitacionType(workPackage)) {
-        @if (licitacionLabelFields.length > 0 || licitacionTags.length > 0) {
-          <div
-            class="op-wp-single-card--content-licitacion-fields"
-            data-test-selector="op-wp-single-card--content-licitacion-fields">
-            @for (field of licitacionLabelFields; track field.label) {
-              <div
-                class="op-wp-single-card--content-licitacion-field"
-                data-test-selector="op-wp-single-card--content-licitacion-field"
-                [attr.data-qa-field-name]="field.fieldId">
-                <span class="op-wp-single-card--content-licitacion-field-label">{{ field.label }}:</span>
-                <display-field [resource]="workPackage"
-                  [displayFieldOptions]="{ writable: false, placeholder: '' }"
-                  fieldName="{{ field.fieldId }}"
-                  class="op-wp-single-card--content-licitacion-field-value"
-                  containerType="single-view" />
-              </div>
-            }
-            @if (licitacionTags.length > 0) {
-              <div
-                class="op-wp-single-card--content-licitacion-tags"
-                data-test-selector="op-wp-single-card--content-licitacion-tags">
-                @for (tag of licitacionTags; track tag) {
-                  <span
-                    class="op-wp-single-card--content-licitacion-tag-badge"
-                    data-test-selector="op-wp-single-card--content-licitacion-tag-badge"
-                    [style.background-color]="tagColor(tag)">{{ tag }}</span>
-                }
-              </div>
-            }
-          </div>
-        }
-      } @else if (extraCardFieldIds.length > 0) {
+      @if (extraCardFieldIds.length > 0) {
         <div
           class="op-wp-single-card--content-type-fields"
           data-test-selector="op-wp-single-card--content-type-fields">
