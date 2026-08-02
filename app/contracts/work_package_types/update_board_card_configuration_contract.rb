@@ -43,18 +43,56 @@ module WorkPackageTypes
 
     private
 
+    ZONES = Type::BoardCardConfiguration::ZONES
+
     def validate_field_ids
-      ids = model.board_card_field_ids
+      entries = model.board_card_field_ids
 
-      return if ids.blank?
+      return if entries.blank?
 
-      unless ids.is_a?(Array) && ids.all? { |id| id.is_a?(String) }
+      unless entries.is_a?(Array) && entries.all? { |entry| valid_entry_shape?(entry) }
         errors.add(:board_card_field_ids, :invalid)
         return
       end
 
+      ids = entries.map { |entry| entry.is_a?(Hash) ? entry["field_id"] || entry[:field_id] : entry }
       unknown_ids = ids - model.board_card_fields.available_field_ids
       errors.add(:board_card_field_ids, :invalid) if unknown_ids.any?
+
+      duplicate_ids = ids.tally.select { |_, count| count > 1 }.keys
+      errors.add(:board_card_field_ids, :invalid) if duplicate_ids.any?
+    end
+
+    def valid_entry_shape?(entry)
+      case entry
+      when String
+        true
+      when Hash
+        valid_hash_entry?(entry.stringify_keys)
+      else
+        false
+      end
+    end
+
+    def valid_hash_entry?(entry)
+      # `color_id`/`background_color_id` arrive as `""` (not absent/nil) when
+      # the admin form's "none" option is selected -- `select_tag`'s blank
+      # option still submits an empty string. `show_label` always casts
+      # cleanly via `ActiveModel::Type::Boolean` (see
+      # `Type::BoardCardConfiguration#normalize_hash`), so any value for it
+      # is acceptable here.
+      entry["field_id"].is_a?(String) &&
+        (entry["zone"].blank? || ZONES.include?(entry["zone"])) &&
+        (entry["color_id"].blank? || existing_color_id?(entry["color_id"])) &&
+        (entry["background_color_id"].blank? || existing_color_id?(entry["background_color_id"]))
+    end
+
+    def existing_color_id?(color_id)
+      existing_color_ids.include?(color_id.to_i)
+    end
+
+    def existing_color_ids
+      @existing_color_ids ||= Color.pluck(:id)
     end
   end
 end

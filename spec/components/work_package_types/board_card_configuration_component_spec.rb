@@ -33,6 +33,7 @@ require "rails_helper"
 RSpec.describe WorkPackageTypes::BoardCardConfigurationComponent, type: :component do
   let(:type) { create(:type) }
   let(:board_card_form_data) { nil }
+  let(:name_prefix) { "work_package_types_forms_board_card_configuration_form_model[board_card_field_ids]" }
 
   subject(:render_component) do
     render_inline(described_class.new(type, board_card_form_data:))
@@ -43,44 +44,81 @@ RSpec.describe WorkPackageTypes::BoardCardConfigurationComponent, type: :compone
     RequestStore.clear!
   end
 
+  def field_select(index)
+    page.find("select[name='#{name_prefix}[#{index}][field_id]']")
+  end
+
+  def zone_select(index)
+    page.find("select[name='#{name_prefix}[#{index}][zone]']")
+  end
+
+  def show_label_checkbox(index)
+    page.find("input[type=checkbox][name='#{name_prefix}[#{index}][show_label]']")
+  end
+
   context "when no fields are configured" do
-    it "renders a checkbox per available work package attribute, all unchecked" do
+    it "renders a single row with no field preselected" do
       render_component
 
-      expect(page).to have_css("input[type=checkbox][value=priority]")
-      expect(page.find("input[type=checkbox][value=priority]")).not_to be_checked
+      expect(page).to have_css("tr.board-card-configuration-row", count: 1)
+      expect(field_select(0).value).to be_blank
+    end
+
+    it "defaults the blank row to the middle zone, shown, with no color override" do
+      render_component
+
+      expect(zone_select(0).value).to eq("middle")
+      expect(show_label_checkbox(0)).to be_checked
     end
   end
 
-  context "when the type has previously configured fields" do
+  context "when the type has previously configured fields (legacy flat string format)" do
     let(:type) { create(:type, board_card_configuration: { board_card_field_ids: %w[priority assignee] }) }
 
-    it "checks the configured attribute checkboxes" do
+    it "renders one row per configured field, preselected, defaulting to the middle zone" do
       render_component
 
-      expect(page.find("input[type=checkbox][value=priority]")).to be_checked
-      expect(page.find("input[type=checkbox][value=assignee]")).to be_checked
+      expect(page).to have_css("tr.board-card-configuration-row", count: 2)
+      expect(field_select(0).value).to eq("priority")
+      expect(zone_select(0).value).to eq("middle")
+      expect(field_select(1).value).to eq("assignee")
+    end
+  end
+
+  context "when the type has previously configured fields (rich per-field format)" do
+    let(:type) do
+      create(:type, board_card_configuration: {
+               board_card_field_ids: [{ "field_id" => "priority", "zone" => "top", "show_label" => false }]
+             })
+    end
+
+    it "preselects the configured zone and reflects show_label" do
+      render_component
+
+      expect(zone_select(0).value).to eq("top")
+      expect(show_label_checkbox(0)).not_to be_checked
     end
   end
 
   context "when the component is rendered with submitted form values" do
-    let(:type) { create(:type) }
-    let(:board_card_form_data) { { board_card_field_ids: ["priority"] } }
+    let(:board_card_form_data) do
+      { board_card_field_ids: [{ "field_id" => "assignee", "zone" => "footer" }] }
+    end
 
-    it "reflects the submitted (not-yet-persisted) selection" do
+    it "reflects the submitted (not-yet-persisted) row, not the persisted configuration" do
       render_component
 
-      expect(page.find("input[type=checkbox][value=priority]")).to be_checked
-      expect(page.find("input[type=checkbox][value=assignee]")).not_to be_checked
+      expect(field_select(0).value).to eq("assignee")
+      expect(zone_select(0).value).to eq("footer")
     end
   end
 
   context "when a previously configured identifier is no longer a valid attribute" do
     let(:type) { create(:type, board_card_configuration: { board_card_field_ids: %w[priority stale_removed_attribute] }) }
 
-    it "renders without raising and does not show a checkbox for the stale identifier" do
+    it "renders without raising and does not offer the stale identifier as an option" do
       expect { render_component }.not_to raise_error
-      expect(page).not_to have_css("input[type=checkbox][value=stale_removed_attribute]")
+      expect(field_select(0)).not_to have_css("option[value=stale_removed_attribute]")
     end
   end
 
@@ -89,17 +127,17 @@ RSpec.describe WorkPackageTypes::BoardCardConfigurationComponent, type: :compone
   # a single visual row) is not a real work package attribute/schema property
   # and must never be offered as a selectable board card field.
   context "regarding the merged date pseudo-attribute (post-deploy bug fix)" do
-    it "never offers the merged pseudo 'date' attribute as a selectable option" do
+    it "never offers the merged pseudo 'date' attribute as a field option" do
       render_component
 
-      expect(page).not_to have_css("input[type=checkbox][value=date]")
+      expect(field_select(0)).not_to have_css("option[value=date]")
     end
 
     it "offers the real start_date and due_date attributes separately, in API camelCase format" do
       render_component
 
-      expect(page).to have_css("input[type=checkbox][value=startDate]")
-      expect(page).to have_css("input[type=checkbox][value=dueDate]")
+      expect(field_select(0)).to have_css("option[value=startDate]")
+      expect(field_select(0)).to have_css("option[value=dueDate]")
     end
   end
 
@@ -114,8 +152,22 @@ RSpec.describe WorkPackageTypes::BoardCardConfigurationComponent, type: :compone
     it "offers the custom field in API camelCase format, not the internal snake_case key" do
       render_component
 
-      expect(page).to have_css("input[type=checkbox][value=customField#{custom_field.id}]")
-      expect(page).not_to have_css("input[type=checkbox][value=custom_field_#{custom_field.id}]")
+      expect(field_select(0)).to have_css("option[value=customField#{custom_field.id}]")
+      expect(field_select(0)).not_to have_css("option[value=custom_field_#{custom_field.id}]")
     end
+  end
+
+  it "offers the app-wide Color palette for the text/background color pickers" do
+    color = create(:color, name: "Distinctive color name")
+    render_component
+
+    color_select = page.find("select[name='#{name_prefix}[0][color_id]']")
+    expect(color_select).to have_css("option", text: color.name)
+  end
+
+  it "scopes row add/remove interactivity to the admin--board-card-configuration Stimulus controller" do
+    render_component
+
+    expect(page).to have_css("[data-controller='admin--board-card-configuration']")
   end
 end

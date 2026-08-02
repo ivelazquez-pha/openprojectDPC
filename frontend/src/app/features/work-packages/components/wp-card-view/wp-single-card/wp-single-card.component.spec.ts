@@ -19,9 +19,21 @@ import {
   KeepTabService,
 } from 'core-app/features/work-packages/components/wp-single-view-tabs/keep-tab/keep-tab.service';
 import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
+import { CardFieldConfig } from 'core-app/features/hal/resources/type-resource';
 import {
   WorkPackageSingleCardComponent,
 } from 'core-app/features/work-packages/components/wp-card-view/wp-single-card/wp-single-card.component';
+
+function fieldConfig(fieldId:string, overrides:Partial<CardFieldConfig> = {}):CardFieldConfig {
+  return {
+    fieldId,
+    zone: 'middle',
+    color: null,
+    backgroundColor: null,
+    showLabel: true,
+    ...overrides,
+  };
+}
 
 function buildWorkPackage(overrides:Record<string, unknown> = {}):WorkPackageResource {
   return {
@@ -83,10 +95,10 @@ describe('WorkPackageSingleCardComponent', () => {
     });
 
     it('renders no extra card fields even if a map were somehow provided', () => {
-      component.typeCardFieldsByTypeId = { 1: ['priority'] };
+      component.typeCardFieldsByTypeId = { 1: [fieldConfig('priority')] };
       fixture.detectChanges();
 
-      expect(component.extraCardFieldIds).toEqual([]);
+      expect(component.extraCardFieldConfigs).toEqual([]);
     });
   });
 
@@ -95,37 +107,54 @@ describe('WorkPackageSingleCardComponent', () => {
       // Schema never emits in this test -> state stays unresolved.
       setup(of());
       component.renderTypeCardFields = true;
-      component.typeCardFieldsByTypeId = { 1: ['priority'] };
+      component.typeCardFieldsByTypeId = { 1: [fieldConfig('priority')] };
       fixture.detectChanges();
 
       expect(component.schemaLoaded).toBe(false);
-      expect(component.extraCardFieldIds).toEqual([]);
+      expect(component.extraCardFieldConfigs).toEqual([]);
     });
 
     it('resolves the OWN type\'s configured fields once the schema resolves', () => {
       setup();
       component.renderTypeCardFields = true;
       component.typeCardFieldsByTypeId = {
-        1: ['priority'],
-        2: ['assignee'],
+        1: [fieldConfig('priority')],
+        2: [fieldConfig('assignee')],
       };
       fixture.detectChanges();
 
       expect(component.schemaLoaded).toBe(true);
-      expect(component.extraCardFieldIds).toEqual(['priority']);
+      expect(component.extraCardFieldConfigs).toEqual([fieldConfig('priority')]);
     });
 
     it('renders each card according to its own type when Types are mixed on a board', () => {
       setup();
       component.renderTypeCardFields = true;
       component.typeCardFieldsByTypeId = {
-        1: ['priority'],
-        2: ['assignee'],
+        1: [fieldConfig('priority')],
+        2: [fieldConfig('assignee')],
       };
       component.workPackage = buildWorkPackage({ type: { id: '2', name: 'Task' } });
       fixture.detectChanges();
 
-      expect(component.extraCardFieldIds).toEqual(['assignee']);
+      expect(component.extraCardFieldConfigs).toEqual([fieldConfig('assignee')]);
+    });
+
+    it('groups configured fields by zone', () => {
+      setup();
+      component.renderTypeCardFields = true;
+      component.typeCardFieldsByTypeId = {
+        1: [
+          fieldConfig('priority', { zone: 'top' }),
+          fieldConfig('assignee', { zone: 'middle' }),
+          fieldConfig('category', { zone: 'footer' }),
+        ],
+      };
+      fixture.detectChanges();
+
+      expect(component.fieldsForZone('top')).toEqual([fieldConfig('priority', { zone: 'top' })]);
+      expect(component.fieldsForZone('middle')).toEqual([fieldConfig('assignee', { zone: 'middle' })]);
+      expect(component.fieldsForZone('footer')).toEqual([fieldConfig('category', { zone: 'footer' })]);
     });
 
     it('resolves a human-readable label from the loaded schema', () => {

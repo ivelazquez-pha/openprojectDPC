@@ -44,7 +44,7 @@ module WorkPackageTypes
 
     def update
       result = UpdateService.new(user: current_user, model: @type, contract_class: UpdateBoardCardConfigurationContract)
-                            .call(board_card_field_ids: permitted_field_ids)
+                            .call(board_card_field_ids: permitted_field_configs)
 
       if result.success?
         redirect_to edit_type_board_card_configuration_path(type_id: @type.id), notice: I18n.t(:notice_successful_update)
@@ -55,9 +55,23 @@ module WorkPackageTypes
 
     private
 
-    def permitted_field_ids
-      Array(params.dig(:work_package_types_forms_board_card_configuration_form_model, :board_card_field_ids))
-        .reject(&:blank?)
+    # Each row of the admin form submits a Hash (`field_id`, `zone`,
+    # `color_id`, `background_color_id`, `show_label`) rather than a bare
+    # identifier -- see `Type::BoardCardConfiguration` for the shape this
+    # feeds into. Rows with no field selected (the always-present blank row
+    # the form renders when nothing else is configured, or a freshly
+    # JS-added row the admin never filled in) are dropped here rather than
+    # rejected by the contract, since "not configured" is a valid intent.
+    def permitted_field_configs
+      form_params
+        .permit(board_card_field_ids: %i[field_id zone color_id background_color_id show_label])
+        .to_h
+        .fetch("board_card_field_ids", [])
+        .reject { |entry| entry["field_id"].blank? }
+    end
+
+    def form_params
+      params[:work_package_types_forms_board_card_configuration_form_model] || ActionController::Parameters.new
     end
   end
 end

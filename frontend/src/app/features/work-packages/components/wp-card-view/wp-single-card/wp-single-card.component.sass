@@ -75,10 +75,10 @@
     &:not(.-new)
       display: grid
       grid-template-columns: max-content max-content auto auto 1fr
-      grid-template-rows: auto 1fr max-content max-content auto
+      grid-template-rows: auto 1fr max-content max-content max-content auto max-content
       grid-row-gap: 5px
       grid-column-gap: 5px
-      grid-template-areas: "status id project project project" "subject subject subject subject subject" "image image image image image" "typeFields typeFields typeFields typeFields typeFields" "avatar avatar avatar dates dates"
+      grid-template-areas: "status id project project project" "subject subject subject subject subject" "topFields topFields topFields topFields topFields" "image image image image image" "typeFields typeFields typeFields typeFields typeFields" "avatar avatar avatar dates dates" "footerFields footerFields footerFields footerFields footerFields"
       overflow: hidden
       flex-grow: 1
       font-size: var(--body-font-size)
@@ -185,11 +185,22 @@
       box-shadow: none
       padding: 15px
 
+  // Default (no modifier) renders in the "middle" zone, below the cover
+  // image -- the original, and still default, placement for extra card
+  // fields. `_top`/`_footer` place the same row styling in the other two
+  // fixed zones (see `Type::BoardCardConfiguration::ZONES` on the backend).
   &--content-type-fields
     grid-area: typeFields
     display: flex
     flex-direction: column
     margin-top: 4px
+
+    &_top
+      grid-area: topFields
+      margin-top: 0
+
+    &_footer
+      grid-area: footerFields
 
   &--content-type-field
     display: flex
