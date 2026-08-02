@@ -327,6 +327,32 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
     return String(value);
   }
 
+  /**
+   * Whether this work package actually has a value for the given field --
+   * an empty field renders as a bare "-" placeholder, so applying the
+   * configured color/background to it would paint a colored stripe/dash
+   * with nothing in it. `false` for `null`/`undefined`, an empty array
+   * (an unset multi-value list field), or a blank string; `true`
+   * otherwise (including falsy-but-meaningful values like `0`).
+   */
+  public hasFieldValue(wp:WorkPackageResource, fieldName:string):boolean {
+    const value = (wp as unknown as Record<string, unknown>)[fieldName];
+
+    if (value === null || value === undefined) {
+      return false;
+    }
+
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+
+    if (typeof value === 'string') {
+      return value.trim().length > 0;
+    }
+
+    return true;
+  }
+
   public fullWorkPackageLink(wp:WorkPackageResource):string {
     return this.keepTabService.currentShowHref(wp.displayId);
   }

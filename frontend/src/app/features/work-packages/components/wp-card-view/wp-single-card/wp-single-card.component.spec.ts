@@ -181,5 +181,18 @@ describe('WorkPackageSingleCardComponent', () => {
       expect(component.extraCardFieldTooltip(component.workPackage, 'subject')).toBe('Some subject');
       expect(component.extraCardFieldTooltip(component.workPackage, 'missingField')).toBe('');
     });
+
+    it('reports whether the work package actually has a value for a field, so an empty "-" placeholder is never colored', () => {
+      setup();
+      fixture.detectChanges();
+
+      expect(component.hasFieldValue(component.workPackage, 'priority')).toBe(true);
+      expect(component.hasFieldValue(component.workPackage, 'missingField')).toBe(false);
+      expect(component.hasFieldValue(buildWorkPackage({ customField1: [] }), 'customField1')).toBe(false);
+      expect(component.hasFieldValue(buildWorkPackage({ customField1: ['a'] }), 'customField1')).toBe(true);
+      expect(component.hasFieldValue(buildWorkPackage({ notes: '' }), 'notes')).toBe(false);
+      expect(component.hasFieldValue(buildWorkPackage({ notes: '  ' }), 'notes')).toBe(false);
+      expect(component.hasFieldValue(buildWorkPackage({ percentageDone: 0 }), 'percentageDone')).toBe(true);
+    });
   });
 });

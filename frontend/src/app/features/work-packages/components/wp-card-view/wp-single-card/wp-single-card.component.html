@@ -203,14 +203,14 @@
         class="op-wp-single-card--content-type-field"
         data-test-selector="op-wp-single-card--content-type-field"
         [attr.data-qa-field-name]="config.fieldId"
-        [style.color]="config.color"
-        [style.--op-card-field-color]="config.color"
-        [style.--op-card-field-bg]="config.backgroundColor"
+        [style.color]="hasFieldValue(workPackage, config.fieldId) ? config.color : null"
+        [style.--op-card-field-color]="hasFieldValue(workPackage, config.fieldId) ? config.color : null"
+        [style.--op-card-field-bg]="hasFieldValue(workPackage, config.fieldId) ? config.backgroundColor : null"
         [title]="extraCardFieldTooltip(workPackage, config.fieldId)">
         @if (config.showLabel) {
           <span
             class="op-wp-single-card--content-type-field-label"
-            [style.color]="config.color">{{ extraCardFieldLabel(workPackage, config.fieldId) }}:</span>
+            [style.color]="hasFieldValue(workPackage, config.fieldId) ? config.color : null">{{ extraCardFieldLabel(workPackage, config.fieldId) }}:</span>
         }
         <display-field [resource]="workPackage"
           [displayFieldOptions]="{ writable: false, placeholder: '' }"
