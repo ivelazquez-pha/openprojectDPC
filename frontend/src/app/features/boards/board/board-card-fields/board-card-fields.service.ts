@@ -6,8 +6,8 @@ import { ApiV3FilterBuilder } from 'core-app/shared/helpers/api-v3/api-v3-filter
 import { TypeCardFieldsByTypeId } from 'core-app/features/work-packages/components/wp-card-view/wp-single-card/resolve-type-card-fields';
 
 /**
- * Builds a `typeId -> configured board card field ids` map for Kanban board
- * cards.
+ * Builds a `typeId -> configured board card field configs` map for Kanban
+ * board cards.
  *
  * Types are fetched GLOBALLY via `/api/v3/types` (unscoped by project), NOT
  * limited to the board's own root project. This matters for Subproject-type
@@ -26,7 +26,7 @@ export class BoardCardFieldsService {
   private cachedMap$:Observable<TypeCardFieldsByTypeId>|null = null;
 
   /**
-   * Returns (and caches) the `typeId -> fieldIds[]` map for every type
+   * Returns (and caches) the `typeId -> fieldConfigs[]` map for every type
    * globally visible to the current user.
    */
   public map$():Observable<TypeCardFieldsByTypeId> {
@@ -39,7 +39,7 @@ export class BoardCardFieldsService {
         .pipe(
           map((types) => types.reduce<TypeCardFieldsByTypeId>((map, type) => {
             if (type.id) {
-              map[type.id] = type.boardCardFieldIds || [];
+              map[type.id] = type.boardCardFields || [];
             }
             return map;
           }, {})),

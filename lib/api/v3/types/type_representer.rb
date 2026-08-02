@@ -45,11 +45,24 @@ module API
         property :is_milestone
 
         # Board-only Kanban card field configuration: an ordered, read-only
-        # list of extra work package attribute identifiers configured for
-        # this type. Stale/no-longer-available identifiers are already
-        # filtered out by Type::BoardCardConfiguration#field_ids.
-        property :board_card_field_ids,
-                 getter: ->(*) { board_card_fields.field_ids }
+        # list of extra work package attribute rows configured for this
+        # type, each with the zone it renders in (top/middle/footer),
+        # resolved color/backgroundColor (hex, or nil for "use the default
+        # styling"), and whether to render the "label:" prefix. Stale/
+        # no-longer-available identifiers are already filtered out by
+        # Type::BoardCardConfiguration#field_configs.
+        property :board_card_fields,
+                 getter: ->(*) {
+                   board_card_fields.field_configs.map do |config|
+                     {
+                       fieldId: config.field_id,
+                       zone: config.zone,
+                       color: config.color,
+                       backgroundColor: config.background_color,
+                       showLabel: config.show_label
+                     }
+                   end
+                 }
 
         # Per-Type override for the label shown on a work package's
         # full/detail view "combined date" trigger (the compact summary that

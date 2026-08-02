@@ -52,6 +52,7 @@ import {
   resolveTypeCardFields,
   TypeCardFieldsByTypeId,
 } from 'core-app/features/work-packages/components/wp-card-view/wp-single-card/resolve-type-card-fields';
+import { CardFieldConfig } from 'core-app/features/hal/resources/type-resource';
 
 const DETAILS_URL_PATTERN = new RegExp(`/details/(${WP_ID_URL_PATTERN})(?:/|$)`);
 
@@ -269,21 +270,31 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
   }
 
   /**
-   * Ordered list of extra field identifiers to render as additional
-   * `label: value` rows below the fixed baseline for this card, resolved
-   * from this work package's OWN type (so mixed Types on the same board
-   * each render only their own configured fields).
+   * Ordered list of extra field configs to render as additional rows for
+   * this card, resolved from this work package's OWN type (so mixed Types
+   * on the same board each render only their own configured fields).
    *
    * Gated as a whole on `renderTypeCardFields` (board-only opt-in) and on
    * `schemaLoaded` (never renders a partial/erroring section while the
    * schema for this work package hasn't resolved yet).
    */
-  public get extraCardFieldIds():string[] {
+  public get extraCardFieldConfigs():CardFieldConfig[] {
     if (!this.renderTypeCardFields || !this.schemaLoaded) {
       return [];
     }
 
     return resolveTypeCardFields(this.workPackage, this.typeCardFieldsByTypeId);
+  }
+
+  /**
+   * The subset of `extraCardFieldConfigs` assigned to render in the given
+   * zone. Three fixed zones only (not free positioning) -- see
+   * `Type::BoardCardConfiguration::ZONES` on the backend and
+   * `wp-single-card.component.sass`'s `topFields`/`typeFields`/
+   * `footerFields` grid areas.
+   */
+  public fieldsForZone(zone:CardFieldConfig['zone']):CardFieldConfig[] {
+    return this.extraCardFieldConfigs.filter((config) => config.zone === zone);
   }
 
   /**

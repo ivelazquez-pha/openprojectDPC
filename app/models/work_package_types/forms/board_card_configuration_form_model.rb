@@ -30,14 +30,21 @@
 
 module WorkPackageTypes
   module Forms
+    # Backs the `work_package_types_forms_board_card_configuration_form_model`
+    # param scope used by `BoardCardConfigurationTabController#update` -- not
+    # an ActiveRecord model, just a plain carrier for the data the board card
+    # configuration tab's view needs, so `ActiveModel::Naming` is enough to
+    # give it a stable `model_name`/param key for `settings_primer_form_with`.
     class BoardCardConfigurationFormModel
       extend ActiveModel::Naming
 
-      attr_reader :field_ids, :available_attributes, :validation_errors
+      attr_reader :field_rows, :available_attributes, :zone_options, :color_options, :validation_errors
 
-      def initialize(field_ids:, available_attributes:, validation_errors: {})
-        @field_ids = field_ids
+      def initialize(field_rows:, available_attributes:, zone_options:, color_options:, validation_errors: {})
+        @field_rows = field_rows
         @available_attributes = available_attributes
+        @zone_options = zone_options
+        @color_options = color_options
         @validation_errors = validation_errors
       end
     end
