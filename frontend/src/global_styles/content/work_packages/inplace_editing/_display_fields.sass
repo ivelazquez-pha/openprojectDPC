@@ -211,3 +211,45 @@ op-editable-attribute-field
 
   .-minimal &
     width: initial
+
+// Kanban board card: render a multi-value list field's selected options
+// (e.g. a multi-select custom field) as Trello-style inline badges,
+// instead of the default one-block-per-value stack (`.custom-option
+// :not(.-multiple-lines)` above only covers the single-value case).
+//
+// This lives here -- global styles, not wp-single-card.component.sass --
+// on purpose: `.custom-option` and its `.-multiline` wrapper are rendered
+// by the separate `<display-field>` component, not by the card component
+// itself. Angular's view encapsulation scopes a plain nested selector
+// written in a component's own stylesheet to elements THAT component
+// renders directly; it can never reach into a child component's own
+// template output. Only an unscoped, global rule can. `!important` on the
+// row's background matches the precedent in
+// `user-autocompleter.component.sass`'s own cross-boundary `:has()` rule,
+// needed here because the scoped `background-color` rule on the same
+// class (in wp-single-card.component.sass) carries an Angular-added
+// `[_ngcontent]` attribute, giving it equal-or-greater specificity.
+.op-wp-single-card--content-type-field:has(.custom-option.-multiple-lines)
+  background-color: transparent !important
+  overflow: visible !important
+  white-space: normal !important
+
+.op-wp-single-card--content-type-field-value
+  // The actual flex/wrap container has to be `.-multiline` (the direct
+  // parent of the `.custom-option` divs) -- the field value's own host
+  // element is one level further out and wraps `.-multiline` itself, so
+  // making IT a flex container only affects that single wrapper, not the
+  // individual `.custom-option` divs one level deeper inside it.
+  .-multiline
+    display: flex
+    flex-wrap: wrap
+    gap: 4px
+    white-space: normal
+
+  .custom-option.-multiple-lines
+    display: inline-block
+    padding: 0 6px
+    border-radius: 10px
+    max-width: 100%
+    background-color: var(--op-card-field-bg, var(--borderColor-muted))
+    @include text-shortener(false)

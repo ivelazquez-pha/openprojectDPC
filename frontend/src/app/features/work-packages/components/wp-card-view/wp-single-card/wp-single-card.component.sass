@@ -213,16 +213,6 @@
     font-size: var(--body-font-size-sm, 0.85em)
     background-color: var(--op-card-field-bg, transparent)
 
-    // A multi-value list field (several selected custom field options)
-    // renders as individual inline badges instead of one colored row --
-    // see `--content-type-field-value`'s `:has()` override below. The row
-    // itself goes transparent so only the badges carry the field's
-    // configured color, and wraps instead of truncating to one line.
-    &:has(.custom-option.-multiple-lines)
-      background-color: transparent
-      overflow: visible
-      white-space: normal
-
   &--content-type-field-label
     color: var(--fgColor-muted)
     flex-shrink: 0
@@ -232,23 +222,10 @@
     text-overflow: ellipsis
     white-space: nowrap
 
-    &:has(.custom-option.-multiple-lines)
-      display: flex
-      flex-wrap: wrap
-      gap: 4px
-      overflow: visible
-      white-space: normal
-
-    // Trello-style badge: each selected option of a multi-value list
-    // field gets its own small rounded chip, all sharing the field's
-    // single configured background color (`--op-card-field-bg`) rather
-    // than the app-wide default of one stacked block per value (see
-    // `_display_fields.sass`'s `.custom-option:not(.-multiple-lines)`,
-    // which only covers the single-value case).
-    .custom-option.-multiple-lines
-      display: inline-block
-      padding: 0 6px
-      border-radius: 10px
-      max-width: 100%
-      background-color: var(--op-card-field-bg, var(--borderColor-muted))
-      @include text-shortener(false)
+  // The multi-value-list-as-badges override lives in the GLOBAL
+  // `_display_fields.sass` instead of here: `.custom-option` (and its
+  // `.-multiline` wrapper) are rendered by the separate `<display-field>`
+  // component, not by this one. Angular's view encapsulation scopes a
+  // plain nested selector in a component's OWN stylesheet to elements
+  // THAT component renders directly, so it can never reach into another
+  // component's template output -- only a global (unscoped) rule can.
