@@ -62,12 +62,30 @@ module WorkPackageTypes
     # the form renders when nothing else is configured, or a freshly
     # JS-added row the admin never filled in) are dropped here rather than
     # rejected by the contract, since "not configured" is a valid intent.
+    #
+    # `board_card_field_ids[0][field_id]=...&board_card_field_ids[1][field_id]=...`
+    # (indexed brackets, what every browser form submission produces) parses
+    # into a HASH keyed by string index ("0", "1", ...), NOT an Array --
+    # `permit(board_card_field_ids: [...])`'s array-of-hashes spec expects an
+    # actual Array and silently drops the whole key otherwise, so
+    # `.to_h.fetch(...)` came back empty on every real form submit. Reading
+    # each row explicitly via `.values` and permitting it on its own side-
+    # steps that ambiguity entirely.
     def permitted_field_configs
-      form_params
-        .permit(board_card_field_ids: %i[field_id zone color_id background_color_id show_label])
-        .to_h
-        .fetch("board_card_field_ids", [])
+      row_entries(form_params[:board_card_field_ids])
+        .map { |entry| entry.permit(:field_id, :zone, :color_id, :background_color_id, :show_label).to_h }
         .reject { |entry| entry["field_id"].blank? }
+    end
+
+    def row_entries(value)
+      case value
+      when Array
+        value
+      when ActionController::Parameters, Hash
+        value.values
+      else
+        []
+      end
     end
 
     def form_params
