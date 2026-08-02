@@ -204,7 +204,8 @@
         data-test-selector="op-wp-single-card--content-type-field"
         [attr.data-qa-field-name]="config.fieldId"
         [style.color]="config.color"
-        [style.backgroundColor]="config.backgroundColor"
+        [style.--op-card-field-color]="config.color"
+        [style.--op-card-field-bg]="config.backgroundColor"
         [title]="extraCardFieldTooltip(workPackage, config.fieldId)">
         @if (config.showLabel) {
           <span
