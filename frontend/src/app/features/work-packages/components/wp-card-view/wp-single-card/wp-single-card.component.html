@@ -202,6 +202,7 @@
       <div
         class="op-wp-single-card--content-type-field"
         data-test-selector="op-wp-single-card--content-type-field"
+        [class.op-wp-single-card--content-type-field_bold]="config.bold"
         [attr.data-qa-field-name]="config.fieldId"
         [style.color]="hasFieldValue(workPackage, config.fieldId) ? config.color : null"
         [style.--op-card-field-color]="hasFieldValue(workPackage, config.fieldId) ? config.color : null"

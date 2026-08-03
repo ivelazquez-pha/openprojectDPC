@@ -213,6 +213,14 @@
     font-size: var(--body-font-size-sm, 0.85em)
     background-color: var(--op-card-field-bg, transparent)
 
+    // `font-weight` is an inherited property, so this reaches the value's
+    // text too even though it's rendered by a separate <display-field>
+    // component -- no cross-component encapsulation issue here (unlike
+    // background-color/the badge layout below, inheritance isn't blocked
+    // by Angular's view encapsulation, only stylesheet rule matching is).
+    &_bold
+      font-weight: 700
+
   &--content-type-field-label
     color: var(--fgColor-muted)
     flex-shrink: 0

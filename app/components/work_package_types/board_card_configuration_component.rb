@@ -109,7 +109,8 @@ module WorkPackageTypes
           "zone" => config.zone,
           "color_id" => config.color_id,
           "background_color_id" => config.background_color_id,
-          "show_label" => config.show_label
+          "show_label" => config.show_label,
+          "bold" => config.bold
         }
       end
     end
@@ -135,7 +136,8 @@ module WorkPackageTypes
         "zone" => Type::BoardCardConfiguration::DEFAULT_ZONE,
         "color_id" => nil,
         "background_color_id" => nil,
-        "show_label" => true
+        "show_label" => true,
+        "bold" => false
       }
     end
   end

@@ -42,6 +42,7 @@ export interface CardFieldConfig {
   color:string|null;
   backgroundColor:string|null;
   showLabel:boolean;
+  bold:boolean;
 }
 
 export class TypeResource extends HalResource {

@@ -7,7 +7,7 @@ import { CardFieldConfig } from 'core-app/features/hal/resources/type-resource';
 
 function fieldConfig(fieldId:string):CardFieldConfig {
   return {
-    fieldId, zone: 'middle', color: null, backgroundColor: null, showLabel: true,
+    fieldId, zone: 'middle', color: null, backgroundColor: null, showLabel: true, bold: false,
   };
 }
 

@@ -56,9 +56,9 @@ module WorkPackageTypes
     private
 
     # Each row of the admin form submits a Hash (`field_id`, `zone`,
-    # `color_id`, `background_color_id`, `show_label`) rather than a bare
-    # identifier -- see `Type::BoardCardConfiguration` for the shape this
-    # feeds into. Rows with no field selected (the always-present blank row
+    # `color_id`, `background_color_id`, `show_label`, `bold`) rather than a
+    # bare identifier -- see `Type::BoardCardConfiguration` for the shape
+    # this feeds into. Rows with no field selected (the always-present blank row
     # the form renders when nothing else is configured, or a freshly
     # JS-added row the admin never filled in) are dropped here rather than
     # rejected by the contract, since "not configured" is a valid intent.
@@ -73,7 +73,7 @@ module WorkPackageTypes
     # steps that ambiguity entirely.
     def permitted_field_configs
       row_entries(form_params[:board_card_field_ids])
-        .map { |entry| entry.permit(:field_id, :zone, :color_id, :background_color_id, :show_label).to_h }
+        .map { |entry| entry.permit(:field_id, :zone, :color_id, :background_color_id, :show_label, :bold).to_h }
         .reject { |entry| entry["field_id"].blank? }
     end
 

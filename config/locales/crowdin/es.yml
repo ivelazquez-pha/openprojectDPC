@@ -1367,6 +1367,22 @@ es:
         reset_description: 'This will reset the attributes to their default group and disable ALL custom fields.
 
           '
+      board_card_configuration:
+        tab: Campos de la tarjeta del tablero
+        intro: Seleccione los atributos para mostrar como filas adicionales en las tarjetas del tablero Kanban para paquetes de trabajo de este tipo. Esto aplica a todos los tableros.
+        field_column: Campo
+        zone_column: Posición
+        color_column: Color de texto
+        background_color_column: Color de fondo
+        show_label_column: Mostrar etiqueta
+        bold_column: Negrita
+        actions_column: Acciones
+        add_field: Agregar campo
+        remove_field: Quitar campo
+        zones:
+          top: Arriba
+          middle: Medio
+          footer: Pie
       projects:
         tab: Entornos
         enable_all: Habilitar en todos los entornos

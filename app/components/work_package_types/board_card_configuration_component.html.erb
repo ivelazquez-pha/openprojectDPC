@@ -39,6 +39,7 @@ See COPYRIGHT and LICENSE files for more details.
           <th><%= t("types.edit.board_card_configuration.color_column") %></th>
           <th><%= t("types.edit.board_card_configuration.background_color_column") %></th>
           <th><%= t("types.edit.board_card_configuration.show_label_column") %></th>
+          <th><%= t("types.edit.board_card_configuration.bold_column") %></th>
           <th><%= t("types.edit.board_card_configuration.actions_column") %></th>
         </tr>
       </thead>
@@ -85,6 +86,13 @@ See COPYRIGHT and LICENSE files for more details.
               <%= check_box_tag "#{form_field_name}[#{index}][show_label]",
                                  "1",
                                  ActiveModel::Type::Boolean.new.cast(row["show_label"]),
+                                 id: nil %>
+            </td>
+            <td>
+              <%= hidden_field_tag "#{form_field_name}[#{index}][bold]", "0", id: nil %>
+              <%= check_box_tag "#{form_field_name}[#{index}][bold]",
+                                 "1",
+                                 ActiveModel::Type::Boolean.new.cast(row["bold"]),
                                  id: nil %>
             </td>
             <td>

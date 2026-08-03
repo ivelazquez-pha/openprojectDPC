@@ -59,7 +59,8 @@ module API
                        zone: config.zone,
                        color: config.color,
                        backgroundColor: config.background_color,
-                       showLabel: config.show_label
+                       showLabel: config.show_label,
+                       bold: config.bold
                      }
                    end
                  }

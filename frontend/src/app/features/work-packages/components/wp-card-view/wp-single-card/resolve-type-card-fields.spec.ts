@@ -15,6 +15,7 @@ function fieldConfig(fieldId:string, overrides:Partial<CardFieldConfig> = {}):Ca
     color: null,
     backgroundColor: null,
     showLabel: true,
+    bold: false,
     ...overrides,
   };
 }

@@ -33,7 +33,7 @@ import { Controller } from '@hotwired/stimulus';
 /**
  * Add/remove rows in the Kanban board card fields admin form (Type ->
  * "Board card fields" tab). Each row's inputs are named
- * `...[board_card_field_ids][INDEX][field_id|zone|color_id|background_color_id|show_label]`
+ * `...[board_card_field_ids][INDEX][field_id|zone|color_id|background_color_id|show_label|bold]`
  * -- `addRow` clones the last row and rewrites `INDEX` to the next integer,
  * mirroring `admin--custom-fields`' `addOption` (see
  * `custom-fields.controller.ts`), which uses the same
@@ -44,6 +44,15 @@ export default class BoardCardConfigurationController extends Controller {
   static targets = ['row'];
 
   declare readonly rowTargets:HTMLTableRowElement[];
+
+  // Default `checked` state for a fresh row's checkboxes, keyed by the
+  // field name they end in -- NOT uniformly `true`: `show_label` defaults
+  // to shown, but `bold` defaults to off (see `Type::BoardCardConfiguration
+  // ::FieldConfig`'s own `show_label`/`bold` defaults on the backend).
+  private static readonly CHECKBOX_DEFAULTS:Record<string, boolean> = {
+    show_label: true,
+    bold: false,
+  };
 
   addRow() {
     const count = this.rowTargets.length;
@@ -62,7 +71,9 @@ export default class BoardCardConfigurationController extends Controller {
       el.name = el.name.replace(/\[\d+\]/, `[${count}]`);
       el.removeAttribute('id');
       if (el.type === 'checkbox') {
-        el.checked = true;
+        const match = /\[(\w+)\]$/.exec(el.name);
+        const fieldName = match ? match[1] : '';
+        el.checked = BoardCardConfigurationController.CHECKBOX_DEFAULTS[fieldName] ?? false;
       }
     });
 

@@ -41,7 +41,7 @@
 #     rendering exactly as before (zone "middle", no color override, label
 #     shown), or
 #   - a Hash with a `"field_id"` key plus optional `"zone"`, `"color_id"`,
-#     `"background_color_id"`, `"show_label"` keys.
+#     `"background_color_id"`, `"show_label"`, `"bold"` keys.
 #
 # Normalization: a configured field id that is no longer a valid work
 # package attribute for this type (e.g. a deleted custom field, or a
@@ -65,7 +65,7 @@ class Type::BoardCardConfiguration
   ZONES = %w[top middle footer].freeze
   DEFAULT_ZONE = "middle"
 
-  FieldConfig = Struct.new(:field_id, :zone, :color_id, :background_color_id, :show_label, keyword_init: true) do
+  FieldConfig = Struct.new(:field_id, :zone, :color_id, :background_color_id, :show_label, :bold, keyword_init: true) do
     def color
       self.class.hexcode_for(color_id)
     end
@@ -162,7 +162,7 @@ class Type::BoardCardConfiguration
   def normalize(entry)
     case entry
     when String
-      FieldConfig.new(field_id: entry, zone: DEFAULT_ZONE, color_id: nil, background_color_id: nil, show_label: true)
+      FieldConfig.new(field_id: entry, zone: DEFAULT_ZONE, color_id: nil, background_color_id: nil, show_label: true, bold: false)
     when Hash
       normalize_hash(entry)
     end
@@ -184,7 +184,8 @@ class Type::BoardCardConfiguration
       # through ActiveModel::Type::Boolean, which handles "0"/"1"/true/false
       # uniformly, so both HTML form submissions and any real boolean
       # (e.g. a JSON API caller) behave the same.
-      show_label: entry.key?("show_label") ? ActiveModel::Type::Boolean.new.cast(entry["show_label"]) : true
+      show_label: entry.key?("show_label") ? ActiveModel::Type::Boolean.new.cast(entry["show_label"]) : true,
+      bold: entry.key?("bold") ? ActiveModel::Type::Boolean.new.cast(entry["bold"]) : false
     )
   end
 
