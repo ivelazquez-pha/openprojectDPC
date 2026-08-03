@@ -25,6 +25,29 @@ opce-ckeditor-augmented-textarea .op-ckeditor--attachments
   --ck-content-font-family: var(--body-font-family)
   --ck-content-font-size: var(--body-font-size)
 
+// Dark mode fix: CKEditor derives all of its own colors (toolbar,
+// dropdowns, editable content, read-only preview) from the --ck-color-
+// base-* tokens defined once on :root in the vendored ckeditor.css, using
+// its own light-theme values (#fff background, #333 text) -- a completely
+// separate system from Primer's --bgColor-*/--fgColor-* tokens that the
+// rest of the app's dark mode (`body[data-color-mode="dark"]`, see
+// theme-utils.ts) already reacts to. Nothing connects the two, so long
+// text content stays on CKEditor's light-mode background/text colors in
+// dark mode -- except something elsewhere already forces the CONTAINER's
+// background dark without touching CKEditor's own (unrelated) text color
+// token, leaving unreadable dark-text-on-dark-background. Re-pointing the
+// base tokens at the same Primer tokens already used everywhere else in
+// dark mode fixes both problems at once: content stays legible, and it
+// follows the app's theme instead of fighting it.
+body[data-color-mode="dark"]
+  .ck-content,
+  .ck-editor__editable,
+  .ck-editor__preview
+    --ck-color-base-background: var(--bgColor-default)
+    --ck-color-base-foreground: var(--bgColor-muted)
+    --ck-color-base-text: var(--fgColor-default)
+    --ck-color-base-border: var(--borderColor-default)
+
 // Specific overrides for ck contenteditable
 .ck-content
 
