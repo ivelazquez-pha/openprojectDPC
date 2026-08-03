@@ -54,6 +54,30 @@ opce-ckeditor-augmented-textarea .op-ckeditor--attachments
   --ck-color-base-text: var(--fgColor-default)
   --ck-color-base-border: var(--borderColor-default)
 
+// A THIRD, still-separate namespace: the actual typography of the rich
+// text CONTENT (as opposed to the editor's UI chrome, fixed above) reads
+// from --ck-content-* tokens -- e.g. `.ck-content { color: var(--ck-
+// content-font-color) }`, with --ck-content-font-color: #000 hardcoded in
+// its own :root block, nothing to do with --ck-color-base-text. This is
+// what actually colors the paragraph you're typing -- confirmed via
+// DevTools: --ck-color-text correctly picked up the fix above, but the
+// visible text stayed black because it never reads that token at all.
+//
+// Unlike --ck-color-base-* above, these ARE safe to override directly on
+// `.ck-content`: each is consumed by a rule declared on a DIFFERENT
+// selector than the one defining it (e.g. `.ck-content .image > figcaption`
+// reads --ck-content-color-image-caption-text, which is only DEFINED at
+// :root) -- so the var() lookup happens fresh at the consuming descendant,
+// walking up through `.ck-content`, not frozen at :root like the case above.
+body[data-color-mode="dark"]
+  .ck-content,
+  .ck-editor__preview
+    --ck-content-font-color: var(--fgColor-default)
+    --ck-content-color-image-caption-text: var(--fgColor-muted)
+    --ck-content-color-image-caption-background: var(--bgColor-muted)
+    --ck-content-color-table-caption-text: var(--fgColor-muted)
+    --ck-content-color-table-caption-background: var(--bgColor-muted)
+
 // Specific overrides for ck contenteditable
 .ck-content
 
