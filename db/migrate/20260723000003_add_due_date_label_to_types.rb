@@ -28,26 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module WorkPackageTypes
-  class BoardCardConfigurationForm < ApplicationForm
-    include Redmine::I18n
-
-    form do |board_card_form|
-      board_card_form.check_box_group(name: :board_card_field_ids) do |group|
-        model.available_attributes.each do |label, key|
-          group.check_box(
-            label:,
-            value: key,
-            checked: model.field_ids.include?(key)
-          )
-        end
-      end
-
-      board_card_form.submit(
-        name: :submit,
-        label: I18n.t(:button_save),
-        scheme: :primary
-      )
-    end
+class AddDueDateLabelToTypes < ActiveRecord::Migration[8.0]
+  def change
+    add_column :types, :due_date_label, :string
   end
 end

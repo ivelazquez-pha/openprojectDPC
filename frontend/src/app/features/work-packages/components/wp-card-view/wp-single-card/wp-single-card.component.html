@@ -85,6 +85,13 @@
         >
         {{workPackage.formattedId}}
       </a>
+      @if (fieldsForZone('top').length > 0) {
+        <div
+          class="op-wp-single-card--content-type-fields op-wp-single-card--content-type-fields_top"
+          data-test-selector="op-wp-single-card--content-type-fields_top">
+          <ng-container [ngTemplateOutlet]="cardFieldRows" [ngTemplateOutletContext]="{ $implicit: fieldsForZone('top') }" />
+        </div>
+      }
       <span class="op-wp-single-card--content-subject-line">
         @if (showAsInlineCard && showStartDate) {
           <span
@@ -173,26 +180,45 @@
           class="op-wp-single-card--content-dates"
           containerType="single-view" />
       }
-      @if (extraCardFieldIds.length > 0) {
+      @if (fieldsForZone('middle').length > 0) {
         <div
           class="op-wp-single-card--content-type-fields"
           data-test-selector="op-wp-single-card--content-type-fields">
-          @for (fieldId of extraCardFieldIds; track fieldId) {
-            <div
-              class="op-wp-single-card--content-type-field"
-              data-test-selector="op-wp-single-card--content-type-field"
-              [attr.data-qa-field-name]="fieldId"
-              [title]="extraCardFieldTooltip(workPackage, fieldId)">
-              <span class="op-wp-single-card--content-type-field-label">{{ extraCardFieldLabel(workPackage, fieldId) }}:</span>
-              <display-field [resource]="workPackage"
-                [displayFieldOptions]="{ writable: false, placeholder: '' }"
-                fieldName="{{ fieldId }}"
-                class="op-wp-single-card--content-type-field-value"
-                containerType="single-view" />
-            </div>
-          }
+          <ng-container [ngTemplateOutlet]="cardFieldRows" [ngTemplateOutletContext]="{ $implicit: fieldsForZone('middle') }" />
+        </div>
+      }
+      @if (fieldsForZone('footer').length > 0) {
+        <div
+          class="op-wp-single-card--content-type-fields op-wp-single-card--content-type-fields_footer"
+          data-test-selector="op-wp-single-card--content-type-fields_footer">
+          <ng-container [ngTemplateOutlet]="cardFieldRows" [ngTemplateOutletContext]="{ $implicit: fieldsForZone('footer') }" />
         </div>
       }
     </div>
   }
+
+  <ng-template #cardFieldRows let-configs>
+    @for (config of configs; track config.fieldId) {
+      <div
+        class="op-wp-single-card--content-type-field"
+        data-test-selector="op-wp-single-card--content-type-field"
+        [class.op-wp-single-card--content-type-field_bold]="config.bold"
+        [attr.data-qa-field-name]="config.fieldId"
+        [style.color]="hasFieldValue(workPackage, config.fieldId) ? config.color : null"
+        [style.--op-card-field-color]="hasFieldValue(workPackage, config.fieldId) ? config.color : null"
+        [style.--op-card-field-bg]="hasFieldValue(workPackage, config.fieldId) ? config.backgroundColor : null"
+        [title]="extraCardFieldTooltip(workPackage, config.fieldId)">
+        @if (config.showLabel) {
+          <span
+            class="op-wp-single-card--content-type-field-label"
+            [style.color]="hasFieldValue(workPackage, config.fieldId) ? config.color : null">{{ extraCardFieldLabel(workPackage, config.fieldId) }}:</span>
+        }
+        <display-field [resource]="workPackage"
+          [displayFieldOptions]="{ writable: false, placeholder: '' }"
+          fieldName="{{ config.fieldId }}"
+          class="op-wp-single-card--content-type-field-value"
+          containerType="single-view" />
+      </div>
+    }
+  </ng-template>
 </div>

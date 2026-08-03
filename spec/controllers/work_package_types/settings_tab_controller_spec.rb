@@ -70,6 +70,7 @@ RSpec.describe WorkPackageTypes::SettingsTabController do
             "name" => "Galactic Order",
             "color_id" => lightsaber_red.id.to_s,
             "description" => "This is how the emperor governs you ... yes you!",
+            "due_date_label" => "Fecha apertura",
             "is_milestone" => "0",
             "is_in_roadmap" => "1",
             "is_default" => "0"
@@ -82,6 +83,10 @@ RSpec.describe WorkPackageTypes::SettingsTabController do
       end
 
       it { expect(response).to redirect_to(edit_type_settings_path(type_id: type.id)) }
+
+      it "saves the due_date_label override" do
+        expect(type.reload.due_date_label).to eq("Fecha apertura")
+      end
 
       context "if the the params are invalid" do
         let(:another_type) { create(:type_feature) }

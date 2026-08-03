@@ -70,6 +70,13 @@ module WorkPackageTypes
         rich_text_options: { showAttachments: false }
       )
 
+      settings_form.text_field(
+        name: :due_date_label,
+        label: label(:due_date_label),
+        caption: I18n.t("types.edit.settings.due_date_label_text"),
+        validation_message: validation_message_for(:due_date_label)
+      )
+
       settings_form.check_box(
         name: :is_milestone,
         label: label(:is_milestone)

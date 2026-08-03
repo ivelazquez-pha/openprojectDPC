@@ -29,8 +29,96 @@ See COPYRIGHT and LICENSE files for more details.
 
 <p><%= I18n.t("types.edit.board_card_configuration.intro") %></p>
 
-<%=
-  settings_primer_form_with(**form_options) do |f|
-    render(WorkPackageTypes::BoardCardConfigurationForm.new(f))
-  end
-%>
+<%= settings_primer_form_with(**form_options) do |f| %>
+  <div data-controller="admin--board-card-configuration">
+    <table class="generic-table" id="board-card-configuration-table">
+      <thead>
+        <tr>
+          <th><%= t("types.edit.board_card_configuration.field_column") %></th>
+          <th><%= t("types.edit.board_card_configuration.zone_column") %></th>
+          <th><%= t("types.edit.board_card_configuration.color_column") %></th>
+          <th><%= t("types.edit.board_card_configuration.background_color_column") %></th>
+          <th><%= t("types.edit.board_card_configuration.show_label_column") %></th>
+          <th><%= t("types.edit.board_card_configuration.bold_column") %></th>
+          <th><%= t("types.edit.board_card_configuration.actions_column") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% field_rows.each_with_index do |row, index| %>
+          <tr
+            class="board-card-configuration-row"
+            data-test-selector="board-card-configuration-row"
+            data-admin--board-card-configuration-target="row">
+            <td>
+              <%= select_tag "#{form_field_name}[#{index}][field_id]",
+                             options_for_select(available_attributes, row["field_id"]),
+                             include_blank: true,
+                             id: nil %>
+            </td>
+            <td>
+              <%= select_tag "#{form_field_name}[#{index}][zone]",
+                             options_for_select(zone_options, row["zone"]),
+                             id: nil %>
+            </td>
+            <td>
+              <%= select_tag "#{form_field_name}[#{index}][color_id]",
+                             options_for_select(color_options, row["color_id"]),
+                             include_blank: t(:label_none),
+                             id: nil %>
+            </td>
+            <td>
+              <%= select_tag "#{form_field_name}[#{index}][background_color_id]",
+                             options_for_select(color_options, row["background_color_id"]),
+                             include_blank: t(:label_none),
+                             id: nil %>
+            </td>
+            <td>
+              <%= hidden_field_tag "#{form_field_name}[#{index}][show_label]", "0", id: nil %>
+              <%#
+                Cast explicitly: on a validation-failure re-render, `row`
+                comes straight from the just-submitted params, where
+                `show_label` is still the HTML string "0"/"1" (not yet
+                normalized by Type::BoardCardConfiguration#normalize_hash) --
+                `check_box_tag`'s `checked` treats ANY non-nil/non-false
+                value as checked, so the raw string "0" would render as
+                checked without this cast.
+              %>
+              <%= check_box_tag "#{form_field_name}[#{index}][show_label]",
+                                 "1",
+                                 ActiveModel::Type::Boolean.new.cast(row["show_label"]),
+                                 id: nil %>
+            </td>
+            <td>
+              <%= hidden_field_tag "#{form_field_name}[#{index}][bold]", "0", id: nil %>
+              <%= check_box_tag "#{form_field_name}[#{index}][bold]",
+                                 "1",
+                                 ActiveModel::Type::Boolean.new.cast(row["bold"]),
+                                 id: nil %>
+            </td>
+            <td>
+              <%= link_to "",
+                          "#",
+                          data: { action: "admin--board-card-configuration#removeRow" },
+                          class: "icon icon-delete",
+                          "aria-label": t("types.edit.board_card_configuration.remove_field") %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%=
+      render(Primer::Beta::Button.new(
+        scheme: :link,
+        test_selector: "add-board-card-field",
+        data: { action: "admin--board-card-configuration#addRow" },
+        mt: 2
+      )) do |button|
+        button.with_leading_visual_icon(icon: :plus)
+        t("types.edit.board_card_configuration.add_field")
+      end
+    %>
+  </div>
+
+  <%= render(Primer::Beta::Button.new(scheme: :primary, type: :submit, mt: 3)) { t(:button_save) } %>
+<% end %>

@@ -75,10 +75,10 @@
     &:not(.-new)
       display: grid
       grid-template-columns: max-content max-content auto auto 1fr
-      grid-template-rows: auto 1fr max-content max-content auto
+      grid-template-rows: auto 1fr max-content max-content max-content auto max-content
       grid-row-gap: 5px
       grid-column-gap: 5px
-      grid-template-areas: "status id project project project" "subject subject subject subject subject" "image image image image image" "typeFields typeFields typeFields typeFields typeFields" "avatar avatar avatar dates dates"
+      grid-template-areas: "status id project project project" "subject subject subject subject subject" "topFields topFields topFields topFields topFields" "image image image image image" "typeFields typeFields typeFields typeFields typeFields" "avatar avatar avatar dates dates" "footerFields footerFields footerFields footerFields footerFields"
       overflow: hidden
       flex-grow: 1
       font-size: var(--body-font-size)
@@ -185,11 +185,22 @@
       box-shadow: none
       padding: 15px
 
+  // Default (no modifier) renders in the "middle" zone, below the cover
+  // image -- the original, and still default, placement for extra card
+  // fields. `_top`/`_footer` place the same row styling in the other two
+  // fixed zones (see `Type::BoardCardConfiguration::ZONES` on the backend).
   &--content-type-fields
     grid-area: typeFields
     display: flex
     flex-direction: column
     margin-top: 4px
+
+    &_top
+      grid-area: topFields
+      margin-top: 0
+
+    &_footer
+      grid-area: footerFields
 
   &--content-type-field
     display: flex
@@ -200,6 +211,15 @@
     white-space: nowrap
     text-overflow: ellipsis
     font-size: var(--body-font-size-sm, 0.85em)
+    background-color: var(--op-card-field-bg, transparent)
+
+    // `font-weight` is an inherited property, so this reaches the value's
+    // text too even though it's rendered by a separate <display-field>
+    // component -- no cross-component encapsulation issue here (unlike
+    // background-color/the badge layout below, inheritance isn't blocked
+    // by Angular's view encapsulation, only stylesheet rule matching is).
+    &_bold
+      font-weight: 700
 
   &--content-type-field-label
     color: var(--fgColor-muted)
@@ -209,3 +229,11 @@
     overflow: hidden
     text-overflow: ellipsis
     white-space: nowrap
+
+  // The multi-value-list-as-badges override lives in the GLOBAL
+  // `_display_fields.sass` instead of here: `.custom-option` (and its
+  // `.-multiline` wrapper) are rendered by the separate `<display-field>`
+  // component, not by this one. Angular's view encapsulation scopes a
+  // plain nested selector in a component's OWN stylesheet to elements
+  // THAT component renders directly, so it can never reach into another
+  // component's template output -- only a global (unscoped) rule can.

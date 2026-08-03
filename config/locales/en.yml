@@ -1440,6 +1440,19 @@ en:
       board_card_configuration:
         tab: "Board card fields"
         intro: "Select the attributes to show as additional rows on Kanban board cards for work packages of this type. This applies to every board."
+        field_column: "Field"
+        zone_column: "Position"
+        color_column: "Text color"
+        background_color_column: "Background color"
+        show_label_column: "Show label"
+        bold_column: "Bold"
+        actions_column: "Actions"
+        add_field: "Add field"
+        remove_field: "Remove field"
+        zones:
+          top: "Top"
+          middle: "Middle"
+          footer: "Footer"
       projects:
         tab: Projects
         enable_all: Enable for all projects
@@ -1448,6 +1461,7 @@ en:
       settings:
         tab: "Settings"
         type_color_text: The selected color distinguishes different types in Gantt charts or work packages tables. It is therefore recommended to use a strong color.
+        due_date_label_text: Overrides the displayed label of the "Due date" attribute for work packages of this type (e.g. in the work package form, table columns, and filters). Leave blank to use the default label.
       subject_configuration:
         tab: "Subject configuration"
         manually_editable_subjects:
@@ -1996,6 +2010,7 @@ en:
       type:
         description: "Default text for description"
         attribute_groups: "Form configuration"
+        due_date_label: "Due date label"
         is_in_roadmap: "Displayed in roadmap by default"
         is_default: "Activated for new projects by default"
         is_milestone: "Is milestone"

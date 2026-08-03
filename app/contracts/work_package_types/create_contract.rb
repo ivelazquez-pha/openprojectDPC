@@ -32,6 +32,7 @@ module WorkPackageTypes
   class CreateContract < BaseContract
     attribute :color_id
     attribute :description
+    attribute :due_date_label
     attribute :is_default
     attribute :is_in_roadmap
     attribute :is_milestone
@@ -40,5 +41,6 @@ module WorkPackageTypes
     attribute :attribute_groups
 
     validates :is_default, :is_milestone, :is_in_roadmap, inclusion: { in: [true, false] }
+    validates :due_date_label, length: { maximum: 255 }
   end
 end

@@ -138,5 +138,23 @@ RSpec.describe Type::BoardCardConfiguration do
         expect(configuration.field_ids).to eq([])
       end
     end
+
+    # CONFIRMED BUG FIX: a custom field not associated with this Type must
+    # never be available, even though `Type#work_package_attributes` lists
+    # every `WorkPackageCustomField` in the system when called without a
+    # `project:` (as this admin-form context always does).
+    context "when a custom field is NOT associated with this type" do
+      let(:unassociated_custom_field) { create(:work_package_custom_field) }
+      let(:type) { build(:type, custom_fields: []) }
+
+      before do
+        unassociated_custom_field
+        type.board_card_field_ids = ["customField#{unassociated_custom_field.id}"]
+      end
+
+      it "is not available and is dropped as stale" do
+        expect(configuration.field_ids).to eq([])
+      end
+    end
   end
 end

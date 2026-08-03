@@ -110,5 +110,20 @@ module WorkPackageTypes
         end
       end
     end
+
+    describe "due_date_label validations" do
+      context "when due_date_label is too long" do
+        let(:attributes) { base_attributes.merge(due_date_label: "A" * 300) }
+
+        it "the contract is invalid" do
+          expect(contract.validate).to be_falsey
+        end
+
+        it "adds and error to the contract" do
+          contract.validate
+          expect(contract.errors.details[:due_date_label]).to eq([{ count: 255, error: :too_long }])
+        end
+      end
+    end
   end
 end

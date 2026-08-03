@@ -52,6 +52,7 @@ import {
   resolveTypeCardFields,
   TypeCardFieldsByTypeId,
 } from 'core-app/features/work-packages/components/wp-card-view/wp-single-card/resolve-type-card-fields';
+import { CardFieldConfig } from 'core-app/features/hal/resources/type-resource';
 
 const DETAILS_URL_PATTERN = new RegExp(`/details/(${WP_ID_URL_PATTERN})(?:/|$)`);
 
@@ -269,21 +270,31 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
   }
 
   /**
-   * Ordered list of extra field identifiers to render as additional
-   * `label: value` rows below the fixed baseline for this card, resolved
-   * from this work package's OWN type (so mixed Types on the same board
-   * each render only their own configured fields).
+   * Ordered list of extra field configs to render as additional rows for
+   * this card, resolved from this work package's OWN type (so mixed Types
+   * on the same board each render only their own configured fields).
    *
    * Gated as a whole on `renderTypeCardFields` (board-only opt-in) and on
    * `schemaLoaded` (never renders a partial/erroring section while the
    * schema for this work package hasn't resolved yet).
    */
-  public get extraCardFieldIds():string[] {
+  public get extraCardFieldConfigs():CardFieldConfig[] {
     if (!this.renderTypeCardFields || !this.schemaLoaded) {
       return [];
     }
 
     return resolveTypeCardFields(this.workPackage, this.typeCardFieldsByTypeId);
+  }
+
+  /**
+   * The subset of `extraCardFieldConfigs` assigned to render in the given
+   * zone. Three fixed zones only (not free positioning) -- see
+   * `Type::BoardCardConfiguration::ZONES` on the backend and
+   * `wp-single-card.component.sass`'s `topFields`/`typeFields`/
+   * `footerFields` grid areas.
+   */
+  public fieldsForZone(zone:CardFieldConfig['zone']):CardFieldConfig[] {
+    return this.extraCardFieldConfigs.filter((config) => config.zone === zone);
   }
 
   /**
@@ -314,6 +325,32 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
     }
 
     return String(value);
+  }
+
+  /**
+   * Whether this work package actually has a value for the given field --
+   * an empty field renders as a bare "-" placeholder, so applying the
+   * configured color/background to it would paint a colored stripe/dash
+   * with nothing in it. `false` for `null`/`undefined`, an empty array
+   * (an unset multi-value list field), or a blank string; `true`
+   * otherwise (including falsy-but-meaningful values like `0`).
+   */
+  public hasFieldValue(wp:WorkPackageResource, fieldName:string):boolean {
+    const value = (wp as unknown as Record<string, unknown>)[fieldName];
+
+    if (value === null || value === undefined) {
+      return false;
+    }
+
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+
+    if (typeof value === 'string') {
+      return value.trim().length > 0;
+    }
+
+    return true;
   }
 
   public fullWorkPackageLink(wp:WorkPackageResource):string {

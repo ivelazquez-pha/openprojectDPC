@@ -77,24 +77,35 @@ module WorkPackageTypes
       before do
         put :update, params: {
           type_id: wp_type.id,
-          work_package_types_forms_board_card_configuration_form_model: { board_card_field_ids: field_ids }
+          work_package_types_forms_board_card_configuration_form_model: { board_card_field_ids: field_configs }
         }
       end
 
-      context "with valid field identifiers" do
-        let(:field_ids) { %w[priority assignee] }
+      context "with valid field configurations" do
+        let(:field_configs) do
+          [
+            { field_id: "priority" },
+            { field_id: "assignee", zone: "footer", show_label: "0" }
+          ]
+        end
 
         it "redirects to the current tab path" do
           expect(response).to redirect_to edit_type_board_card_configuration_path(type_id: wp_type.id)
         end
 
-        it "persists the ordered field identifiers" do
-          expect(wp_type.reload.board_card_field_ids).to eq(%w[priority assignee])
+        it "persists the ordered field configurations, casting the HTML form's string values" do
+          wp_type.reload
+
+          expect(wp_type.board_card_fields.field_ids).to eq(%w[priority assignee])
+
+          footer_field = wp_type.board_card_fields.field_configs.last
+          expect(footer_field.zone).to eq("footer")
+          expect(footer_field.show_label).to be false
         end
       end
 
-      context "with an empty selection" do
-        let(:field_ids) { [""] }
+      context "with a row that has no field selected (the always-present blank row)" do
+        let(:field_configs) { [{ field_id: "" }] }
 
         it "persists an empty configuration" do
           expect(wp_type.reload.board_card_field_ids).to eq([])
@@ -102,7 +113,7 @@ module WorkPackageTypes
       end
 
       context "with an unknown field identifier" do
-        let(:field_ids) { %w[priority not_a_real_attribute] }
+        let(:field_configs) { [{ field_id: "priority" }, { field_id: "not_a_real_attribute" }] }
 
         it "renders the edit template with an unprocessable status" do
           expect(response).to have_http_status :unprocessable_entity
@@ -110,7 +121,23 @@ module WorkPackageTypes
         end
 
         it "does not persist the invalid configuration" do
-          expect(wp_type.reload.board_card_field_ids).not_to eq(%w[priority not_a_real_attribute])
+          expect(wp_type.reload.board_card_field_ids).to be_nil
+        end
+      end
+
+      context "with the same field configured twice" do
+        let(:field_configs) { [{ field_id: "priority" }, { field_id: "priority", zone: "footer" }] }
+
+        it "renders the edit template with an unprocessable status" do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+
+      context "with an unknown color id" do
+        let(:field_configs) { [{ field_id: "priority", color_id: "999999" }] }
+
+        it "renders the edit template with an unprocessable status" do
+          expect(response).to have_http_status :unprocessable_entity
         end
       end
     end

@@ -115,6 +115,24 @@ RSpec.describe API::V3::Types::TypeRepresenter do
       end
     end
 
+    describe "dueDateLabel" do
+      context "with an override configured" do
+        let(:type) { build_stubbed(:type, due_date_label: "Fecha de licitación") }
+
+        it "indicates the configured override" do
+          expect(subject).to be_json_eql("Fecha de licitación".to_json).at_path("dueDateLabel")
+        end
+      end
+
+      context "with no override configured" do
+        let(:type) { build_stubbed(:type) }
+
+        it "is null" do
+          expect(subject).to be_json_eql(nil.to_json).at_path("dueDateLabel")
+        end
+      end
+    end
+
     it_behaves_like "has UTC ISO 8601 date and time" do
       let(:date) { type.created_at }
       let(:json_path) { "createdAt" }

@@ -111,5 +111,36 @@ module WorkPackageTypes
         end
       end
     end
+
+    describe "due_date_label validations" do
+      context "when due_date_label is blank" do
+        let(:updated_attributes) { { due_date_label: "" } }
+
+        it "the contract is valid" do
+          expect(contract.validate).to be_truthy
+        end
+      end
+
+      context "when due_date_label is a reasonable override" do
+        let(:updated_attributes) { { due_date_label: "Fecha apertura" } }
+
+        it "the contract is valid" do
+          expect(contract.validate).to be_truthy
+        end
+      end
+
+      context "when due_date_label is too long" do
+        let(:updated_attributes) { { due_date_label: "A" * 300 } }
+
+        it "the contract is invalid" do
+          expect(contract.validate).to be_falsey
+        end
+
+        it "adds and error to the contract" do
+          contract.validate
+          expect(contract.errors.details[:due_date_label]).to eq([{ count: 255, error: :too_long }])
+        end
+      end
+    end
   end
 end

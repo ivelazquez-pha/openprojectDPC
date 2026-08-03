@@ -136,5 +136,59 @@ module WorkPackageTypes
         expect(contract.validate).to be_falsey
       end
     end
+
+    context "when a rich per-field config entry has a valid zone and an existing color" do
+      let(:color) { create(:color) }
+
+      before do
+        model.board_card_field_ids = [
+          { "field_id" => "priority", "zone" => "top", "color_id" => color.id, "show_label" => "0" }
+        ]
+      end
+
+      it "is valid" do
+        expect(contract.validate).to be_truthy
+      end
+    end
+
+    context "when a rich per-field config entry has \"none\" selected for color (submitted as an empty string)" do
+      before do
+        model.board_card_field_ids = [{ "field_id" => "priority", "color_id" => "", "background_color_id" => "" }]
+      end
+
+      it "is valid" do
+        expect(contract.validate).to be_truthy
+      end
+    end
+
+    context "when a rich per-field config entry has an invalid zone" do
+      before do
+        model.board_card_field_ids = [{ "field_id" => "priority", "zone" => "not_a_real_zone" }]
+      end
+
+      it "is invalid" do
+        expect(contract.validate).to be_falsey
+      end
+    end
+
+    context "when a rich per-field config entry references a color id that doesn't exist" do
+      before do
+        model.board_card_field_ids = [{ "field_id" => "priority", "color_id" => "999999" }]
+      end
+
+      it "is invalid" do
+        expect(contract.validate).to be_falsey
+      end
+    end
+
+    context "when the same field id is configured more than once" do
+      before do
+        model.board_card_field_ids = [{ "field_id" => "priority" }, { "field_id" => "priority", "zone" => "footer" }]
+      end
+
+      it "is invalid" do
+        expect(contract.validate).to be_falsey
+      end
+    end
   end
 end

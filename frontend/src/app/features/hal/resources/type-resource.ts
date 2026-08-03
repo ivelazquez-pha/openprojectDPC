@@ -29,15 +29,40 @@
 import { HalResource } from 'core-app/features/hal/resources/hal-resource';
 import { InputState } from '@openproject/reactivestates';
 
+/**
+ * A single extra field row configured to render on Kanban board cards, for
+ * work packages of one particular Type. `color`/`backgroundColor` are
+ * already-resolved hex strings (or `null` for "use the default styling") --
+ * see `Type::BoardCardConfiguration::FieldConfig` on the backend, which owns
+ * resolving the admin-picked `Color` reference to a hex value.
+ */
+export interface CardFieldConfig {
+  fieldId:string;
+  zone:'top'|'middle'|'footer';
+  color:string|null;
+  backgroundColor:string|null;
+  showLabel:boolean;
+  bold:boolean;
+}
+
 export class TypeResource extends HalResource {
   public color:string;
 
   /**
-   * Ordered list of extra work package attribute identifiers configured to
-   * render on Kanban board cards for work packages of this type. Board-only;
-   * has no effect outside of board card rendering. Read-only.
+   * Ordered list of extra field rows configured to render on Kanban board
+   * cards for work packages of this type. Board-only; has no effect outside
+   * of board card rendering. Read-only.
    */
-  public boardCardFieldIds:string[]|undefined;
+  public boardCardFields:CardFieldConfig[]|undefined;
+
+  /**
+   * Optional override for the label shown on a work package's full/detail
+   * view "combined date" trigger (e.g. instead of the standard "Date"
+   * label). Undefined/blank means the standard translated label is used.
+   * Does not affect the date-picker modal's internal "Start date"/"Finish
+   * date" captions. Read-only.
+   */
+  public dueDateLabel:string|undefined;
 
   public get state():InputState<this> {
     return this.states.types.get(this.href!) as any;
