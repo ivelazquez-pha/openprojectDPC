@@ -25,6 +25,59 @@ opce-ckeditor-augmented-textarea .op-ckeditor--attachments
   --ck-content-font-family: var(--body-font-family)
   --ck-content-font-size: var(--body-font-size)
 
+// Dark mode fix: CKEditor derives EVERY one of its own colors (toolbar,
+// dropdowns, tooltips, editable content, read-only preview -- e.g.
+// `--ck-color-text: var(--ck-color-base-text)`, `--ck-color-toolbar-
+// background: var(--ck-color-base-background)`, dozens more) from just
+// four `--ck-color-base-*` tokens, using its own light-theme values (#fff
+// background, #333 text) -- a completely separate system from Primer's
+// --bgColor-*/--fgColor-* tokens that the rest of the app's dark mode
+// (`body[data-color-mode="dark"]`, see theme-utils.ts) already reacts to.
+//
+// Crucially, ALL of those derived `--ck-color-*: var(--ck-color-base-*)`
+// declarations live on `:root` itself in the vendored ckeditor.css. A
+// custom property's `var()` reference resolves using the value available
+// AT THE ELEMENT WHERE THAT DECLARATION LIVES -- so overriding the base
+// tokens on a DESCENDANT (e.g. `.ck-content`) does nothing for any derived
+// token: it's already been resolved to the old light-mode value at
+// `:root`, and that resolved value is what inherits down, not a live
+// reference. The override has to happen on `:root` itself so every
+// derived token recomputes from the new base values.
+//
+// `:root` can't be reached with a plain descendant selector from
+// `body[data-color-mode="dark"]` (body is root's CHILD, not the other way
+// around) -- `:has()` is what lets `:root` react to an attribute set on
+// its own descendant.
+:root:has(body[data-color-mode="dark"])
+  --ck-color-base-background: var(--bgColor-default)
+  --ck-color-base-foreground: var(--bgColor-muted)
+  --ck-color-base-text: var(--fgColor-default)
+  --ck-color-base-border: var(--borderColor-default)
+
+// A THIRD, still-separate namespace: the actual typography of the rich
+// text CONTENT (as opposed to the editor's UI chrome, fixed above) reads
+// from --ck-content-* tokens -- e.g. `.ck-content { color: var(--ck-
+// content-font-color) }`, with --ck-content-font-color: #000 hardcoded in
+// its own :root block, nothing to do with --ck-color-base-text. This is
+// what actually colors the paragraph you're typing -- confirmed via
+// DevTools: --ck-color-text correctly picked up the fix above, but the
+// visible text stayed black because it never reads that token at all.
+//
+// Unlike --ck-color-base-* above, these ARE safe to override directly on
+// `.ck-content`: each is consumed by a rule declared on a DIFFERENT
+// selector than the one defining it (e.g. `.ck-content .image > figcaption`
+// reads --ck-content-color-image-caption-text, which is only DEFINED at
+// :root) -- so the var() lookup happens fresh at the consuming descendant,
+// walking up through `.ck-content`, not frozen at :root like the case above.
+body[data-color-mode="dark"]
+  .ck-content,
+  .ck-editor__preview
+    --ck-content-font-color: var(--fgColor-default)
+    --ck-content-color-image-caption-text: var(--fgColor-muted)
+    --ck-content-color-image-caption-background: var(--bgColor-muted)
+    --ck-content-color-table-caption-text: var(--fgColor-muted)
+    --ck-content-color-table-caption-background: var(--bgColor-muted)
+
 // Specific overrides for ck contenteditable
 .ck-content
 
